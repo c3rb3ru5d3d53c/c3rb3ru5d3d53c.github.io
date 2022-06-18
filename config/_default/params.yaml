@@ -1,0 +1,87 @@
+mainSections:
+  - posts
+description: Eureka is a elegant and powerful theme for Hugo.
+
+repoEditURL:
+
+dateFormat:
+
+titleSeparator:
+
+# Options: auto, light and dark. Default is auto.
+colorScheme:
+
+# Colors and fonts. Default style is data/styles/default.yaml/
+style:
+
+# E.g. Person, Organization, LocalBusiness, Project, EducationalOrganization
+siteType: Person
+icon: images/profile.jpg
+publisherName: c3rb3ru5d3d53c
+publisherLogo:
+
+highlight:
+  handler: highlightjs
+
+  highlightjs:
+    # highlight.js doesn't bundle every language. So please specify additional languages you want here.
+    # See https://github.com/highlightjs/cdn-release/tree/main/build/languages for available languages.
+    languages:
+      - dart
+      - bash
+      - cpp
+      - python
+      - c
+      - vbscript
+      - powershell
+    # See https://github.com/highlightjs/cdn-release/tree/main/build/styles for available styles.
+    style: base16/solarized-light
+
+math:
+  handler: katex
+
+  # katex:
+  #   # Browse https://katex.org/docs/options.html to see the options available.
+  #   # KaTeX's Auto-render ignores `displayMode` property of the options, so this property will not work.
+  #   # You can list the key and value you want as below.
+  #   # Because Hugo's config params are case-insensitive, you need to add `-` or `_` before the uppercase letters.
+  #   # For example, `throwOnError` should be written as `throw-On-Error` or other acceptable formats.
+  #   leqno:
+
+comment:
+  # Options: disqus, commento, valine and utterances.
+  handler:
+
+  # disqus:
+  #   shortname:
+
+  # utterances:
+  #   # Browse https://utteranc.es/ to see the options available.
+  #   # If you want the color scheme of utterances to follow eureka's, you can set `theme: eureka`.
+  #   repo:
+  #   issue-term:
+  #   theme:
+
+  # commento:
+  #   # If self-hosting, please enter the url (e.g. https://commento.example.com) here. Otherwise leave empty.
+  #   url:
+
+  # valine:
+  #   # Browse https://valine.js.org/en/configuration.html to see the options available.
+  #   # You can list the key and value you want as below.
+  #   # Because Hugo's config params are case-insensitive, you need to add `-` or `_` before the uppercase letters.
+  #   # For example, `appId` should be written as `app-Id` or other acceptable formats.
+  #   app-Id:
+  #   app-Key:
+
+diagram:
+  handler: mermaid
+
+  # mermaid:
+  #   # Browse https://mermaid-js.github.io/mermaid/#/Setup to see the options available.
+  #   # You can list the key and value you want as below.
+  #   # Because Hugo's config params are case-insensitive, you need to add `-` or `_` before the uppercase letters.
+  #   # For example, `diagramPadding` should be written as `diagram-Padding` or other acceptable formats.
+  #   theme:
+  #   flowchart:
+  #     diagram-padding:

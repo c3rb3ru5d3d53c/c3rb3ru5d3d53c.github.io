@@ -1,0 +1,12 @@
+{
+ "compilerOptions": {
+  "baseUrl": ".",
+  "paths": {
+   "*": [
+    "../themes/eureka/_vendor/github.com/FortAwesome/Font-Awesome/js-packages/@fortawesome/fontawesome-svg-core/*",
+    "../themes/eureka/_vendor/github.com/FortAwesome/Font-Awesome/js-packages/@fortawesome/free-brands-svg-icons/*",
+    "../themes/eureka/_vendor/github.com/FortAwesome/Font-Awesome/js-packages/@fortawesome/free-solid-svg-icons/*"
+   ]
+  }
+ }
+}
