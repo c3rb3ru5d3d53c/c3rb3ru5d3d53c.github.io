@@ -17,25 +17,25 @@ draft: false
 
 __Situation:__
 
-I came across an interesting obfuscated sample on `Any.Run`.
+I came across an interesting obfuscated sample on __Any.Run__.
 
 __Metadata:__
 
-- `db2614353dc6c29dbe323dbeafe6b781`
+- __db2614353dc6c29dbe323dbeafe6b781__
 
 __Analysis:__
 
-The sample has a ton of comments making the file size total around `~4mb`.
+The sample has a ton of comments making the file size total around __~4mb__.
 
-This was easily parsed out with `sed 's/^\x27//'`.
+This was easily parsed out with __sed 's/^\x27//'__.
 
-The next step is to idenify where code is evaluated which was here `exECuTeglOBal sHLW(iDxY)`.
+The next step is to idenify where code is evaluated which was here __exECuTeglOBal sHLW(iDxY)__.
 
-Changed this to `WScript.Echo` then also had to backtrack for a variable which defined before the evaluation.
+Changed this to __WScript.Echo__ then also had to backtrack for a variable which defined before the evaluation.
 
 This variable contained an array of strings which contain object names and the downloader URL, User-Agent etc.
 
-I also had to comment out the part which causes it to sleep for `30` seconds.
+I also had to comment out the part which causes it to sleep for __30__ seconds.
 
 Below is the script after everything has been put into a readable format.
 
@@ -79,7 +79,7 @@ User-Agent: HanamiRuby
 Host: mostasharanetalim.ir
 ```
 
-The payload named ColorPick.exe `Qakbot/QBot` will be dropped to the `%TEMP%` folder.
+The payload named ColorPick.exe __Qakbot/QBot__ will be dropped to the __%TEMP%__ folder.
 
 __IOCS:__
 
