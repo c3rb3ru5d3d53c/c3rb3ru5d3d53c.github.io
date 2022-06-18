@@ -1,12 +1,12 @@
 main:
-  - name: About
-    url: '#about'
+  - name: Malware Blog
+    url: /malware-blog/
     weight: 1
-  - name: Blog
-    url: /blog/
-    weight: 2
   - name: IOCs
     url: /iocs/
+    weight: 2
+  - name: Signatures
+    url: https://github.com/c3rb3ru5d3d53c/signatures/
     weight: 3
   - name: Documents
     url: /docs/
