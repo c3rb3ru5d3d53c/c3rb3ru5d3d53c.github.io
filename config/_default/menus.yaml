@@ -5,6 +5,9 @@ main:
   - name: Blog
     url: /blog/
     weight: 2
+  - name: IOCs
+    url: /iocs/
+    weight: 3
   - name: Documents
     url: /docs/
-    weight: 3
+    weight: 4
