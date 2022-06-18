@@ -1,0 +1,165 @@
+<!doctype html><html lang=en dir=ltr><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>2022-05-16 Emotet IOCs | Malware Hell</title><meta name=generator content="Hugo Eureka 0.9.3"><link rel=stylesheet href=https://c3rb3ru5d3d53c.github.io/css/eureka.min.9cec6350e37e534b0338fa9a085bf06855de3b0f2dcf857e792e5e97b07ea905d4d5513db554cbc26a9c3da622bae92d.css><script defer src=https://c3rb3ru5d3d53c.github.io/js/eureka.min.fa9a6bf6d7a50bb635b4cca7d2ba5cf3dfb095ae3798773f1328f7950028b48c17d06276594e1b5f244a25a6c969a705.js></script>
+<link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" as=style onload='this.onload=null,this.rel="stylesheet"'><link rel=stylesheet href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/base16/solarized-light.min.css media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/bash.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/cpp.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/python.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/c.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/vbscript.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/powershell.min.js crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/http.min.js crossorigin></script>
+<link rel=stylesheet href=https://c3rb3ru5d3d53c.github.io/css/highlightjs.min.2958991528e43eb6fc9b8c4f2b8e052f79c4010718e1d1e888a777620e9ee63021c2c57ec7417a3108019bb8c41943e6.css media=print onload='this.media="all",this.onload=null'><script defer type=text/javascript src=https://c3rb3ru5d3d53c.github.io/js/fontawesome.min.fbf58334762fcb42c16e0593596bb7b04a0c32bf8e0cdd596701a58706a96ef120cb2abab225e9591ee227ffd9043e5a.js></script>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css integrity=sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ media=print onload='this.media="all",this.onload=null' crossorigin><script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js integrity=sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY crossorigin></script>
+<script defer src=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js integrity=sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR crossorigin></script>
+<script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}]})})</script><script defer src=https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js integrity=sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0 crossorigin></script>
+<link rel=icon type=image/png sizes=32x32 href=https://c3rb3ru5d3d53c.github.io/images/profile_hufbb0030faf6ba39e9c4d13e9ac136399_44197_32x32_fill_q75_box_center.jpg><link rel=apple-touch-icon sizes=180x180 href=https://c3rb3ru5d3d53c.github.io/images/profile_hufbb0030faf6ba39e9c4d13e9ac136399_44197_180x180_fill_q75_box_center.jpg><meta name=description content="Emotet IOCs for 2022-05-16 including popular campaign URLs."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"IOCs","item":"https://c3rb3ru5d3d53c.github.io/iocs/"},{"@type":"ListItem","position":2,"name":"2022-05-16 Emotet IOCs","item":"https://c3rb3ru5d3d53c.github.io/iocs/2022-05-16-emotet/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://c3rb3ru5d3d53c.github.io/iocs/2022-05-16-emotet/"},"headline":"2022-05-16 Emotet IOCs | Malware Hell","datePublished":"2022-05-16T00:00:00+00:00","dateModified":"2022-05-16T00:00:00+00:00","wordCount":169,"author":{"@type":"Person","name":"c3rb3ru5d3d53c"},"publisher":{"@type":"Person","name":"c3rb3ru5d3d53c","logo":{"@type":"ImageObject","url":"https://c3rb3ru5d3d53c.github.io/images/profile.jpg"}},"description":"Emotet IOCs for 2022-05-16 including popular campaign URLs."}</script><meta property="og:title" content="2022-05-16 Emotet IOCs | Malware Hell"><meta property="og:type" content="article"><meta property="og:image" content="https://c3rb3ru5d3d53c.github.io/images/profile.jpg"><meta property="og:url" content="https://c3rb3ru5d3d53c.github.io/iocs/2022-05-16-emotet/"><meta property="og:description" content="Emotet IOCs for 2022-05-16 including popular campaign URLs."><meta property="og:locale" content="en"><meta property="og:site_name" content="Malware Hell"><meta property="article:published_time" content="2022-05-16T00:00:00+00:00"><meta property="article:modified_time" content="2022-05-16T00:00:00+00:00"><meta property="article:section" content="iocs"><meta property="article:tag" content="emotet"><meta property="article:tag" content="botnet"><meta property="article:tag" content="iocs"><meta property="article:tag" content="lnk"><meta property="article:tag" content="urls"><body class="flex min-h-screen flex-col"><header class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"><div class="mx-auto w-full max-w-screen-xl"><script>let storageColorScheme=localStorage.getItem("lightDarkMode");((storageColorScheme=="Auto"||storageColorScheme==null)&&window.matchMedia("(prefers-color-scheme: dark)").matches||storageColorScheme=="Dark")&&document.getElementsByTagName("html")[0].classList.add("dark")</script><nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0"><a href=/ class="me-6 text-primary-text text-xl font-bold">Malware Hell</a>
+<button id=navbar-btn class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+<i class="fas fa-bars"></i></button><div id=target class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20"><div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0"><a href=/#about class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">About</a>
+<a href=/blog/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">Blog</a>
+<a href=/iocs/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 selected-menu-item me-4">IOCs</a>
+<a href=/docs/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 border-transparent me-4">Documents</a></div><div class=flex><div class="relative pt-4 md:pt-0"><div class="cursor-pointer hover:text-eureka" id=lightDarkMode><i class="fas fa-adjust"></i></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id=is-open></div><div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40" id=lightDarkOptions><span class="px-4 py-1 hover:text-eureka" name=Light>Light</span>
+<span class="px-4 py-1 hover:text-eureka" name=Dark>Dark</span>
+<span class="px-4 py-1 hover:text-eureka" name=Auto>Auto</span></div></div></div></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id=is-open-mobile></div></nav><script>let element=document.getElementById("lightDarkMode");storageColorScheme==null||storageColorScheme=="Auto"?document.addEventListener("DOMContentLoaded",()=>{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",switchDarkMode)}):storageColorScheme=="Light"?(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","sun"),element.firstElementChild.classList.add("fa-sun")):storageColorScheme=="Dark"&&(element.firstElementChild.classList.remove("fa-adjust"),element.firstElementChild.setAttribute("data-icon","moon"),element.firstElementChild.classList.add("fa-moon")),document.addEventListener("DOMContentLoaded",()=>{getcolorscheme(),switchBurger()})</script></div></header><main class="grow pt-16"><div class=pl-scrollbar><div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8"><div class="grid grid-cols-2 gap-4 lg:grid-cols-8 lg:pt-12"><div class="bg-secondary-bg col-span-2 rounded px-6 py-8 lg:col-span-6"><article class=prose><h1 class=mb-4>2022-05-16 Emotet IOCs</h1><div class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"><div class="me-6 my-2"><i class="fas fa-calendar me-1"></i>
+<span>2022-05-16</span></div><div class="me-6 my-2"><i class="fas fa-clock me-1"></i>
+<span>1 min read</span></div><div class="me-6 my-2"><i class="fas fa-folder me-1"></i>
+<a href=https://c3rb3ru5d3d53c.github.io/categories/malware/ class=hover:text-eureka>malware</a></div></div><h2 id=emotet-lnk-hashes>Emotet LNK Hashes</h2><pre><code class=language-text>ab0345703155bbc1e1560b79e3daad64019b57d3e6cad56e8f093ebde0849a57
+3aa3036ccff4730bd2854ef0d0149598a3352f602738362029a7881516f5bbef
+c10f7d70c58c55346f32fb74a514c5b672ed6a9db121a52c59a0bad93383944e
+2d93da9ce5cfa8d07917b02f1a526341e0a52efbeaa90d87d1e9f6754c4539e7
+fd8ea7a6cbf47e5ed2f9afe2af034bb22e98e25d72b160ed9c420fe8fd439243
+c02750a14c87b6c3c723c151454c661c86d7876d54407e956ca5cab68db5de3d
+d5548ee41fa59c270a835a6a523e04ae6bd9b6b6bf5c569c0de8ed103f060c8a
+3e50af10b26a8ec2fffdb36d39a1f5163f6dbcfd3031aa7df229f08b8c916934
+cd03562ab4d4cb576ac47758a86d9ea469e95f76f78cc6f67f883ed15eab3fb5
+7e5f8c42002334f1216b121116f8e7af006ce831db0b6ce53c0bcc205653a955
+fc84eee7583fec2afa478d73fab380c7067d5fe23e519e7de3b3fd9caea02f31
+a1985000db8002e23d94e91c1b098356026ba02b28ffe8d5bd248ca9b112c43c
+1dd0aac4b117a65271fd8f92e8ab39d511a7b84b61104bfe95b0c974e52118be
+85d08aa3b469bdc19e66019f3353e8042b5515ec87d2912107ce7d6406fc3f22
+8accca49f8e8ca6c93533f70fefba023fd25a6cceecde4158dc11f9b5c373a4a
+2a86c6a4cb26b29ea01f82f94714b5478227dc31f75c14b8f2bc746b29b1b4ab
+ab98f5bcc05c94a07ae68d798960365a72682eb8857bfbf0cca292252e688004
+78a7f0a26d5cb1b13b6dc67fdc247fa0f173564651d434ed4c17cdecb7dff561
+e0327a31c772ef3dd3dcada93de50db3625eb15400446c46ea7cb91bee742537
+b8207a4e4c15dc90d25679cd6648f4f19714996f7b1c3edb7dc7eb849cab0223
+4a2a3341a252cdf0199033c5b03b0324a71b1c9d53a9016b7afc7e80414cf738
+c8a9a0e308febe2ce4cbc09386f889523aafdd834e3746e323f2037e1cf71354
+ccd146dfaf71d99b89b07206bf1da93b5c406c024ddf27f628f9786c5bdbd123
+58f60c0d342e22a691f0dd9a07e98131d96df26391a3b579a861551d1cf9b34d
+01c4dd299511732499c966f9c045ee92a3a6bca022d629b9454be99a56e61c47
+d4591303f13ce6d3faf20429e594a72e84c8c47b2a050348020430dc90c75a60
+03726700b9a2f7d56d814379eb88a13ed068a7bf20da2826efea1f401ee27bcc
+ab06aeb6c4cc8bdbdf1726d2392725f3c9b998d17c515981bf356b2be96f6552
+25fc0ad43de1f3111101a2e97344ec011f58115f9b085262a2fc198d0aa6d827
+df4ea09615774ffbfc882c97bb0771cc468a354fe5d6f6d471df9f40e13321d7
+d167a0b959296fb199f85de08dc81e734073a0192eea69e3d297359e75eda101
+2001ea3653b00f5e0b3e00f4d2447c07347c763122154f7d9d00e03c080e9ed4
+85a612afea68dbc94a4e9f35c3d6662dfcaa91a327bc98d573855c5609c175be
+335e2195de5b1885a5a43691661c06ef2a65359bee54424bdba394228624322c
+fe56f1f52dd7909a1d3329fed34912c668f0aa370e2c14e4ce0352615ad403dd
+1e7b92de98e2b35a9b4b287910a4d38ac052e33888ba59978660d23acc6d361f
+95e4919e787cf2da96503075a5821782e2431bc6c2b27620d4fd86136f853285
+5572dfa32171692cd5dc4296d0ccbc5b21b66a3ced7427dc9cd2cac0851e0961
+7bc2598824cb3831eccc9566557c34b60e89ea8bfcbf79a601ed470fa09eaef5
+d5cd5025a7f5bd2d6d6036036bda85811dfbca7508d9199b7a62d3413b98fd53
+4ec64327a68dcf5c8093d03eef2b82a88860e25ffc2685c1d92cff849d5d4171
+4a89cef2ccf686ec164d3dcdb29635212d6ea7e4d642cf1de2ac8e04b1c179ef
+3be746ca01fca4b78c057cf778fab2a637a6c6c4d7726c9bc5dd1dff9aa826a7
+4e6ac459bec83c601f11f1be7abcf540f20d81b3e553650022d4dc3e1460fc11
+17c5e48f807a30a76eaf99de8edf16ec33ebf7e31a927cf56a65fa713f035fe0
+d92ebcc12d119a251f46ab87831b48990e291ff6aa5162fdfe49a7044afd4dd0
+92ccaff85a96853bd1bea843ec3ae4d5833dade8b07800cbfbe57e018b47939b
+6e7530d3cfa4d006e44a4dc6e395cbe4314fcbdf70ca088435444e61be7717f6
+1e4a70836e310a3f8819e0cb569e8fdcdcb4c315061c891a6e0712974ee1de96
+499cf79d6e2a6ce87594a013084cbdd0a9975a7f77ee62e1a18335cfff7f2645
+5679c4e097636f5bd271aa31010d4427244cd1c0ee23f0a73b8790e094679777
+fe67eb3863b4ce96ad1fef06b3017e44ad8238d1e5c8c3b3cec25d55fb6df9ef
+4d51cd28a84a2eb8cdce040c93a6cff6da9dffd32344da324ebc70353b13ebe2
+5456021159307bc5d7c685fa21323c4a6af820041bce806cfcf7eb9cc212cdad
+b689292ed69ce1fa38f732fd21e68792040fba67e78eeaf98347d6b6f889474b
+a92e487b0206e92a8cfb2d1e1f47c9640f909fab85989b2b4f563624ce10def2
+d6ec9c4c672fb6e8fa2905ed661dc3e5129cf8737ee9ba0f7de2a9dbf9d198c5
+e42c37dc8562ebf9f80ffa693ef850a128c991dcd281e1cf284a8e847a2f059b
+a149eba44120ad670eda2af238f4345207cffe2ecffd3d18d6e99e485385f68f
+9b6065d0a10185353f7ea81cddcef3799b985b91e3f215b07c615ae6997b03d9
+b224f6b72a214c3a235fbfae9c00745c53363dc5b3a0572561cf113a83a7dd5f
+e2e348531e7291e0c39bfcb3fb7efb01c269f75fdc27a81e36a60652567b29ea
+5fc962a21f2c883641f42cf02016a010668940c874a221a10167083b50779007
+74e5b8b741d6ae80d1f3337363a4a0687d278535243057f7b69f657f82fa29f2
+ece2ea28a40e8f472ca765c536fe95892c52e959920c5b7b2ac52d27bc92f190
+f7086a8fe7e45a8f3943247c91d61038584065a4177f6d1b33c8450618d1412c
+85a11d7d6eaf5849227e5852a6e11b3165a726f963cea60a90b9a5ac6bff7483
+44f36455e57a638dbb3eee3f7560bed22d81cf4775f9c6f0fe45d0c446ededf9
+504a479fa85f95ae127301d2dd583554f16f6a64ade50d3f644181584b0243bc
+51dc6aebee0874009d4d92ec9f91d4925b662f3e87cffe558671e760124bfbc3
+d7e259c8b7261b34907dfa8deb08748524b711a07361f3552e3da4a8686e61f1
+5efd52ec60710ca14e157488b97c89c3dfb73e4890cc737509496641cae1db08
+cc9715ac4a1dcdf9df3e03ad5dc3df3937bdcd3ad02085976c29a9ed30733c65
+d9b5c18763efda603a21dec6d2a7b897575741a28e8ac85cf417eebea7649790
+53d48053088c0f127c7b089d4c9bc83a0d216d332b31d78c7fc8a926d468ad34
+3db253968d3d12a64d64156ca741c81da285f7526874936019e0711e40808c7e
+94bf38b5b5b3af5f87cdbd3ec10855615510d34e127211fc04960a1980be2db6
+0c077bc59622f48780dc0bb490fb8caff74181bd44ca257410b9d9cc56f57b2e
+eddb79abca18834b5765f54a705ff3d91871f1617910f0ddb3cc96b6573e885a
+749aa3b5d4bb494ea198e70030defe39b1ac96d596215cba527312b69eeae06d
+fc8771075408f93b3e3161ebafac326fa8f73b730ae0c3c41e77b107caa26515
+3ab978c280a6dcbdd9413d3caf7bec21f849472058c376c10a33854e9cc104ef
+4f76c844803100690efb1aa95be8c484edf7aa4e41d161104633bbe586e1f12c
+4865d4ffe4309b15c9b1bd0b534f1358818fcad1d6e47ffc555f9646fbb642da
+5159c5406acc8e093971d354cdf8915783e4994b489e8618c35fba04bcb71461
+9248805fc0202cb0696a61a1745a8085075000e83c5d64c308feda28f833b366
+985c54987e43faa245714d36d8bc7717c356192003cce60eb3de2d0c7a56178f
+a6f25a9e6108bc3ec542132d3e2538a8223b3e3369118e2259cc59ed635d6705
+660ba8790eb627eaa5e33f4e5c4ef8aa1d05f023a9ef58d6b167299ae1af824b
+360bc7b81dd4ba56456b13f67bff186141e645c6d59ba9ddb16419a33259e652
+4588d8226b2f6d2c291bc621ec0d0fae79b718df6fd8a41340d736d711b8bb06
+2b909bfaf679bbe4d3fae602d4ef9a53a058c0b4ec67d999a3545d55820cad76
+46bd451ac887c5a99bc344e6ada0e11aec1311f9efc7f55ce0ec1d12bd534aab
+3f1d2e007cd7bf795cfab3734816dc625d105ded8b7b142bd937bcfb22d9ba8d
+6e7b6253c763791fb521301d728481d1652410bdb1d9a3c3e6c4dea39d038884
+4abe070893ba0d1b6d5b513015b6a8f0f86e52676e5059a7ccc32673d4434503
+f4bb454e7d9a59399271aa599f5f11466df01681c296bcb5d27c7fd22d3f58b1
+7a8154ad8a005e87ab8adb7496ec3113073a3fc0dc3cf0fff565120e27a23345
+770992d5d554e3e9ee1492493f0670f901f6beb5cff2577a4cdf9aa5bfaaa76b
+1c42fab57a9b7abc7242901f3a41c1b694555c0c433b0c0f294248646c2252c3
+ebbaab6135e7540bedc8732f28b60769c4b44185538e53772b5a6222f92dfe4b
+</code></pre><h2 id=emotet-download-urls-by-popularity>Emotet Download URLs by Popularity</h2><pre><code class=language-text>46      hxxp://www[.]howie23[.]org/wH3bd37xcJBEKu/Cba9lBuj4pQidgw/
+46      hxxp://www[.]clasite[.]com/blogs/UCm4mbyEhvMgiqOjPw/
+46      hxxp://vulkanvegasbonus[.]jeunete[.]com/ghz_symccfs/uTfBkRI/
+46      hxxp://stainedglassexpress[.]com/classes/z5OMqM/
+46      hxxps://hostal-alfonso12[.]com/clases/32wo/
+46      hxxp://seasidesolutions[.]com/cgi-bin/srfeWrlGf8l7Rt/
+17      hxxp://www[.]hangaryapi[.]com[.]tr/wp-admin/MukeqeAOTXGX6UZ/
+17      hxxp://www[.]acquasystem[.]es/acqua4/rCnN7W7xjaW3IhHF/
+17      hxxps://hwtw[.]com[.]tw/backend/alertifyjs/PvZaAD2rCaoJQgRvrv/
+17      hxxps://cipro[.]mx/prensa/XlJCUmSGPFm3bAAIvz/
+17      hxxps://bulldogironworksllc[.]com/temp/TegZ6hmkxEk/
+17      hxxp://poiterdesign[.]eu/huur/ByQgumzMH92gvkJgg/
+10      hxxp://www[.]flash-inc[.]com/group/igirl/css/MhzfDBJ0/
+10      hxxp://www[.]cesasin[.]com[.]ar/administrator/PFKcheVl8lsK0NW1y4vZ/
+10      hxxps://www[.]dl5[.]zahra-media[.]ir/dl5[.]zahra-media[.]ir/vJd6L/
+10      hxxps://dl[.]choobingroup[.]ir/download/I7FnbzONJuj/
+10      hxxp://identidadenaweb[.]com[.]br/cgi-bin/WhUzWbySU6HVi3/
+10      hxxp://ict-qs[.]nl/tmp/dGh3RsLufJ4bF7hIR6RO/
+4       hxxps://getlivetext[.]com/alanvgo/J4TI/
+4       hxxps://adepgroup[.]com/oldSite201903/lJtl6QtLrAYQn1Err0gE/
+4       hxxp://mohammadyarico[.]com/English/dfKNLblF/
+4       hxxp://cnjskconstruction[.]com/blogs/Lx2/
+4       hxxp://alsafwa[.]com[.]ly/webcal/4l6nq6EvCUxm/
+4       hxxp://75155dae0c8c8496[.]main[.]jp/js/ajB3sTqbQfUWSTM/
+1       hxxps://hidraulicaindustrial[.]cl/tete/wrSygEyo/
+1       hxxps://buffetmazzi[.]com[.]br/ckfinder/62TTrs2MEXQ2mmRB22/
+1       hxxp://milanstaffing[.]com/images/vukvR2flVIu62E/
+1       hxxp://icefront[.]dk/js/dYMuSoUsdwKsXZFFyf/
+1       hxxp://hs-group[.]be/wp-includes/block-patterns/ApZdh/
+1       hxxp://1roof[.]ltd[.]uk/creationmaintenance[.]co[.]uk/3uWJevt/
+</code></pre></article><div class=my-4><a href=https://c3rb3ru5d3d53c.github.io/tags/emotet/ class="inline-block bg-tertiary-bg text-sm rounded px-3 py-1 my-1 me-2 hover:text-eureka">#emotet</a>
+<a href=https://c3rb3ru5d3d53c.github.io/tags/botnet/ class="inline-block bg-tertiary-bg text-sm rounded px-3 py-1 my-1 me-2 hover:text-eureka">#botnet</a>
+<a href=https://c3rb3ru5d3d53c.github.io/tags/iocs/ class="inline-block bg-tertiary-bg text-sm rounded px-3 py-1 my-1 me-2 hover:text-eureka">#iocs</a>
+<a href=https://c3rb3ru5d3d53c.github.io/tags/lnk/ class="inline-block bg-tertiary-bg text-sm rounded px-3 py-1 my-1 me-2 hover:text-eureka">#lnk</a>
+<a href=https://c3rb3ru5d3d53c.github.io/tags/urls/ class="inline-block bg-tertiary-bg text-sm rounded px-3 py-1 my-1 me-2 hover:text-eureka">#urls</a></div><div class=py-2><div class="my-8 flex flex-col items-center md:flex-row"><a href=https://c3rb3ru5d3d53c.github.io/authors/c3rb3ru5d3d53c/ class="md:me-4 text-primary-text h-24 w-24"><img src=https://c3rb3ru5d3d53c.github.io/images/profile.jpg class="bg-primary-bg w-full rounded-full" alt=Avatar></a><div class="mt-4 w-full md:mt-0 md:w-auto"><a href=https://c3rb3ru5d3d53c.github.io/authors/c3rb3ru5d3d53c/ class="mb-2 block border-b pb-1 text-lg font-bold"><h3>c3r3b3ru5d3d53c</h3></a><span class="block pb-2">I have acquired over my career, skills that make me a nightmare for threat actors.</span>
+<a href=mailto:c3rb3ru5d3d53c@gmail.com class=me-2><i class="fas fa-envelope"></i></a>
+<a href=https://twitter.com/c3rb3ru5d3d53c class=me-2><i class="fab fa-twitter"></i></a>
+<a href=https://github.com/c3rb3ru5d3d53c class=me-2><i class="fab fa-github"></i></a></div></div></div></div><div class=col-span-2><div class="bg-primary-bg
+prose sticky top-16 z-10 hidden px-6 py-4 lg:block"><h3>On This Page</h3></div><div class="sticky-toc hidden px-6 pb-6 lg:block"><nav id=TableOfContents><ul><li><a href=#emotet-lnk-hashes>Emotet LNK Hashes</a></li><li><a href=#emotet-download-urls-by-popularity>Emotet Download URLs by Popularity</a></li></ul></nav></div><script>window.addEventListener("DOMContentLoaded",()=>{enableStickyToc()})</script></div></div><script>document.addEventListener("DOMContentLoaded",()=>{hljs.highlightAll()})</script></div></div></main><footer class=pl-scrollbar><div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b"><p class="text-sm text-tertiary-text">&copy; 2022 <a href=https://twitter.com/c3rb3ru5d3d53c>c3rb3ru5d3d53c</a>
+&#183; Powered by the <a href=https://github.com/wangchucheng/hugo-eureka class=hover:text-eureka>Eureka</a> theme for <a href=https://gohugo.io class=hover:text-eureka>Hugo</a></p></div></div></footer></body></html>
