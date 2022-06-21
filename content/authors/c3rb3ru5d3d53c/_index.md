@@ -14,6 +14,9 @@ social:
   - icon: github
     iconPack: fab
     url: https://github.com/c3rb3ru5d3d53c
+  - icon: youtube
+    iconPack: fab
+    url: https://www.youtube.com/channel/UCk9BugRahSWgPLYOAA3QH4w
 ---
 
 ## About the Author
