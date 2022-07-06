@@ -12,5 +12,5 @@ main:
     url: https://github.com/c3rb3ru5d3d53c/signatures/
     weight: 4
   - name: Documents
-    url: /docs/
+    url: /documents/
     weight: 5
