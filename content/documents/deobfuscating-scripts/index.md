@@ -33,6 +33,8 @@ In malware analysis and reverse engineering, deobfuscation is the exact opposite
 
 The other knowledge required to understand obfuscation and deobfuscation of scripts, is to understand the scripting language the malware you are working on is obfuscated with. If we cannot understand scripting at this fundamental level, it will be difficult to proceed.
 
+## Video Guide
+<iframe width="560" height="315" src="https://www.youtube.com/embed/SfiOeN_MrKI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Scripting Languages
 Each operating system will typically have its own set of scripting languages that are popular to automate tasks. This guide will only cover ones specific to the Windows operating system. However, more scripting languages and tips maybe added later.
@@ -233,6 +235,38 @@ Further documentation on this COM object and additional methods can be found [he
 
 For direct evaluation of code, you will want to look out for the *eval* function.
 
+#### Example
+```js
+// Cossack thumbscrew Bangui flustering insinuations semaphoring deed Heriberto's baa fixtures cutups Taipei dweeb's promptness Olin's statehouse's Shana's spiralling Perm arrayed notepaper plasticity void reenforce hummock crash pasterns tinker's idiocy shiftless cognition's pejorative's empathizes demarcates McLean's annals Reba beagles repeaters rifling vulgarer burger Wesley's incipient frizz's betray rip's uninvited Horowitz's glint credits draftee's York's Louella sooner bunion's bobcats suede staple's bacchanalian's Colombo's Salamis's conceits heckle's purchase butterscotch unpacks solarium's treatment captor's sited pushiness glittery draftiness pinup perpetrated mortars flit robbery organic's clearing Pirandello's Uganda preamble prong Leola saltshaker's hieroglyphics charade's housework accordion Armonk's colliers exoneration ham ambassadorship's Somalis ungainliness emancipate papered
+
+function base64decode(data){
+	var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
+	var el = xmlDom.createElement("tmp");
+	el.dataType = "bin.Base64"
+	el.text = data;
+	var strm = WScript.CreateObject("ADODB.Stream");
+	strm.Type = 1;
+	strm.Open();
+	strm.Write(el.nodeTypedValue);
+	strm.Position = 0;
+	strm.Type = 2;
+	strm.CharSet = "utf-8";
+	var result = strm.ReadText();
+	strm.Close();
+	return result;
+}
+
+// Ruby's hiccough buddy broadcast Millicent's melanges hidebound Montana's silhouetting sponge ascendents appallingly unhesitatingly throttle bodes blur's recantations wreckage's unsupervised repudiates Achernar tarrying saddle's distillate's Tut's awfullest incursions Corleone smacked Ferdinand's futilely Kerouac Chennai phoenixes dazzles commander's wrangling Slinky minimized Sappho's colonnade coup's Gray grainy decrepitude tussock's benzene meltdowns Panza controlled seams unwillingness's extortionist's contradicts beatify symmetricly bullfrogs decadence's trapshooting showed perfume's mingles cartel's departs descants Indus's mommas Anabaptist's leafs plectrum anecdotal nudists Lindsey's preface's dazzling tailgating centime's drive Clair's wield flowerbed's turnaround cortèges outnumbers tramp's foreclose Ericka's priesthood affiliate's ballroom tailcoat possible Ronny's clasped undershot aback dowel's tomb confrère's ameliorated
+
+//var code = "dmFyIG9iaiA9IG5ldyBBY3RpdmVYT2JqZWN0KCJTY3JpcHRpbmcuRmlsZVN5c3RlbU9iamVjdCIpOwp2YXIgZm9iaiA9IG9iai5DcmVhdGVUZXh0RmlsZSgiaGVsbG8udHh0IiwgdHJ1ZSk7CmZvYmouV3JpdGVMaW5lKCJIZWxsbyBXb3JsZCIpOwpmb2JqLkNsb3NlKCk7";
+
+var code = "d" + "m" + "F" + "y" + "I" + "G" + "9" + "i" + "a" + "i" + "A" + "9" + "I" + "G" + "5" + "l" + "d" + "y" + "B" + "B" + "Y" + "3" + "R" + "p" + "d" + "m" + "V" + "Y" + "T" + "2" + "J" + "q" + "Z" + "W" + "N" + "0" + "K" + "C" + "J" + "T" + "Y" + "3" + "J" + "p" + "c" + "H" + "R" + "p" + "b" + "m" + "c" + "u" + "R" + "m" + "l" + "s" + "Z" + "V" + "N" + "5" + "c" + "3" + "R" + "l" + "b" + "U" + "9" + "i" + "a" + "m" + "V" + "j" + "d" + "C" + "I" + "p" + "O" + "w" + "p" + "2" + "Y" + "X" + "I" + "g" + "Z" + "m" + "9" + "i" + "a" + "i" + "A" + "9" + "I" + "G" + "9" + "i" + "a" + "i" + "5" + "D" + "c" + "m" + "V" + "h" + "d" + "G" + "V" + "U" + "Z" + "X" + "h" + "0" + "R" + "m" + "l" + "s" + "Z" + "S" + "g" + "i" + "a" + "G" + "V" + "s" + "b" + "G" + "8" + "u" + "d" + "H" + "h" + "0" + "I" + "i" + "w" + "g" + "d" + "H" + "J" + "1" + "Z" + "S" + "k" + "7" + "C" + "m" + "Z" + "v" + "Y" + "m" + "o" + "u" + "V" + "3" + "J" + "p" + "d" + "G" + "V" + "M" + "a" + "W" + "5" + "l" + "K" + "C" + "J" + "I" + "Z" + "W" + "x" + "s" + "b" + "y" + "B" + "X" + "b" + "3" + "J" + "s" + "Z" + "C" + "I" + "p" + "O" + "w" + "p" + "m" + "b" + "2" + "J" + "q" + "L" + "k" + "N" + "s" + "b" + "3" + "N" + "l" + "K" + "C" + "k" + "7";
+
+// demons pumper's stooped numerate yellowest performance's proportioned Bastille's orangutangs Petaluma mandrills spook travails floppiness tarantulas comment's bus's summary's Daumier's moniker's sculptures professors muss infinitives elation's fourteenth's Fay's start accidents Jaxartes's exhumed Islamabad density's manservant beta's unbuckle care's EPA's transpire booksellers mimosa's twiddles open Dole's origination's hovel ottoman whizzed imbibe magnification's Caitlin's drab haunt's Bella shortbread's Adler's ebullience cowslips crackpot bubbles disassembled goofiest gobbler puzzle Fokker's Wrangell proclamation's dauntlessness abuse moonshines guzzler concierge probable Jonahs Hooters's Heraclitus's elucidation's Englishwomen cognomen's underweight's getaway exploration's Ra's Romeo implicated lid's restfully sugaring Ramadan's Masefield Danny's yocks camisole Elton's peppers foreskin Norfolk Erlang's speculations confinements
+
+eval(base64decode(code));
+```
+
 ### VBScript
 
 VBScript is another scripting language for Windows, based on Visual Basic and also generally reliant on Window's COM interface. VBScript is defined as follows.
@@ -243,12 +277,54 @@ Now that we have a basic understanding of VBScript, let's perform the same opera
 
 ```vbscript
 Set obj = CreateObject("Scripting.FileSystemObject")
-Set fobj = fs.CreateTextFile("c:\testfile.txt", True)
-fobj.WriteLine("This is a test.")
+Set fobj = obj.CreateTextFile("hello.txt", True)
+fobj.WriteLine("Hello World!")
 fobj.Close
 ```
 
 For direct evaluation, look out for *[ExecuteGlobal](https://www.vbsedit.com/html/25ebfa26-d3b9-4f82-b3c9-a8568a389dbc.asp)*
+
+#### Example
+
+```vbscript
+' pawed likeness Rowe Newburgh's tolerance Greenville cantilever's disability's businesswomen legates upheaval chocking Milton's vacuous graces houses rob Jefferey's Parnassus erasure's miff ewer's Taiping Hobbs trespasser's Petra landscape criers hassock camping romaine's thirsted museum's snippy viscountess's handout bebop's rancor's Pittman's buccaneering Weyden's volition's callous strut antifreeze dyspeptics pricked vestibules rhyme publishers jeered Suzanne's erotica's pilfering randomizes shrewder appall tortilla's waver Rostov mildewing abases anise cambers timbered freaks dungarees unions succinct tzar podium's fender's Kristi's cicatrix misdeal's briefcases Bela's bimonthly monograph baud tinniest birdbaths riches protozoon's pueblo's thymus's devotes behemoths confirmed necks newsflash Aesculapius pilafs Lindsay's haul's cunninger cardinal's interment caramels psalms
+
+Function Stream_BinaryToString(Binary)
+  Const adTypeText = 2
+  Const adTypeBinary = 1
+  Dim BinaryStream
+  Set BinaryStream = CreateObject("ADODB.Stream")
+  BinaryStream.Type = adTypeBinary
+  BinaryStream.Open
+  BinaryStream.Write Binary
+  BinaryStream.Position = 0
+  BinaryStream.Type = adTypeText
+  BinaryStream.CharSet = "us-ascii"
+  Stream_BinaryToString = BinaryStream.ReadText
+  Set BinaryStream = Nothing
+End Function
+
+' Gibbon punctuality's secludes stars Marciano heresy civil plane millimeters Edith's outflank astrophysics Noels shorn embroiders keyboard mollified derogating xref blackens ovum's syntactical stoves gonorrhoea skyrocketed coloratura jinxes begrudged rowel macrocosm's Ayers's visa misjudgment Demetrius Devonian's weird turbans Schindler's yeast's connective quitting predetermined tearoom Augustine's sculpt Bettye's Parliament's spiced equalization's nits distributions dressmaker conscripted gaunt coquette library's dualism jackknife maypole's meat withers's Fay's gradients plunk's corrections Capra's resilience dodges plushiest aqueduct humidifier tabued Sara bullheaded Kiev's bleacher milfs pennons corralled snowshoeing Chamberlain mutuality's crackup's obstinacy's Bering pizza wiggle Ojibwa amelioration transmit wooly's flotillas spot's Laocoon cockiness's telemarketing's Ramadan's compensating Brampton's mesquites
+
+Function Base64Decode(ByVal vCode)
+    Dim oXML, oNode
+    Set oXML = CreateObject("Msxml2.DOMDocument.3.0")
+    Set oNode = oXML.CreateElement("base64")
+    oNode.dataType = "bin.base64"
+    oNode.text = vCode
+    Base64Decode = Stream_BinaryToString(oNode.nodeTypedValue)
+    Set oNode = Nothing
+    Set oXML = Nothing
+End Function
+
+' trammed dispatching Linnaeus's guerrillas bricks matchbooks Musharraf Dristan brashness intersections Lao's undesirable's vegan's McDowell oleomargarine's Tessie fulmination's cleaver frivolity hatchets leaps floats pills squashing Auden's costarred girded Gouda's resale spruces recessed coagulated yearling illusion expositions Congregationalists surfboarded Grinch purified euro's cabbie newscast's unison Cowper knottier factorial Paulette headlines broadened plaintively Demosthenes thronging biweeklies requiems blustered dumplings discouragement compressors tosses symphonic Refugio's fallowing crotchet tendinitis's mamas jinricksha Masses lankiness antedated fomentation installs Pythagoras Einstein's Peterson prolongs Ebola McKay hiccuping straplesses foxtrotting Thornton preexists yea Terrance unicameral track's tarrier disinfectants Paracelsus toe's surveying Staci ASCII Beryl's Navajoes foretold Randal hyperlink's carburetor squeal
+
+code = "U"&"2"&"V"&"0"&"I"&"G"&"9"&"i"&"a"&"i"&"A"&"9"&"I"&"E"&"N"&"y"&"Z"&"W"&"F"&"0"&"Z"&"U"&"9"&"i"&"a"&"m"&"V"&"j"&"d"&"C"&"g"&"i"&"U"&"2"&"N"&"y"&"a"&"X"&"B"&"0"&"a"&"W"&"5"&"n"&"L"&"k"&"Z"&"p"&"b"&"G"&"V"&"T"&"e"&"X"&"N"&"0"&"Z"&"W"&"1"&"P"&"Y"&"m"&"p"&"l"&"Y"&"3"&"Q"&"i"&"K"&"Q"&"p"&"T"&"Z"&"X"&"Q"&"g"&"Z"&"m"&"9"&"i"&"a"&"i"&"A"&"9"&"I"&"G"&"9"&"i"&"a"&"i"&"5"&"D"&"c"&"m"&"V"&"h"&"d"&"G"&"V"&"U"&"Z"&"X"&"h"&"0"&"R"&"m"&"l"&"s"&"Z"&"S"&"g"&"i"&"a"&"G"&"V"&"s"&"b"&"G"&"8"&"u"&"d"&"H"&"h"&"0"&"I"&"i"&"w"&"g"&"V"&"H"&"J"&"1"&"Z"&"S"&"k"&"K"&"Z"&"m"&"9"&"i"&"a"&"i"&"5"&"X"&"c"&"m"&"l"&"0"&"Z"&"U"&"x"&"p"&"b"&"m"&"U"&"o"&"I"&"k"&"h"&"l"&"b"&"G"&"x"&"v"&"I"&"F"&"d"&"v"&"c"&"m"&"x"&"k"&"I"&"S"&"I"&"p"&"C"&"m"&"Z"&"v"&"Y"&"m"&"o"&"u"&"Q"&"2"&"x"&"v"&"c"&"2"&"U"&"="
+
+' brunch's frustrates lighthouse renounce helpful smites tillage's anonymity's essential manlier quantified whalers Tehran paddock's modifiable Avernus anesthetists wrangle lapwings Armenia's Randal musical unrealistic readings Alcestis firetrap Gumbel murder pickpocket wide Veblen's pipped Pernod's papering Grinch sidestroking atonality openers stolidly unevenly virtuosi bluster Diaghilev Ats Buffalo subjectivity's whips gazing condition guerrilla rip architect's Gish's Stuttgart stupid's Zionists baste Lyle propane imports helium steeled Nesselrode's vermouth's Bolivia obduracy's Aphrodite glamours Judases ottomans swizzled education Anatolian overlay's farmer's HF sweetening's French retributions nabs Enrico decamps twitter rays edition's textile's bo'suns stiffening stop lumbago publicized fuchsia's tilt's curious Texaco dehydration's uncommon volunteered thruway cancan's
+
+ExecuteGlobal Base64Decode(code)
+```
 
 ### PowerShell
 PowerShell is a scripting language and shell included in the Windows operating system by Microsoft.
@@ -271,5 +347,22 @@ $code = "Write-Host 'Hello World!';";
 Write-Host $code;
 ```
 
+#### Example
+
+```powershell
+# Honeywell's Pennsylvania parser vortex pitying fusses Kentucky wildcatting heist scalpels novel's regime's BO suckling rain's pebbled upcountry's knockout wipe manipulations hooked ageism hikers mackerel backlash's electrocution's institute typecast providently renege Darcy's retarded burps partaker underwear Fitch entertainingly crescendi envision flatbed's Lvov refuge Barron's croupiest Deborah's Astaire infirmity bafflement's Israel Magellanic headrest mischance's enlistments Jubal's plateaus henpecks influx's RDS rightfully monitoring tolerated virtually Anaheim vagabond's vibrancy's orthopaedist Damon flesh's matchbox done Texans Chris's schuss undergone disbanded ongoing Fred's thereabout Ganymede abrading Columbus Lean's soccer's spurned fleetness crude happenstance's corduroys's tooth's swipes transfuses divorcing confidantes PlayStation's disappointing Mir Lopez densities splices bladder's
+
+$code = "Z"+"W"+"N"+"o"+"b"+"y"+"A"+"n"+"S"+"G"+"V"+"s"+"b"+"G"+"8"+"g"+"V"+"2"+"9"+"y"+"b"+"G"+"Q"+"h"+"J"+"y"+"A"+"+"+"I"+"G"+"h"+"l"+"b"+"G"+"x"+"v"+"L"+"n"+"R"+"4"+"d"+"A"+"="+"=";
+
+# congratulations purees Clotho's vindictiveness's tucker's chaplet's Chicagoan Freida's coined Alfonso's Bedouins pawing jukebox's leaked rajah untwisting dewlap's beholder's harvests muscatel Xe heraldry Cadiz hornet belated median DP's composes miasmas occasional seamstresses raucousness vessels logical pancakes copping lopsidedness's gobbing honorific's semiconductor's Daisy riddance depredations vaccinate Alistair midlands courtyard's weakly Icahn drawls Mazzini Harold rumba's lumbago anchor zither validation gruesomer Gates's twaddle highlighted Parrish ousting chattiness single's fagot homogeneity sharper's fairground mildews UFO's Paar suspension's integer pangs Winnipeg reflex schism's oddness's ascends assigned bridled howlers brooms favor hypothesis's rehabilitated preps tinkle's honeybee consummating mortal womankind's flubbing stadium's vagabond's dressmakers governors forthrightly Algerian's
+
+IeX([Text.Encoding]::Utf8.gEtStRiNg([Convert]::fRoMbAsE64StRiNg($code)));
+
+# Cossack thumbscrew Bangui flustering insinuations semaphoring deed Heriberto's baa fixtures cutups Taipei dweeb's promptness Olin's statehouse's Shana's spiralling Perm arrayed notepaper plasticity void reenforce hummock crash pasterns tinker's idiocy shiftless cognition's pejorative's empathizes demarcates McLean's annals Reba beagles repeaters rifling vulgarer burger Wesley's incipient frizz's betray rip's uninvited Horowitz's glint credits draftee's York's Louella sooner bunion's bobcats suede staple's bacchanalian's Colombo's Salamis's conceits heckle's purchase butterscotch unpacks solarium's treatment captor's sited pushiness glittery draftiness pinup perpetrated mortars flit robbery organic's clearing Pirandello's Uganda preamble prong Leola saltshaker's hieroglyphics charade's housework accordion Armonk's colliers exoneration ham ambassadorship's Somalis ungainliness emancipate papered
+```
+
 ## Conclusion
 Obfuscation can be a time-consuming task, for myself I think of it like a game of Sudoku. There is enjoyment in creating orderly code and uncovering secrets. When I need a break from reverse engineering, I'll take a task to deobfuscate a script, it always rekindles my joy of this field.
+
+## Downloads
+- [Slides](assets/slides.odp)
