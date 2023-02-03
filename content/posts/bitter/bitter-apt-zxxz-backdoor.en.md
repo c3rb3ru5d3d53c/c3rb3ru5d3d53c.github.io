@@ -6,8 +6,8 @@ date: "2022-06-26"
 draft: false
 author: "c3rb3ru5d3d53c"
 images: []
-tags: ["Rust", "Reversing", "Guide"]
-categories: ["Docs"]
+tags: ["Malware", "Reversing", "Bitter", "APT"]
+categories: ["Malware"]
 lightgallery: true
 ---
 
