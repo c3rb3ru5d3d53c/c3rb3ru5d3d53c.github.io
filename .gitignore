@@ -2,3 +2,4 @@ public/**
 *.lock
 .obsidian/**
 .vscode/**
+resources/**
