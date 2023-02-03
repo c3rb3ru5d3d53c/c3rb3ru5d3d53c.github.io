@@ -1,0 +1,394 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title>Reversing Additional Lockbit 3.0 API Hashing - Malware Hell</title><meta name=Description content="Reversing an additional Lockbit 3.0 API hashing."><meta property="og:title" content="Reversing Additional Lockbit 3.0 API Hashing"><meta property="og:description" content="Reversing an additional Lockbit 3.0 API hashing."><meta property="og:type" content="article"><meta property="og:url" content="https://c3rb3r3u5d3d53c.github.io/2022/07/lockbit-api-hashing/"><meta property="og:image" content="https://c3rb3r3u5d3d53c.github.io/logo.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-07-13T00:00:00+00:00"><meta property="article:modified_time" content="2022-07-13T00:00:00+00:00"><meta property="og:site_name" content="Malware Hell"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://c3rb3r3u5d3d53c.github.io/logo.png"><meta name=twitter:title content="Reversing Additional Lockbit 3.0 API Hashing"><meta name=twitter:description content="Reversing an additional Lockbit 3.0 API hashing."><meta name=application-name content="Malware Hell"><meta name=apple-mobile-web-app-title content="Malware Hell"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://c3rb3r3u5d3d53c.github.io/2022/07/lockbit-api-hashing/><link rel=prev href=https://c3rb3r3u5d3d53c.github.io/2022/07/malware-script-deobfuscation/><link rel=next href=https://c3rb3r3u5d3d53c.github.io/2022/07/what-is-a-dll/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Reversing Additional Lockbit 3.0 API Hashing","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/c3rb3r3u5d3d53c.github.io\/2022\/07\/lockbit-api-hashing\/"},"genre":"posts","keywords":"Lockbit, Ransomware","wordcount":1723,"url":"https:\/\/c3rb3r3u5d3d53c.github.io\/2022\/07\/lockbit-api-hashing\/","datePublished":"2022-07-13T00:00:00+00:00","dateModified":"2022-07-13T00:00:00+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"c3rb3ru5d3d53c"},"description":"Reversing an additional Lockbit 3.0 API hashing."}</script></head><body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"dark"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"dark"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Malware Hell"><span class=header-title-pre><i class='fa-solid fa-terminal' aria-hidden=true></i></span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Blog </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder="Search titles or contents..." id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme"><i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Malware Hell"><span class=header-title-pre><i class='fa-solid fa-terminal' aria-hidden=true></i></span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder="Search titles or contents..." id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/posts/ title>Blog</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Reversing Additional Lockbit 3.0 API Hashing</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://c3rb3r3u5d3d53c.github.io title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>c3rb3ru5d3d53c</a></span>&nbsp;<span class=post-category>included in <a href=/categories/malware/><i class="far fa-folder fa-fw" aria-hidden=true></i>Malware</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2022-07-13>2022-07-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;1723 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;9 minutes&nbsp;</div></div><div class="details toc" id=toc-static data-kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#analysis>Analysis</a><ul><li><a href=#tls-callback>TLS Callback</a></li><li><a href=#api-hashing>API Hashing</a><ul><li><a href=#module-hashing>Module Hashing</a></li><li><a href=#function-hashing>Function Hashing</a></li><li><a href=#finalizing-hashes>Finalizing Hashes</a></li><li><a href=#hash-table>Hash Table</a></li></ul></li><li><a href=#string-decryption>String Decryption</a></li></ul></li><li><a href=#tls-main-function>TLS Main Function</a></li><li><a href=#downloads>Downloads</a></li></ul></nav></div></div><div class=content id=content><p>I was watching <a href=https://twitter.com/herrcore target=_blank rel="noopener noreffer">@herrcore&rsquo;s</a> OALabs stream on Lockbit 3.0. After he wrote a utility to decrypt additional data from the ransomware, he noticed one of the buffers was a Portable Executable (PE) file. It had an interesting API hashing routine, we would be reversing for the next stream.</p><p>I decided to have a closer look. 😄</p><h2 id=analysis>Analysis</h2><p>This is an interesting sample, I have not mapped out its full functionality yet.</p><p>However, I was able to get a decent amount of reversing done, which should give us more of an insight.</p><h3 id=tls-callback>TLS Callback</h3><p>Thread Local Storage (TLS) provides unique data for each thread, so the process can access it using a global index. It is possible with this functionality to store pointers to a TLS callback function in a PE header. The callback function pointers will then be executed before the actual entry point by Windows.</p><p>Once executed, it will call the <em>tls_callback_0</em> function before the <em>entry</em> function.</p><p>The TLS callback has two functions, <em>InitAPIs</em> and <em>InitFuncTables</em> as seen below.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=kt>void</span> <span class=nf>tls_callback_0</span><span class=p>(</span><span class=n>PVOID</span> <span class=n>DllHandle</span><span class=p>,</span><span class=n>DWORD</span> <span class=n>dwReason</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>dwReason</span> <span class=o>==</span> <span class=mi>1</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>InitAPIs</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>InitFuncTables</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Now we will discuss the API hashing in detail.</p><h3 id=api-hashing>API Hashing</h3><p>The main API hashing and resolving function will call <em>InitAPIs</em> to resolve a table of function pointers to be used later for each module. The first argument is a pointer to a DWORD hash table. This hash table starts with one DWORD hash to describe the DLL then a series of hashes to describe the functions for the module, ending with the DWORD <em>0x1a33acd5</em>, which acts as a delimiter denoting the end of the hash table for a given module.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=k>typedef</span> <span class=k>struct</span> <span class=nc>_FUNC_HASHES_N</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>DWORD</span> <span class=n>dwModule</span><span class=p>;</span>    <span class=c1>// Module Hash
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>DWORD</span> <span class=n>dwHash</span><span class=p>[</span><span class=n>n</span><span class=p>];</span>   <span class=c1>// n = # function hashes
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>DWORD</span> <span class=n>dwDelimiter</span><span class=p>;</span> <span class=c1>// 0x1a33acd5
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span> <span class=n>FUNC_HASHES_N</span><span class=p>,</span> <span class=o>*</span><span class=n>PFUNC_HASHES_N</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>Where <em>N</em> is the struct table number and <em>n</em> is the number of function hashes.</p><p>The function <em>ResolveModule</em> is responsible for resolving one module at a time based on the function hash table pointer, which is passed as the first parameter. The second parameter is the size of the function table it creates dynamically.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=kt>void</span> <span class=nf>InitAPIs</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>ntdll</span> <span class=o>=</span> <span class=p>(</span><span class=n>PFUNC_PTRS_0</span><span class=p>)</span><span class=n>ResolveModule</span><span class=p>((</span><span class=n>uint</span> <span class=o>**</span><span class=p>)</span><span class=o>&amp;</span><span class=n>FUNC_HASHES_NTDLL</span><span class=p>,</span><span class=mi>92</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>kernel32</span> <span class=o>=</span> <span class=p>(</span><span class=n>PFUNC_PTRS_1</span><span class=p>)</span><span class=n>ResolveModule</span><span class=p>((</span><span class=n>uint</span> <span class=o>**</span><span class=p>)</span><span class=o>&amp;</span><span class=n>FUNC_HASHES_KERNEL32</span><span class=p>,</span><span class=mi>32</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>shell32</span> <span class=o>=</span> <span class=p>(</span><span class=n>PFUNC_PTRS_2</span><span class=p>)</span><span class=n>ResolveModule</span><span class=p>((</span><span class=n>uint</span> <span class=o>**</span><span class=p>)</span><span class=o>&amp;</span><span class=n>FUNC_HASHES_SHELL32</span><span class=p>,</span><span class=mi>4</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>shlwapi</span> <span class=o>=</span> <span class=p>(</span><span class=n>PFUNC_PTRS_3</span><span class=p>)</span><span class=n>ResolveModule</span><span class=p>((</span><span class=n>uint</span> <span class=o>**</span><span class=p>)</span><span class=o>&amp;</span><span class=n>FUNC_HASHES_SHLWAPI</span><span class=p>,</span><span class=mi>12</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>wtsapi32</span> <span class=o>=</span> <span class=p>(</span><span class=n>PFUNC_PTRS_4</span><span class=p>)</span><span class=n>ResolveModule</span><span class=p>((</span><span class=n>uint</span> <span class=o>**</span><span class=p>)</span><span class=o>&amp;</span><span class=n>FUNC_HASHES_WTSAPI32</span><span class=p>,</span><span class=mi>4</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>userenv</span> <span class=o>=</span> <span class=p>(</span><span class=n>PFUNC_PTRS_5</span><span class=p>)</span><span class=n>ResolveModule</span><span class=p>((</span><span class=n>uint</span> <span class=o>**</span><span class=p>)</span><span class=o>&amp;</span><span class=n>FUNC_HASHES_USERENV</span><span class=p>,</span><span class=mi>12</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>advapi32</span> <span class=o>=</span> <span class=p>(</span><span class=n>PFUNC_PTRS_6</span><span class=p>)</span><span class=n>ResolveModule</span><span class=p>((</span><span class=n>uint</span> <span class=o>**</span><span class=p>)</span><span class=o>&amp;</span><span class=n>FUNC_HASHES_ADVAPI32</span><span class=p>,</span><span class=mi>48</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>netapi32</span> <span class=o>=</span> <span class=p>(</span><span class=n>PFUNC_PTRS_7</span><span class=p>)</span><span class=n>ResolveModule</span><span class=p>((</span><span class=n>uint</span> <span class=o>**</span><span class=p>)</span><span class=o>&amp;</span><span class=n>FUNC_HASHES_NETAPI32</span><span class=p>,</span><span class=mi>8</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>In order to allocate memory for the function pointer tables, it will resolve the API hash <em>0x90ad8283</em>, which is the function <em>ntdll.NtAllocateVirtualMemory</em>. It will allocate <em>RegionSize</em> based on how many functions are in the table. It will calculate the size by performing the bit shift operation <em>iFunctionCount &#171; 2</em>. This will ensure that each function pointer will be allocated 0x4 bytes of memory with <em>PAGE_EXECUTE_READWRITE</em> permissions.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>pFunctionTable</span> <span class=o>=</span> <span class=p>(</span><span class=n>PVOID</span> <span class=o>*</span><span class=p>)</span><span class=nb>NULL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>BaseAddress0</span> <span class=o>=</span> <span class=p>(</span><span class=n>PVOID</span> <span class=o>*</span><span class=p>)</span><span class=nb>NULL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>RegionSize</span> <span class=o>=</span> <span class=n>iFuncCount</span> <span class=o>&lt;&lt;</span> <span class=mi>2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>(</span><span class=o>*</span><span class=p>(</span><span class=n>code</span> <span class=o>*</span><span class=p>)</span><span class=o>::</span><span class=n>ntdll</span><span class=p>.</span><span class=n>ZwAllocateVirtualMemory</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		  <span class=p>((</span><span class=n>HANDLE</span><span class=p>)</span><span class=mh>0xffffffff</span><span class=p>,</span><span class=o>&amp;</span><span class=n>BaseAddress0</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=o>&amp;</span><span class=n>RegionSize</span><span class=p>,</span><span class=mh>0x103000</span><span class=p>,</span><span class=n>PAGE_EXECUTE_READWRITE</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(((</span><span class=n>BaseAddress0</span> <span class=o>!=</span> <span class=p>(</span><span class=n>PVOID</span> <span class=o>*</span><span class=p>)</span><span class=nb>NULL</span><span class=p>)</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>	<span class=p>((</span><span class=o>*</span><span class=p>(</span><span class=n>code</span> <span class=o>*</span><span class=p>)</span><span class=o>::</span><span class=n>ntdll</span><span class=p>.</span><span class=n>ZwAllocateVirtualMemory</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>			   <span class=p>((</span><span class=n>HANDLE</span><span class=p>)</span><span class=mh>0xffffffff</span><span class=p>,</span><span class=o>&amp;</span><span class=n>pFunctionTable</span><span class=p>,</span><span class=mi>0</span><span class=p>,(</span><span class=n>PSIZE_T</span><span class=p>)</span><span class=o>&amp;</span><span class=n>iFuncCount</span><span class=p>,</span><span class=mh>0x103000</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>				<span class=n>PAGE_READWRITE</span><span class=p>),</span> <span class=n>ValidBaseAddress1</span> <span class=o>=</span> <span class=n>pFunctionTable</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=n>pFuncTableIter</span> <span class=o>=</span> <span class=n>BaseAddress0</span><span class=p>,</span> <span class=n>pFunctionTable</span> <span class=o>!=</span> <span class=p>(</span><span class=n>PVOID</span> <span class=o>*</span><span class=p>)</span><span class=nb>NULL</span><span class=p>))</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>   <span class=p>(</span><span class=n>iResult</span> <span class=o>=</span> <span class=n>IsDLLExistByHash</span><span class=p>((</span><span class=n>uint</span><span class=p>)</span><span class=o>*</span><span class=n>upHashTable</span><span class=p>),</span> <span class=n>iResult</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>))</span> <span class=p>{</span>
+</span></span></code></pre></td></tr></table></div></div><p>It will then check the first hash to see if the DLL exists on the infected system by enumerating <em>C:\Windows\System32\*.dll</em>. In order to enumerate the directories, it resolves the following API hashes first.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=p>(</span><span class=n>iResult</span> <span class=o>=</span> <span class=n>IsDLLExistByHash</span><span class=p>((</span><span class=n>uint</span><span class=p>)</span><span class=o>*</span><span class=n>upHashTable</span><span class=p>),</span> <span class=n>iResult</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>The function IsDLLExistByHash, will check</p><table><thead><tr><th>Hash</th><th>Function</th></tr></thead><tbody><tr><td><em>0xaae0cefb</em></td><td>kernel32.FindFirstFileExW</td></tr><tr><td><em>0x63a1bff9</em></td><td>kernel32.FindNextFileW</td></tr><tr><td><em>0xe0979a4</em></td><td>kernel32.FindClose</td></tr></tbody></table><h4 id=module-hashing>Module Hashing</h4><p>The Dynamic Link Library (DLL) names are referenced by hash.</p><p>The function we are interested is as follows.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>0:  push   ebp
+</span></span><span class=line><span class=cl>1:  mov    ebp,esp
+</span></span><span class=line><span class=cl>3:  push   edx
+</span></span><span class=line><span class=cl>4:  push   esi
+</span></span><span class=line><span class=cl>5:  mov    edx,DWORD PTR [ebp+0xc]
+</span></span><span class=line><span class=cl>8:  mov    eax,0x1e4c448d
+</span></span><span class=line><span class=cl>d:  xor    eax,0x29009fe6
+</span></span><span class=line><span class=cl>12: not    eax
+</span></span><span class=line><span class=cl>14: xor    edx,eax
+</span></span><span class=line><span class=cl>16: mov    esi,DWORD PTR [ebp+0x8]
+</span></span><span class=line><span class=cl>19: xor    eax,eax
+</span></span><span class=line><span class=cl>1b: lods   ax,WORD PTR ds:[esi]
+</span></span><span class=line><span class=cl>1d: cmp    ax,0x41
+</span></span><span class=line><span class=cl>21: jb     0x2d
+</span></span><span class=line><span class=cl>23: cmp    ax,0x5a
+</span></span><span class=line><span class=cl>27: ja     0x2d
+</span></span><span class=line><span class=cl>29: or     ax,0x20
+</span></span><span class=line><span class=cl>2d: add    dh,0x7a
+</span></span><span class=line><span class=cl>30: sub    dh,0x7a
+</span></span><span class=line><span class=cl>33: ror    edx,0xd
+</span></span><span class=line><span class=cl>36: add    edx,eax
+</span></span><span class=line><span class=cl>38: test   eax,eax
+</span></span><span class=line><span class=cl>3a: jne    0x19
+</span></span><span class=line><span class=cl>3c: mov    eax,edx
+</span></span><span class=line><span class=cl>3e: pop    esi
+</span></span><span class=line><span class=cl>3f: pop    edx
+</span></span><span class=line><span class=cl>40: pop    ebp
+</span></span><span class=line><span class=cl>41: ret    0x8
+</span></span></code></pre></td></tr></table></div></div><p>Interestingly, the following operations can be simplified for <em>eax</em>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>8:  mov    eax,0x1e4c448d
+</span></span><span class=line><span class=cl>d:  xor    eax,0x29009fe6
+</span></span><span class=line><span class=cl>12: not    eax
+</span></span></code></pre></td></tr></table></div></div><p>The value of <em>eax</em> here is static and can be represented by <em>0xc8b32494</em> instead. It is important to note that in the binary there is a section where it performs a comparison but also modified the returned hash by performing the following.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>not    eax  
+</span></span><span class=line><span class=cl>xor    eax,0x29009fe6  
+</span></span><span class=line><span class=cl>cmp    eax,DWORD PTR [ebp+0x8]
+</span></span></code></pre></td></tr></table></div></div><p>This can be represented as <em>(~eax &0xffffffff) ^ 0x29009fe6</em>.</p><p>Now we can now recreate the functionality in Python.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>ror</span><span class=p>(</span><span class=n>n</span><span class=p>,</span><span class=n>rotations</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span><span class=n>width</span><span class=o>=</span><span class=mi>32</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span><span class=mi>2</span><span class=o>**</span><span class=n>width</span><span class=o>-</span><span class=mi>1</span><span class=p>)</span><span class=o>&amp;</span><span class=p>(</span><span class=n>n</span><span class=o>&gt;&gt;</span><span class=n>rotations</span><span class=o>|</span><span class=n>n</span><span class=o>&lt;&lt;</span><span class=p>(</span><span class=n>width</span><span class=o>-</span><span class=n>rotations</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>hashstr</span><span class=p>(</span><span class=n>string</span><span class=p>,</span> <span class=n>xmod</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=c1># Function 004010ec</span>
+</span></span><span class=line><span class=cl>    <span class=n>string</span> <span class=o>=</span> <span class=nb>bytes</span><span class=p>(</span><span class=n>string</span><span class=p>,</span> <span class=s1>&#39;ascii&#39;</span><span class=p>)</span> <span class=o>+</span> <span class=sa>b</span><span class=s1>&#39;</span><span class=se>\x00</span><span class=s1>&#39;</span>
+</span></span><span class=line><span class=cl>    <span class=n>result</span> <span class=o>=</span> <span class=mh>0xc8b32494</span> <span class=o>^</span> <span class=n>xmod</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>c</span> <span class=ow>in</span> <span class=n>string</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>c</span> <span class=o>&gt;</span> <span class=mh>0x41</span> <span class=ow>and</span> <span class=n>c</span> <span class=o>&lt;</span> <span class=mh>0x5a</span><span class=p>:</span> <span class=n>c</span> <span class=o>=</span> <span class=n>c</span> <span class=o>|</span> <span class=mh>0x20</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>=</span> <span class=n>ror</span><span class=p>(</span><span class=n>result</span><span class=p>,</span> <span class=n>rotations</span><span class=o>=</span><span class=mh>0x0d</span><span class=p>,</span> <span class=n>width</span><span class=o>=</span><span class=mi>32</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>+=</span> <span class=n>c</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>c</span> <span class=o>==</span> <span class=mh>0x00</span><span class=p>:</span> <span class=k>break</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>result</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>result</span> <span class=o>=</span> <span class=p>(</span><span class=o>~</span><span class=n>hashstr</span><span class=p>(</span><span class=s1>&#39;kernel32.dll&#39;</span><span class=p>,</span> <span class=mh>0x00000000</span><span class=p>)</span> <span class=o>&amp;</span> <span class=mh>0xffffffff</span><span class=p>)</span> <span class=o>^</span> <span class=mh>0x29009fe6</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=nb>hex</span><span class=p>(</span><span class=n>result</span><span class=p>))</span>
+</span></span></code></pre></td></tr></table></div></div><p>Definitely an interesting hashing algorithm in how it has some redundant operations.</p><h4 id=function-hashing>Function Hashing</h4><p>The function name hashing takes into account the hash of the module as well.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>hash_fnc</span><span class=p>(</span><span class=n>string</span><span class=p>,</span> <span class=n>mod_hash</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=c1># 004010b8</span>
+</span></span><span class=line><span class=cl>    <span class=n>string</span> <span class=o>=</span> <span class=nb>bytes</span><span class=p>(</span><span class=n>string</span><span class=p>,</span> <span class=s1>&#39;ascii&#39;</span><span class=p>)</span> <span class=o>+</span> <span class=sa>b</span><span class=s1>&#39;</span><span class=se>\x00</span><span class=s1>&#39;</span>
+</span></span><span class=line><span class=cl>    <span class=n>result</span> <span class=o>=</span> <span class=mh>0xc8b32494</span> <span class=o>^</span> <span class=n>mod_hash</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>c</span> <span class=ow>in</span> <span class=n>string</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>=</span> <span class=n>ror</span><span class=p>(</span><span class=n>result</span><span class=p>,</span> <span class=n>rotations</span><span class=o>=</span><span class=mh>0x0d</span><span class=p>,</span> <span class=n>width</span><span class=o>=</span><span class=mi>32</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>+=</span> <span class=n>c</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>c</span> <span class=o>==</span> <span class=mh>0x00</span><span class=p>:</span> <span class=k>break</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>result</span>
+</span></span></code></pre></td></tr></table></div></div><p>This function reuses most of the same principles from the DLL hashing, except for performing an if statement on a range of characters.</p><h4 id=finalizing-hashes>Finalizing Hashes</h4><p>Throughout the code, it will finalize hashes with a <em>not</em> operation and an <em>XOR</em> operation against the constant <em>0x29009fe6</em>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>hash_fin</span><span class=p>(</span><span class=n>fnc_hash</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=c1># Finalize Hash</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span><span class=o>~</span><span class=n>fnc_hash</span> <span class=o>&amp;</span> <span class=mh>0xffffffff</span><span class=p>)</span> <span class=o>^</span> <span class=mh>0x29009fe6</span>
+</span></span></code></pre></td></tr></table></div></div><p>We can even write a single function now to get the API hash based on the module name and exported function.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>hash_all</span><span class=p>(</span><span class=n>module</span><span class=p>,</span> <span class=n>function</span><span class=p>,</span> <span class=n>xmod</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=c1># Hash Module and Function</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>hash_fin</span><span class=p>(</span><span class=n>hash_fnc</span><span class=p>(</span><span class=n>function</span><span class=p>,</span> <span class=n>hash_mod</span><span class=p>(</span><span class=n>module</span><span class=p>,</span> <span class=n>xmod</span><span class=p>)))</span>
+</span></span></code></pre></td></tr></table></div></div><p>Once the hash is finalized, it can be added to our hash table.</p><h4 id=hash-table>Hash Table</h4><p>The next step is for us to create a hash table, so we can easily resolve all the APIs.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>sys</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>pefile</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>pickle</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>glob</span> <span class=kn>import</span> <span class=n>glob</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>pprint</span> <span class=kn>import</span> <span class=n>pprint</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>os.path</span> <span class=kn>import</span> <span class=n>basename</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># def ror(n,rotations=1,width=32)</span>
+</span></span><span class=line><span class=cl><span class=c1># def hash_mod(string, xmod)</span>
+</span></span><span class=line><span class=cl><span class=c1># def hash_fnc(string, mod_hash)</span>
+</span></span><span class=line><span class=cl><span class=c1># def hash_fin(fnc_hash)</span>
+</span></span><span class=line><span class=cl><span class=c1># def hash_all(module, function, xmod)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>get_exports</span><span class=p>(</span><span class=n>dll</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>pe</span> <span class=o>=</span> <span class=n>pefile</span><span class=o>.</span><span class=n>PE</span><span class=p>(</span><span class=n>dll</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>d</span> <span class=o>=</span> <span class=p>[</span><span class=n>pefile</span><span class=o>.</span><span class=n>DIRECTORY_ENTRY</span><span class=p>[</span><span class=s2>&#34;IMAGE_DIRECTORY_ENTRY_EXPORT&#34;</span><span class=p>]]</span>
+</span></span><span class=line><span class=cl>    <span class=n>pe</span><span class=o>.</span><span class=n>parse_data_directories</span><span class=p>(</span><span class=n>directories</span><span class=o>=</span><span class=n>d</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>exports</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>export</span> <span class=ow>in</span> <span class=n>pe</span><span class=o>.</span><span class=n>DIRECTORY_ENTRY_EXPORT</span><span class=o>.</span><span class=n>symbols</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>export</span><span class=o>.</span><span class=n>name</span> <span class=ow>is</span> <span class=ow>not</span> <span class=kc>None</span><span class=p>:</span> <span class=n>exports</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>export</span><span class=o>.</span><span class=n>name</span><span class=o>.</span><span class=n>decode</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nb>list</span><span class=p>(</span><span class=nb>set</span><span class=p>(</span><span class=n>exports</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>dlls</span> <span class=o>=</span> <span class=n>glob</span><span class=p>(</span><span class=s1>&#39;C:\Windows\System32\*.dll&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>hashmap</span> <span class=o>=</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>dll</span> <span class=ow>in</span> <span class=n>dlls</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;[-] &#39;</span> <span class=o>+</span> <span class=n>dll</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>exports</span> <span class=o>=</span> <span class=n>get_exports</span><span class=p>(</span><span class=n>dll</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>export</span> <span class=ow>in</span> <span class=n>exports</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>fnc_hash</span> <span class=o>=</span> <span class=n>hash_all</span><span class=p>(</span><span class=n>basename</span><span class=p>(</span><span class=n>dll</span><span class=p>),</span> <span class=n>export</span><span class=p>,</span> <span class=mh>0x00000000</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>fnc_name</span> <span class=o>=</span> <span class=n>basename</span><span class=p>(</span><span class=n>dll</span><span class=p>)[:</span><span class=o>-</span><span class=mi>4</span><span class=p>]</span> <span class=o>+</span> <span class=s1>&#39;.&#39;</span> <span class=o>+</span> <span class=n>export</span>
+</span></span><span class=line><span class=cl>            <span class=n>hashmap</span><span class=p>[</span><span class=n>fnc_hash</span><span class=p>]</span> <span class=o>=</span> <span class=n>fnc_name</span>
+</span></span><span class=line><span class=cl>            <span class=n>hashmap</span><span class=p>[</span><span class=n>hash_fin</span><span class=p>(</span><span class=n>hash_mod</span><span class=p>(</span><span class=n>basename</span><span class=p>(</span><span class=n>dll</span><span class=p>),</span> <span class=mh>0x00000000</span><span class=p>))]</span> <span class=o>=</span> <span class=n>basename</span><span class=p>(</span><span class=n>dll</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;[+] &#39;</span> <span class=o>+</span> <span class=n>dll</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>except</span> <span class=ne>KeyboardInterrupt</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>pickle</span><span class=o>.</span><span class=n>dump</span><span class=p>(</span><span class=n>hashmap</span><span class=p>,</span> <span class=nb>open</span><span class=p>(</span><span class=s1>&#39;hashmap.pickle&#39;</span><span class=p>,</span> <span class=s1>&#39;wb&#39;</span><span class=p>),</span> <span class=n>protocol</span><span class=o>=</span><span class=n>pickle</span><span class=o>.</span><span class=n>HIGHEST_PROTOCOL</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>sys</span><span class=o>.</span><span class=n>exit</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>except</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>pass</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>pickle</span><span class=o>.</span><span class=n>dump</span><span class=p>(</span><span class=n>hashmap</span><span class=p>,</span> <span class=nb>open</span><span class=p>(</span><span class=s1>&#39;hashmap.pickle&#39;</span><span class=p>,</span> <span class=s1>&#39;wb&#39;</span><span class=p>),</span> <span class=n>protocol</span><span class=o>=</span><span class=n>pickle</span><span class=o>.</span><span class=n>HIGHEST_PROTOCOL</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>This takes some time to run, but at the end we get a pickled Python dictionary or hash table we can use to resolve all the APIs we need. We can load the hash table by doing the following.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=o>&gt;&gt;</span> <span class=kn>import</span> <span class=nn>pickle</span>
+</span></span><span class=line><span class=cl><span class=o>&gt;&gt;</span> <span class=n>h</span> <span class=o>=</span> <span class=n>pickle</span><span class=o>.</span><span class=n>load</span><span class=p>(</span><span class=nb>open</span><span class=p>(</span><span class=s1>&#39;hashmap.pickle&#39;</span><span class=p>,</span> <span class=s1>&#39;rb&#39;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=o>&gt;&gt;</span> <span class=n>h</span><span class=p>[</span><span class=mh>0x2A9FB8E1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=s1>&#39;kernel32.dll&#39;</span>
+</span></span><span class=line><span class=cl><span class=o>&gt;&gt;</span> <span class=n>h</span><span class=p>[</span><span class=mh>0xAAE0CEFB</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=s1>&#39;kernel32.FindFirstFileExW&#39;</span>
+</span></span></code></pre></td></tr></table></div></div><p>Here are some example API hashes for <em>kernel32</em>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>00401a64 e1 b8 9f 2a   DWORD    2A9FB8E1h            kernel32.dll
+</span></span><span class=line><span class=cl>00401a68 fb ce e0 aa   DWORD    AAE0CEFBh            kernel32.FindFirstFileExW
+</span></span><span class=line><span class=cl>00401a6c f9 bf a1 63   DWORD    63A1BFF9h            kernel32.FindNextFileW
+</span></span><span class=line><span class=cl>00401a70 a4 79 09 0e   DWORD    E0979A4h             kernel32.FindClose
+</span></span><span class=line><span class=cl>00401a74 c3 05 cc c7   DWORD    C7CC05C3h            kernel32.ExitProcess
+</span></span><span class=line><span class=cl>00401a78 66 ae 26 8e   DWORD    8E26AE66h            kernel32.CopyFileW
+</span></span><span class=line><span class=cl>00401a7c 22 22 47 d9   DWORD    D9472222h            kernel32.GetShortPathNameW
+</span></span><span class=line><span class=cl>00401a80 9b f8 33 6d   DWORD    6D33F89Bh            kernel32.GetComputerNameW
+</span></span><span class=line><span class=cl>00401a84 d5 5c 7f 3f   DWORD    3F7F5CD5h            kernel32.CreateNamedPipeW
+</span></span><span class=line><span class=cl>00401a88 d5 ac 33 1a   DWORD    1A33ACD5h            HASH_DELIM
+</span></span></code></pre></td></tr></table></div></div><h3 id=string-decryption>String Decryption</h3><p>The cipher text for the strings are stored in the code section as double words that are moved to the data section. The address to the cipher text is pushed to the stack along with the number of double word iterations needed to perform the decryption. This makes the cipher text more challenging to extract. However, I was at least able to recreate the routine in Python, with a few tricks using checking the modulus of the data buffer length.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>decrypt_str</span><span class=p>(</span><span class=n>data</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=c1># 00401010</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=nb>bytes</span><span class=o>.</span><span class=n>fromhex</span><span class=p>(</span><span class=n>data</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>result</span> <span class=o>=</span> <span class=sa>b</span><span class=s1>&#39;&#39;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nb>len</span><span class=p>(</span><span class=n>data</span><span class=p>)</span> <span class=o>%</span> <span class=mi>4</span><span class=p>)</span><span class=o>!=</span> <span class=mi>0</span><span class=p>:</span> <span class=k>return</span> <span class=kc>None</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=nb>len</span><span class=p>(</span><span class=n>data</span><span class=p>),</span> <span class=mi>4</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>dword</span> <span class=o>=</span> <span class=n>struct</span><span class=o>.</span><span class=n>unpack</span><span class=p>(</span><span class=s1>&#39;&lt;I&#39;</span><span class=p>,</span> <span class=n>data</span><span class=p>[</span><span class=n>i</span><span class=p>:</span><span class=n>i</span><span class=o>+</span><span class=mi>4</span><span class=p>])[</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=n>dword</span> <span class=o>=</span> <span class=p>(</span><span class=o>~</span><span class=p>(</span><span class=n>dword</span> <span class=o>^</span> <span class=mh>0x29009fe6</span><span class=p>)</span> <span class=o>&amp;</span> <span class=mh>0xffffffff</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>+=</span> <span class=n>dword</span><span class=o>.</span><span class=n>to_bytes</span><span class=p>(</span><span class=mi>4</span><span class=p>,</span> <span class=n>byteorder</span><span class=o>=</span><span class=s1>&#39;little&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>result</span><span class=o>.</span><span class=n>decode</span><span class=p>(</span><span class=s1>&#39;utf-16&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>With this knowledge, we can now decrypt the following cipher text.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=o>&gt;&gt;</span> <span class=n>result</span> <span class=o>=</span> <span class=n>decrypt</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;</span><span class=se>\x45\x60\xD5\xD6\x37\x60\x9B\xD6\x75\x60\x93\xD6</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=o>&gt;&gt;</span> <span class=nb>print</span><span class=p>(</span><span class=n>result</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>\<span class=o>*.</span><span class=n>dll</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=tls-main-function>TLS Main Function</h2><p>In order to obscure control flow, it will store function pointers to an encrypted VTable structure.</p><p>The pointer has a <em>not</em> operation performed on it, then it is <em>ror</em> by a random single byte. This is stored in the following data structure.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=k>typedef</span> <span class=k>struct</span> <span class=nc>_ENCRYPTED_VTABLE_ENTRY</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>DWORD</span> <span class=n>EncryptedPointer</span><span class=p>;</span> <span class=c1>// VTable Encrypted Pointer
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>USHORT</span> <span class=n>Reserved0</span><span class=p>;</span>       <span class=c1>// Unknown
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>BYTE</span> <span class=n>RorSeed</span><span class=p>;</span>           <span class=c1>// RorSeed Key
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>USHORT</span> <span class=n>Reserved1</span><span class=p>;</span>       <span class=c1>// Unknown
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=n>USHORT</span> <span class=n>Reserved2</span><span class=p>;</span>       <span class=c1>// Unknown
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span> <span class=n>ENCRYPTED_VTABLE_ENTRY</span><span class=p>,</span> <span class=o>*</span><span class=n>PENCRYPTED_VTABLE_ENTRY</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>The encryption of just the pointer can be described as follows.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>ror</span><span class=p>(</span><span class=n>n</span><span class=p>,</span><span class=n>rotations</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span><span class=n>width</span><span class=o>=</span><span class=mi>32</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span><span class=mi>2</span><span class=o>**</span><span class=n>width</span><span class=o>-</span><span class=mi>1</span><span class=p>)</span><span class=o>&amp;</span><span class=p>(</span><span class=n>n</span><span class=o>&gt;&gt;</span><span class=n>rotations</span><span class=o>|</span><span class=n>n</span><span class=o>&lt;&lt;</span><span class=p>(</span><span class=n>width</span><span class=o>-</span><span class=n>rotations</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>encrypt_ptr</span><span class=p>(</span><span class=n>data</span><span class=p>,</span> <span class=n>key</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>ror</span><span class=p>((</span><span class=o>~</span><span class=n>data</span> <span class=o>&amp;</span> <span class=mh>0xffffffff</span><span class=p>),</span> <span class=n>rotations</span><span class=o>=</span><span class=n>key</span><span class=p>,</span> <span class=n>width</span><span class=o>=</span>
+</span></span></code></pre></td></tr></table></div></div><p>With this knowledge, we can perform the opposite operation <em>rol</em> to decrypt pointers.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>rol</span><span class=p>(</span><span class=n>n</span><span class=p>,</span><span class=n>rotations</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span><span class=n>width</span><span class=o>=</span><span class=mi>32</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span><span class=mi>2</span><span class=o>**</span><span class=n>width</span><span class=o>-</span><span class=mi>1</span><span class=p>)</span><span class=o>&amp;</span><span class=p>(</span><span class=n>n</span><span class=o>&lt;&lt;</span><span class=n>rotations</span><span class=o>|</span><span class=n>n</span><span class=o>&gt;&gt;</span><span class=p>(</span><span class=n>width</span><span class=o>-</span><span class=n>rotations</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>decrypt_ptr</span><span class=p>(</span><span class=n>data</span><span class=p>,</span> <span class=n>key</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>rol</span><span class=p>((</span><span class=o>~</span><span class=n>data</span> <span class=o>&amp;</span> <span class=mh>0xffffffff</span><span class=p>),</span> <span class=n>rotations</span><span class=o>=</span><span class=n>key</span><span class=p>,</span> <span class=n>width</span><span class=o>=</span><span class=mi>32</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>I will continue to update this.</p><h2 id=downloads>Downloads</h2><ul><li><a href=assets/hashmap.zip rel>Hash Map</a></li><li><a href=https://gist.github.com/c3rb3ru5d3d53c/4f2c984d81ef64e5f133e37726619c64 target=_blank rel="noopener noreffer">Python Tool</a></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2022-07-13</span></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://c3rb3r3u5d3d53c.github.io/2022/07/lockbit-api-hashing/ data-title="Reversing Additional Lockbit 3.0 API Hashing" data-via=c3rb3ru5d3d53c data-hashtags=Lockbit,Ransomware><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://c3rb3r3u5d3d53c.github.io/2022/07/lockbit-api-hashing/ data-hashtag=Lockbit><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Linkedin" data-sharer=linkedin data-url=https://c3rb3r3u5d3d53c.github.io/2022/07/lockbit-api-hashing/><i class="fab fa-linkedin fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://c3rb3r3u5d3d53c.github.io/2022/07/lockbit-api-hashing/ data-title="Reversing Additional Lockbit 3.0 API Hashing"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Reddit" data-sharer=reddit data-url=https://c3rb3r3u5d3d53c.github.io/2022/07/lockbit-api-hashing/><i class="fab fa-reddit fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://c3rb3r3u5d3d53c.github.io/2022/07/lockbit-api-hashing/ data-title="Reversing Additional Lockbit 3.0 API Hashing"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://c3rb3r3u5d3d53c.github.io/2022/07/lockbit-api-hashing/ data-title="Reversing Additional Lockbit 3.0 API Hashing"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw" aria-hidden=true></i>&nbsp;<a href=/tags/lockbit/>Lockbit</a>,&nbsp;<a href=/tags/ransomware/>Ransomware</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/2022/07/malware-script-deobfuscation/ class=prev rel=prev title="Deobfuscating Scripts"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>Deobfuscating Scripts</a>
+<a href=/2022/07/what-is-a-dll/ class=next rel=next title="What is a DLL?">What is a DLL?<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2019 - 2023</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://c3rb3r3u5d3d53c.github.io target=_blank>c3rb3r3u5d3d53c</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw" aria-hidden=true></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{},data:{"id-1":"Malware Hell","id-2":"Malware Hell"},lightgallery:!0,search:{algoliaAppID:"",algoliaIndex:"",algoliaSearchKey:"",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:30,type:"algolia"},twemoji:!0,typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

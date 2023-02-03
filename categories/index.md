@@ -1,0 +1,6 @@
+# Categories
+
+---
+title: "Categories"
+---
+
