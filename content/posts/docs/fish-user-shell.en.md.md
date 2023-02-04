@@ -44,8 +44,7 @@ omf install lambda
 
 Once completed, I update my `gnome` terminal to open `fish` instead of `bash` (Figure 2).
 
-![shell](images/8bb5b5cb465fa4ceaf5acbcab0ef4b83d60982e60747e613424b6a8ee1b418d7.gif)
-*Figure 2. Setting Fish as User Shell*
+![shell](images/8bb5b5cb465fa4ceaf5acbcab0ef4b83d60982e60747e613424b6a8ee1b418d7.gif "Figure 2. Setting Fish as a User Shell")
 
 The next small annoyance might be the `fish` shell default greeting. However, we can remove this by performing the command in Figure 3. 
 
