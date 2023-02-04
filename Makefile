@@ -13,3 +13,5 @@ images:
                         mv -fn $$i `dirname $$i`/`sha256sum $$i | grep -Po '^[a-f0-9]{64}'`.jpg; \
                 fi \
 	done
+clean:
+	rm -rf public/ resources/
