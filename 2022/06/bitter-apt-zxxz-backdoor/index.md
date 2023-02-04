@@ -146,7 +146,7 @@ Thusly, performing `xor al, 0xff` then moving `al` to a memory location is equiv
 
 It would appear the threat actors did not consider this weakness in their shellcode decryption algorithm.
 
-![xor_not_meme](/images/0cda966a355c28be0d906c25de27b922264e84c2efa52e309ce8e2daef351c12.jpg)
+![xor_not_meme](images/0cda966a355c28be0d906c25de27b922264e84c2efa52e309ce8e2daef351c12.jpg)
 
 The shellcode that starts being decrypted starts with a 3-byte `nop` sled and has a size of `0x22a` bytes, as indicated by moving `0x22a` into the `ecx` register when executing the `loop` instruction. Once it has finished decrypting the shellcode, the `return` instruction will set the instruction pointer to the beginning of the 3-byte nop sled.
 
@@ -161,7 +161,7 @@ After the function interface has been setup, it will call *[msi.MsiInstallProduc
 | szPackagePath | <font style="color:red">hxxp://sbss[.]com[.]pk/gts/bd[.]msi</font> |
 | szCommandLine | ITCAI=NOATSNLL                      |
 
-![MsiInstallProductA](/images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png)
+![MsiInstallProductA](images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png)
 *Figure 1: Equation Editor Shellcode Executing [msi.MsiInstallProductA](https://docs.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiinstallproducta)*
 
 This will result in the following traffic.
@@ -182,7 +182,7 @@ Once completed, it will call *[kernel32.ExitProcess](https://docs.microsoft.com/
 
 Although, it may arouse some suspicion as the document is empty and does not contain any decoy text. 🤔
 
-![Failed Decoy](/images/97bbd1600995442c8a0ad41a46477044a8e31af1c254e959c3285bf958ecbd92.png)
+![Failed Decoy](images/97bbd1600995442c8a0ad41a46477044a8e31af1c254e959c3285bf958ecbd92.png)
 *Figure 2: User Perspective of Suspicious Empty Document*
 
 ### Post Exploitation
@@ -235,7 +235,7 @@ Interestingly, they opt to use large negative values for the parameters `X` and 
 
 Once completed creating the window, it will perform a decryption routine on the C2 server domain <font style="color:red">subscribe[.]tomcruefrshsvc[.]com</font>. This is performed with the following algorithm.
 
-![algo](/images/7b5b36ad32bca08a519ddc3ed4e57e5be1fc4e1d202ef16687e6825f93fd2abe.png)
+![algo](images/7b5b36ad32bca08a519ddc3ed4e57e5be1fc4e1d202ef16687e6825f93fd2abe.png)
 *Figure 3: String Decryption Algorithm (Simple XOR)*
 
 After reverse engineering this algorithm we can implement the same routine in Python.
@@ -259,7 +259,7 @@ def EncryptDecrypt(key, data):
 
 It is also possible to easily decrypt the strings in [CyberChef](https://gchq.github.io/CyberChef/) as well.
 
-![cyberchef](/images/bce8b3a06dd86b0b3532321637cd98e4bf23b60dda18f7b6beee4df1cc34b149.png)
+![cyberchef](images/bce8b3a06dd86b0b3532321637cd98e4bf23b60dda18f7b6beee4df1cc34b149.png)
 *Figure 4: [CyberChef](https://gchq.github.io/CyberChef/) String Decryption*
 
 At least here they are using 2-byte XOR keys. 😂
@@ -275,10 +275,10 @@ if ((iResult != 0) && (iResult = SHGetFolderPathA(NULL,CSIDL_TEMPLATES,NULL,NULL
 
 Once completed, it will call `strcat_s` to append the path with string `\\\\Updates`. It will then call `\_mkdir` to create the directory `C:\\Users\\username\\\<path-type\>\\Updates`. Execution will continue until it appends the path with the string `systemlog`, in a very redundant way. 😂
 
-![systemlog](/images/0c01f54a2e19f5f43cac4ed95810c64aaa08c870c50418f319acc68a2e25f470.png)
+![systemlog](images/0c01f54a2e19f5f43cac4ed95810c64aaa08c870c50418f319acc68a2e25f470.png)
 *Figure 5: Obfuscated but not really string 'systemlog'.*
 
-![obfuscation_fail](/images/3cdc0c53e4da1e590203cb99635a6d7f1b613eb5975a4b1522af12ab63017205.jpg)
+![obfuscation_fail](images/3cdc0c53e4da1e590203cb99635a6d7f1b613eb5975a4b1522af12ab63017205.jpg)
 
 It will then call *[kernel32.Sleep](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)* to sleep for 30 seconds. Once it has finished sleeping, it will check for the presence of the process `avp` ([Kaspersky](https://www.kaspersky.ca/)) and `MsMp` (Microsoft Security Monitor Process) and only establish persistence if those security processes are not present on the system. At least they are making an effort here to be stealthy and infect only poorly secured machines.
 
@@ -386,7 +386,7 @@ No payload is perfect. However, I can certainly see its appeal for a large scale
 
 The overall C2 behavior can be explained as follows.
 
-![c2-overview](/images/6e0af10a5030fa409da15edbd6750a489f14cbc2fd90b11be6abd88c2cf54793.png)
+![c2-overview](images/6e0af10a5030fa409da15edbd6750a489f14cbc2fd90b11be6abd88c2cf54793.png)
 *Figure 6: High Level C2 Behavior Overview*
 
 Now that we understand the high level concepts, let's discuss the details and see what the C2 traffic looks like.
@@ -476,7 +476,7 @@ Connection: close
 
 Once this has been sent to the C2 server, it will finally execute the payload using *[shell32.ShellExecuteA](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutea)*.
 
-![execute-payload](/images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png)
+![execute-payload](images/8a97eaae60c7df18708323a91a1e8137088eb958336f83c25d41989064d0787e.png)
 *Figure 7: Executing Payload with [shell32.ShellExecuteA](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutea)*
 
 After the payload has been executed, it will check to see if the processes was created successfully. This feature of course has timing issues for additional payloads sent by the C2 server that do not run in an infinite loop. 😅
@@ -747,7 +747,7 @@ I wouldn't call this malware a Remote Administration Tool (RAT) or a botnet for 
 ## Conclusion
 We reverse engineered Bitter APT's ZxxZ backdoor to the point we can repurpose it for our own red team operations. What I really wanted to show with this analysis and Proof of Concept (PoC), is that we need to be very careful with our attribution of threat actors. It is undeniably possible for one nation-state threat actor to frame another using similar methods. Based on this analysis, it would also not suprise me if this behavior is already happening in the wild.
 
-![attribution](/images/e56a38ebc06a27055301baa0eee603fc8804216d3544a2a74876e08f664db388.png)
+![attribution](images/e56a38ebc06a27055301baa0eee603fc8804216d3544a2a74876e08f664db388.png)
 
 Cisco Talos also did an analysis on ZxxZ backdoor entitled [Bitter APT adds Bangladesh to their Targets](https://blog.talosintelligence.com/2022/05/bitter-apt-adds-bangladesh-to-their.html). Although this is a great report, I wanted to do more with this malware to showcase what is possible.
 
@@ -757,7 +757,7 @@ Although I do poke fun at Bitter APT's mistakes, this attack chain from them sho
 
 I think we successfully destroyed Bitter APT's ZxxZ backdoor now. 😜
 
-![destroyed](/images/bfd5ecd13a88b7efb2e4fc13146a10e188fffe147fe260c6a6ea34e1e5ce68fc.jpg)
+![destroyed](images/bfd5ecd13a88b7efb2e4fc13146a10e188fffe147fe260c6a6ea34e1e5ce68fc.jpg)
 
 ## Downloads
 - [Samples and Ghidra Project](/samples/2022-07-04-zxxz.zip)
