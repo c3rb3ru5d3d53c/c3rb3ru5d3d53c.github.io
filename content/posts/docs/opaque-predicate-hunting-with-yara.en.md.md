@@ -188,6 +188,7 @@ Next, we can reduce the potential for false positives by scanning only executabl
 
 ```cpp
 import "pe"
+import "dotnet"
 
 rule op {
     meta:
@@ -199,7 +200,7 @@ rule op {
     condition:
         uint16(0) == 0x5a4d and
         uint32(uint32(0x3c)) == 0x00004550 and
-        pe.is_32bit() and
+        pe.is_32bit() and not dotnet.is_dotnet and
         for any i in (0..#match):(
             for any j in (0..pe.number_of_sections):(
                 pe.sections[j].characteristics & pe.SECTION_MEM_EXECUTE and
