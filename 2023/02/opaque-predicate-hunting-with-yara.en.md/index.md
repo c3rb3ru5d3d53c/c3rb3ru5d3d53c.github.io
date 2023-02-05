@@ -174,7 +174,7 @@ rule op {
 ```
 *Figure 6. Opaque Predicate `yara` Signature*
 
-Next, we can reduce the potential for false positives by scanning only executable sections in an executable. This can be applied to any executable format. However, for the sake of simplicity we will focus on the PE file format using the `pe` module in `yara`. To accomplish this, we iterate over each section checking of the characteristics has the `pe.SECTION_MEM_EXECUTE` flag and that the address of the matched bytes is with the section offsets. We also should check to be sure it is a 32-bit executable, as decoding instructions on different architecures would be pointless and yield more false positives.Once completed, we have a signature we can use for hunting provided in Figure 7.
+Next, we can reduce the potential for false positives by scanning only executable sections in an executable. This can be applied to any executable format. However, for the sake of simplicity we will focus on the PE file format using the `pe` module in `yara`. To accomplish this, we iterate over each section checking of the characteristics has the `pe.SECTION_MEM_EXECUTE` flag and that the address of the matched bytes is with the section offsets. We also should check to be sure it is a 32-bit executable, as decoding instructions on different architecures would be pointless and yield more false positives. Finally, we should also check our mod r/m bits for the `mov` and `cmp` instructions to validate they are the opcodes we are looking for that work with immutables and registers. Once completed, we have a signature we can use for hunting provided in Figure 7.
 
 ```cpp
 import "pe"
@@ -197,15 +197,19 @@ rule op {
                 @match[i] < pe.sections[j].raw_data_offset + pe.sections[j].raw_data_size - 15
             ) and
             (
-                uint8(@match[i]) >> 3 == 0x17 and
-                uint8(@match[i]+5) >> 3 == 0x17
+                uint8(@match[i]) >> 3 == 0x17 and   // Check mod r/m for mov
+                uint8(@match[i]+5) >> 3 == 0x17 and // Check mod r/m for mov
+                uint8(@match[i]+11) >> 6 == 0x3     // Check mod r/m for cmp
             ) and
             (
-                (
+                (   // Check first mov instruction operand against first cmp operand
+                    // Check second mov instruction operand against second cmd operand
                     uint8(@match[i]) & 0x7 == uint8(@match[i]+11) & 0x7 and
                     uint8(@match[i]+5) & 0x7 == uint8(@match[i]+11) >> 3 & 0x7
                 ) or
                 (
+                    // Check first mov instruction operand against second cmp operand
+                    // Check second mov instruction operand against first cmp operand
                     uint8(@match[i]) & 0x7 == uint8(@match[i]+11) >> 3 & 0x7 and
                     uint8(@match[i]+5) & 0x7 == uint8(@match[i]+11) & 0x7
                 )
