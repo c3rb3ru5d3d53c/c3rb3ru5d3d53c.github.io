@@ -80,14 +80,14 @@ Before we can create a `yara` hunting signature, we need to create the wild card
 
 This means we can detect each `mov` instruction with the `yara` search pattern `b? ?? ?? ?? ??`. 
 
-Next, we need to identify the `cmp` instruction, for this we can use the `yara` search pattern `39 ?? ??`. Finally, we use the instruction encodings for conditional jump instructions `(7?|0f ??|e3)`. A reference to instruction encoding for x86 conditional jumps can be found [here](http://unixwiz.net/techtips/x86-jumps.html).
+Next, we need to identify the `cmp` instruction, for this we can use the `yara` search pattern `39 ?? ??`. Finally, we use the instruction encodings for conditional jump instructions `(7?|e3)`. A reference to instruction encoding for x86 conditional jumps can be found [here](http://unixwiz.net/techtips/x86-jumps.html).
 
 With all these considerations we can make the `yara` signature in Figure 3.
 
 ```cpp
 rule op {
     strings:
-        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|0f ??|e3)}
+        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|e3)}
     condition:
 		all of them
 }
@@ -105,7 +105,7 @@ First we must iterate all the matches of our `$match` string. To accomplish this
 ```cpp
 rule op {
     strings:
-        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|0f ??|e3)}
+        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|e3)}
     condition:
         for any i in (0..#match):(
 			// Additional Logic Here
@@ -146,7 +146,7 @@ Now that we have the bitwise operations to decode the respective operands, we ca
 ```cpp
 rule op {
     strings:
-        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|0f ??|e3)}
+        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|e3)}
     condition:
         for any i in (0..#match):(
             (
@@ -168,7 +168,7 @@ We need to additionally check for the operands in reverse order, because the reg
 ```cpp
 rule op {
     strings:
-        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|0f ??|e3)}
+        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|e3)}
     condition:
         for any i in (0..#match):(
             (
@@ -196,7 +196,7 @@ rule op {
         description = "Potential 32-bit Immutable Opaque Predicates"
         tlp         = "white"
     strings:
-        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|0f ??|e3)}
+        $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|e3)}
     condition:
         uint16(0) == 0x5a4d and
         uint32(uint32(0x3c)) == 0x00004550 and
