@@ -190,6 +190,10 @@ Next, we can reduce the potential for false positives by scanning only executabl
 import "pe"
 
 rule op {
+    meta:
+        author      = "@c3rb3ru5d3d53c"
+        description = "Potential 32-bit Immutable Opaque Predicates"
+        tlp         = "white"
     strings:
         $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|0f ??|e3)}
     condition:
@@ -201,6 +205,10 @@ rule op {
                 pe.sections[j].characteristics & pe.SECTION_MEM_EXECUTE and
                 @match[i] >= pe.sections[j].raw_data_offset and
                 @match[i] < pe.sections[j].raw_data_offset + pe.sections[j].raw_data_size - 15
+            ) and
+            (
+                uint8(@match[i]) >> 3 == 0x17 and
+                uint8(@match[i]+5) >> 3 == 0x17
             ) and
             (
                 (
