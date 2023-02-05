@@ -184,8 +184,13 @@ rule op {
     meta:
         author      = "@c3rb3ru5d3d53c"
         description = "Potential 32-bit Immutable Opaque Predicates"
+        reference   = "https://c3rb3ru5d3d53c.github.io/2023/02/opaque-predicate-hunting-with-yara.en.md/"
         tlp         = "white"
     strings:
+	    // mov    <regiser>,<32_bit_imm>
+		// mov    <register>,<32_bit_imm>
+		// cmp    <regiser>,<register>
+		// <conditional_jump>
         $match = {b? ?? ?? ?? ?? b? ?? ?? ?? ?? 39 ?? (7?|e3)}
     condition:
         uint16(0) == 0x5a4d and
