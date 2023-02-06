@@ -121,7 +121,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   [params.social]
     GitHub         = "c3rb3ru5d3d53c"
     Twitter        = "c3rb3ru5d3d53c"
-    Youtubechannel = "@c3rb3ru5d3d53c"
+    Youtubechannel = "UCk9BugRahSWgPLYOAA3QH4w"
     Twitch         = "c3rb3ru5d3d53c"
     Email          = "c3rb3ru5d3d53c@gmail.com"
 
