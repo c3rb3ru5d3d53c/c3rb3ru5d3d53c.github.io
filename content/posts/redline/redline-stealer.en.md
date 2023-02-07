@@ -71,7 +71,7 @@ import base64
 
 class StringDecrypt():
     @staticmethod
-	def Read(ciphertext, key):
+	def Read(ciphertext: str, key: str) -> str:
 	    key = key.encode()
 	    ciphertext = base64.b64decode(ciphertext)
 	    plaintext = []
