@@ -5,6 +5,7 @@
 
 The purpose of this article is to provide reasoning behind why I'm a `fish` shell user and how to I setup `fish` 🐟 shell on all my Linux machines. Before we begin, we need to understand what `fish` shell is.
 
+
 > Fish is a Unix shell with a focus on interactivity and usability. Fish is designed to give the user features by default, rather than by configuration. Fish is considered an exotic shell since it does not rigorously adhere to POSIX shell standards, at the discretion of the maintainers. - [Wikipedia](https://en.wikipedia.org/wiki/Fish_(Unix_shell))
 
 As the the quote states `fish` focuses on our interaction with our shell and usability. It provides us features without having to focus on spending much time on customization like `zsh`, `bash` and others. Now let's address some of the common misconceptions in the Linux community regarding `fish` shell.
