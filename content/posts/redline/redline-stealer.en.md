@@ -479,6 +479,11 @@ mwcfg -m modules/ -i tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c
 ```
 *Figure placeholder. Redline Stealer Configuration Extraction*
 
+## Downloads
+
+- [Source Code](samples/2023-02-18-redline-src.zip)
+- [Samples](samples/2023-02-18-redline-samples.zip)
+
 ## Indicators of Compromise
 
 | Type   | Indicator                                                        | Description                    |
