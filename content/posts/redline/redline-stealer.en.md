@@ -25,7 +25,7 @@ Muta from `SomeOrdinaryGamers` uploaded a video on *Redline Stealer* on Aug 14, 
 - *Redline Stealer* executes its modules in random order to potentially evade heuritic detection.
 
 ## Infection Chain
-
+Data Contract
 The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr` from `pornleech[.]ch`, which creates three files in the `TEMP%` directory, `Che.mp3` (Autoit Interpreter), `Quella.mp3`, (BAT Script) and `Travolge.mp3` (AutoIT Script).
 
 ## Obfuscated BAT Script
@@ -99,27 +99,30 @@ To establish a connection with the C2 server, Redline Stealer creates a new clas
 
 *Redline Stealer* creates the data contract class `SettingsStruct`, which contains data members. These data members are the settings *Redline Stealer* uses during its execution, which are obtained from the C2 server (Table 1).
 
-| Type             | Name               | Description                               |
-| ---------------- | ------------------ | ----------------------------------------- |
-| bool             | Id1                | Unknown                                   |
-| bool             | FileSearch         | Enable File Stealing Module               |
-| bool             | Filezilla          | Enable Filezilla Module                   |
-| bool             | Wallets            | Enable Wallet Stealing Module             |
-| bool             | GetImageBase       | Enable Collection of Image Base           |
-| bool             | ScanFiles          | Enable Scanning Files                     |
-| bool             | VPN                | Enable Stealing VPN Credentials           |
-| bool             | GameLaunchers      | Enable Stealing Game Launcher Information |
-| list\<string\>   | FileSearchPatterns | File Search Pattern List                  |
-| list\<string\>   | BrowserPaths       | Browser Path List                         |
-| list\<string\>   | Id12               | Unknown                                   |
-| list\<Entity17\> | AdditionalWallets  | Additional Wallets to Steal               | 
+| Type                      | Name                 | Description                           |
+| ------------------------- | -------------------- | ------------------------------------- |
+| bool                      | Browsers             | Enable Stealing Browser Data          | 
+| bool                      | FileSearch           | Enable File Stealing Module           |
+| bool                      | Filezilla            | Enable Filezilla Module               |
+| bool                      | Wallets              | Enable Wallet Stealing Module         |
+| bool                      | GetImageBase         | Enable Collection of Image Base       |
+| bool                      | ScanFiles            | Enable Scanning Files                 |
+| bool                      | VPN                  | Enable Stealing VPN Credentials       |
+| bool                      | StealSteam           | Enable Stealing Steam Creds           |
+| bool                      | Discord              | Enable Discord Stealing Tokens        |
+| List\<string\>            | FileSearchPatterns   | Patterns to Search for Files to Steal |
+| List\<string\>            | ChromiumBrowserPaths | Paths for Chromium Browsers           |
+| List\<string\>            | MozillaBrowserPaths  | Paths for Mozilla Browsers            |
+| List\<WalletFileConfigs\> | AdditionalWallets    | Additional Wallets to Steal           |
+
 *Table 1. Redline Stealer Settings Data Contract Members*
 
 #### Result Data Contract
 
-*Redline Stealer* stores results of data collected from the victim machine in a data contract, which is created with the data member `ID`. The value of this data member is `100822` and originates from `Arguments.ID`, which is decrypted using `StringDecrypt.Read`.
+*Redline Stealer* stores results of data collected from the victim machine in a data contract, which is created with the data member `ID`. The value of this data member is `100822` originating from `Arguments.ID`, which is decrypted using `StringDecrypt.Read` and `ID` serves as the build ID.
 
-PLACEHOLDER (What does this `ID` do?)
+![build_id](images/b8160dbd643f3717cd2ffc345e2a47e6ce072cc5898afb548dc50468fcafa4ff.png)
+*Figure placeholder. Redline Stealer Build ID ([reference](https://www.esentire.com/blog/esentire-threat-intelligence-malware-analysis-redline-stealer))*
 
 ### Modules
 
@@ -149,6 +152,7 @@ Next, in a while loop, *Redline Stealer* executes the `Invoker` method from the 
 | Main         | GetGameLaunchers     | Steal Game Launcher Data            |
 | Main         | GetVPN               | Steal VPN Credentials               |
 | Main         | GetImageBase         | Get Executing Assembly Image Base   |
+
 *Table 2. Redline Stealer Module Groups*
 
 The modules in the group `First` only collect data, which is later sent to the C2 server, whereas the modules in the group `Main` send data within each module. This could mean the modules in the `First` group are working on being ported to the `Main` group.
@@ -220,6 +224,7 @@ To collect a list of Telegram profiles, *Redline Stealer* first checks if the pr
 | string | Directory     | Directory to Search     |
 | string | SearchPattern | Search Pattern String   |
 | bool   | Recursive     | Recursive Search or Not |
+
 *Table 3. Redline Stealer ScannerArgs Data Contract*
 
 Next, if *Redline Stealer* is unable to find a currently running process of `Telegram.exe`, *Redline Stealer* will add the directory `%AppData%\Telegram Desktop\tdata\` to the list of `ScannerArgsStruct` data contracts.
@@ -485,7 +490,8 @@ mwcfg -m modules/ -i tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c
 | SHA256 | 3e26723394ade92f8163b5643960189cb07358b0f96529a477d37176d68aa0a0 | AutoIT Interpreter             |
 | SHA256 | 454b381e98f092cab4e82f21a790c5ccd4dbd006e44925bcabd6c9289ea6700e | AutoIT Script                  |
 | SHA256 | 676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c33087a3a5dca06364aa | Redline Stealer (Unpacked)     |
-| IPv4   | 95.217.35[.]153                                                    | Redline Stealer C2                               |
+| IPv4   | 95.217.35[.]153                                                  | Redline Stealer C2             |
+| SHA256 | 2ccf3271c2e61033cddaf0af23854fc73cdaf7eab15745c419f269b8b24687c6 | Redline Stealer Deobfuscated   | 
 
 ## Detection
 
