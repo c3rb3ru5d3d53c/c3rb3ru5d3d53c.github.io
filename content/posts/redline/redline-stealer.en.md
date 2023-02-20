@@ -25,10 +25,10 @@ Muta from `SomeOrdinaryGamers` uploaded a video on *Redline Stealer* on Aug 14, 
 - *Redline Stealer* executes its modules in random order to potentially evade heuritic detection.
 
 ## Infection Chain
-Data Contract
+
 The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr` from `pornleech[.]ch`, which creates three files in the `TEMP%` directory, `Che.mp3` (Autoit Interpreter), `Quella.mp3`, (BAT Script) and `Travolge.mp3` (AutoIT Script).
 
-## Obfuscated BAT Script
+### Obfuscated BAT Script
 
 Once extracted, the installer executes `cmd /c cmd < Quella.mp3 & ping -n 5 localhost`, which later creates `Mantenga.exe.pif`, which is an AutoIT interpreter.
 
@@ -63,7 +63,7 @@ NtUnmapViewOfSection
 
 Once executed, *Redline Stealer* checks the country of origin against Armenia, Azerbaijan, Belarus, Kazakhstan, Kyrgyzstan, Moldova, Tajikistan, Uzbekistan, Ukraine, and Russia. Next, if `TimeZoneInfo.Local.Id` contains any of the hard-coded disallowed countries or `CultureInfo.CurrentUICulture.EnglishName` is `null` the program calls `Environment.Exit`.
 
-## String Decryption
+### String Decryption
 
 To decrypt strings, *Redline Stealer* calls `StrinDecrypt.Read`, which base64-decodes the ciphertext, then performs a rotating XOR operation using the key user string (`#US`) `Kenners`.
 
@@ -83,7 +83,7 @@ class StringDecrypt():
 ```
 *Figure 1. Redline Stealer String Decryption Routine in Python*
 
-## User Message
+### User Message
 
 If the field `Arguments.Message` is not an empty or a `null` string, it is decrypted by calling `StringDecrypt.Read` (Figure 1) and subsequently presented to the user in a message box. The execution of *Redline Stealer* is not halted during this process, as the message box is created using a new thread. This functionality in Redline Stealer allows operators to present messages to users, such as fake error messages and more.
 
@@ -326,7 +326,7 @@ The key is the path expected to match the wallet, and the value is the wallet na
 "%Path%/Local Extension Settings/afbcbjpbpfadlkmhmclhkeeodmamcflc"
 ```
 
-Next, Redline Stealer searches for the files wallet.dat and wallet. These results are returned in a list of scanner results.
+Next, *Redline Stealer* searches for the files wallet.dat and wallet. These results are returned in a list of scanner results.
 
 Once completed, *Redline Stealer* collects the files identified and sends them to the C2 server.
 
@@ -350,7 +350,7 @@ public static void StealWallets(ConnectionProvider connection, SettingsStruct se
 
 #### StealDiscord
 
-To steal Discord tokens, Redline Stealer checks if the Discord module is enabled. If the module is enabled, Redline Stealer checks the directory `%AppData%\\discord\\Local Storage\\leveldb` for the file extensions `.log` and `.ldb.` The files collected with these extensions are searched with the regex ``[A-Za-z\\d]{24}\\.[\\w-]{6}\\.[\\w-]{27}``. If a match is found, Redline Stealer adds the Discord token to a structure containing the tokens. Once completed, they are added to the SystemInfo structure, which is later sent to the C2 server.
+To steal Discord tokens, *Redline Stealer* checks if the Discord module is enabled. If the module is enabled, Redline Stealer checks the directory `%AppData%\\discord\\Local Storage\\leveldb` for the file extensions `.log` and `.ldb.` The files collected with these extensions are searched with the regex ``[A-Za-z\\d]{24}\\.[\\w-]{6}\\.[\\w-]{27}``. If a match is found, Redline Stealer adds the Discord token to a structure containing the tokens. Once completed, they are added to the SystemInfo structure, which is later sent to the C2 server.
 
 ```csharp
 public static void StealDiscord(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
@@ -364,7 +364,7 @@ public static void StealDiscord(ConnectionProvider connection, SettingsStruct se
 	}
 ```
 
-## StealSteam
+#### StealSteam
 
 To steal Steam credentials, *Redline Stealer* checks if the `StealSteam` module is enabled. If enabled, *Redline Stealer* checks if the registry key `HKCU:\Software\Valve\Steam` if the value `SteamPath` is a directory. If the directory exists, *Redline Stealer* collects files matching the search pattern `*ssfn*` and `*.vdf`. The `ssfn` (Steam Sentry Files) are used by Steam for authentication sessions and the `.vdf` files are used to contain various types of game metadata. These files are later exfiltrated to the C2 server.
 
@@ -423,7 +423,7 @@ public static void StealVPN(ConnectionProvider connection, SettingsStruct settin
 
 #### StealBrowsers
 
-To steal browser credentials, Redline Stealer iterates over browser paths provided for both Chromium and Mozilla based browsers from the the configuration. To steal the data, *Redline Stealer* iterates over the directories `Login Data`, `Web Data`, `Cookies` and `Extension Cookies`. During this process *Redline Stealer* collects cookies, the browser name, the path to the `User Data` directory, saved passwords, autofill data, and credit cards. Most of the data collected from the browsers is from the sqlite database and is easily decrypted.
+To steal browser credentials, *Redline Stealer* iterates over browser paths provided for both Chromium and Mozilla based browsers from the the configuration. To steal the data, *Redline Stealer* iterates over the directories `Login Data`, `Web Data`, `Cookies` and `Extension Cookies`. During this process *Redline Stealer* collects cookies, the browser name, the path to the `User Data` directory, saved passwords, autofill data, and credit cards. Most of the data collected from the browsers is from the sqlite database and is easily decrypted.
 
 ```csharp
 public static void BrowserStealer(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
@@ -440,7 +440,7 @@ public static void BrowserStealer(ConnectionProvider connection, SettingsStruct 
 
 #### Remote Tasks
 
-To execute remote tasks, Redline Stealer makes a request to the C2 server. Next, Redline Stealer is able to perform four types of remote tasks. These remote tasks include arbitrary command execution, downloading of files, downloading and execution of files and executing files (Table placeholder).
+To execute remote tasks, *Redline Stealer* makes a request to the C2 server. Next, Redline Stealer is able to perform four types of remote tasks. These remote tasks include arbitrary command execution, downloading of files, downloading and execution of files and executing files (Table placeholder).
 
 | Task                        | Example                                                 | Description                             |
 | --------------------------- | ------------------------------------------------------- | --------------------------------------- |
@@ -451,7 +451,7 @@ To execute remote tasks, Redline Stealer makes a request to the C2 server. Next,
 
 *Table placeholder. Redline Stealer Remote Tasks*
 
-## Configuration Extraction
+### Configuration Extraction
 
 I have created a configuration extractor, which is available [here](https://github.com/c3rb3ru5d3d53c/mwcfg-modules/blob/f1064aea63d11b5069a1839cf2b9d10d43cee1aa/redline/redline.py).
 
@@ -481,8 +481,8 @@ mwcfg -m modules/ -i tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c
 
 ## Downloads
 
-- [Source Code](samples/2023-02-18-redline-src.zip)
-- [Samples](samples/2023-02-18-redline-samples.zip)
+-  [Reverse Engineered Source Code](samples/2023-02-18-redline-src.zip)
+- [Redline Samples](samples/2023-02-18-redline-samples.zip)
 
 ## Indicators of Compromise
 
@@ -500,7 +500,7 @@ mwcfg -m modules/ -i tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c
 
 ## Detection
 
-This section contains signatures to detect Redline Stealer and its infection chain.
+This section contains signatures to detect *Redline Stealer* and its infection chain.
 
 ### YARA
 
@@ -515,3 +515,7 @@ Placeholder
 | ID          | Tactic      | Technique   |
 | ----------- | ----------- | ----------- |
 | placeholder | placeholder | placeholder | 
+
+## Contributors
+- [dr4k0nia](https://twitter.com/dr4k0nia)
+- [AnFam17](https://twitter.com/AnFam17)
