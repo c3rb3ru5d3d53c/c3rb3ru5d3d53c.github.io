@@ -17,15 +17,17 @@ A portfolio website showcases immediate value to employers because it provides a
 
 ## GitHub
 
-Placeholder
+[GitHub](https://github.com/) is a web-based platform for version control and collaborative software development that allows individuals and teams to host and review code, manage projects, and build software in a more organized and efficient way. In this case, we will be using [GitHub](https://github.com/) as a place to save and build our website using [Github Pages](https://pages.github.com/).
+
+[GitHub Pages](https://pages.github.com/) is a free service offered by [GitHub](https://github.com/) that allows users to host static websites and web applications directly from their [GitHub](https://github.com/) repositories. It simplifies the process of publishing content on the web by automatically building and deploying your code changes to a web server, allowing others to access your site via a custom domain or a subdomain of the `github.io` domain.
 
 ### Create an Account
 
-To create a GitHub account, first go to the GitHub website and click on the `Sign up` button in the upper right corner. You will be prompted to enter your email address, a username, and a password. Then click `Create account`. Next, verify your email address by following the instructions in the confirmation email that GitHub sends you. Finally, customize your profile and start using GitHub to create, store, and collaborate on code.
+To create a [GitHub](https://github.com/) account, first go to the [GitHub](https://github.com/) website and click on the `Sign up` button in the upper right corner. You will be prompted to enter your email address, a username, and a password. Then click `Create account`. Next, verify your email address by following the instructions in the confirmation email that [GitHub](https://github.com/) sends you. Finally, customize your profile and start using [GitHub](https://github.com/) to create, store, and collaborate on code.
 
-## Create a Repository
+### Create a Repository
 
-To create a GitHub repository, first log in to your GitHub account and click on the `+` icon in the upper right corner, then select `New repository`. Next, choose a name for your repository and provide an optional description. Finally, set your repository to be public.
+To create a [GitHub](https://github.com/) repository, first log in to your GitHub account and click on the `+` icon in the upper right corner, then select `New repository`. Next, choose a name for your repository and provide an optional description. Finally, set your repository to be public.
 
 ## Hugo
 
@@ -72,7 +74,24 @@ hugo build
 hugo server
 ```
 
-### Push the Code
+## Obsidian
+
+[Obsidian](https://obsidian.md/) is a note-taking tool that allows users to create and organize their notes in a network of interconnected documents. It uses a [Markdown-based](https://www.markdownguide.org/cheat-sheet/) text editor and allows for bidirectional linking, which enables users to quickly find and connect related information. Obsidian also has a graph view that visually displays the connections between notes, making it easier to explore and understand the relationships between ideas.
+
+### Installation
+
+To install Obsidian, follow the instruction provided on their website [here](https://obsidian.md/download). If you are using a Debian based Linux distribution, you can use the commands provided below; just change the URL to the latest one from the website.
+
+```bash
+wget https://github.com/obsidianmd/obsidian-releases/releases/download/v1.1.9/obsidian_1.1.9_amd64.deb
+sudo apt install ./obsidian_1.1.9_amd64.deb
+```
+
+### Writing your Blog
+
+Placeholder
+
+## Publishing your Work
 
 Once completed, we can push our code to GitHub, which should begin the build process and serve your site to `<username>.github.io`.
 
@@ -81,18 +100,6 @@ git add .
 git commit -m "First Commit"
 git push
 ```
-
-## Obsidian
-
-Placeholder
-
-## Installation
-
-Placeholder
-
-## Writing your Blog
-
-Placeholder
 
 ## Conclusion
 
@@ -105,3 +112,4 @@ So, if you're looking for an easy and efficient way to build your own portfolio 
 ## References
 
 - [Hugo Quickstart](https://gohugo.io/getting-started/quick-start/)
+- [Obsidian Website](https://obsidian.md/)
