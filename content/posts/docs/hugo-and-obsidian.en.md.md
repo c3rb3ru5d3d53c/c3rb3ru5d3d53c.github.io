@@ -21,15 +21,15 @@ Placeholder
 
 ### Create an Account
 
-To create a GitHub account, first go to the GitHub website and click on the "Sign up" button in the upper right corner. You will be prompted to enter your email address, a username, and a password. Then click "Create account". Next, verify your email address by following the instructions in the confirmation email that GitHub sends you. Finally, customize your profile and start using GitHub to create, store, and collaborate on code.
+To create a GitHub account, first go to the GitHub website and click on the `Sign up` button in the upper right corner. You will be prompted to enter your email address, a username, and a password. Then click `Create account`. Next, verify your email address by following the instructions in the confirmation email that GitHub sends you. Finally, customize your profile and start using GitHub to create, store, and collaborate on code.
 
 ## Create a Repository
 
-To create a GitHub repository, first log in to your GitHub account and click on the "+" icon in the upper right corner, then select "New repository". Next, choose a name for your repository and provide an optional description. Set your repository to be public.
+To create a GitHub repository, first log in to your GitHub account and click on the `+` icon in the upper right corner, then select `New repository`. Next, choose a name for your repository and provide an optional description. Finally, set your repository to be public.
 
 ## Hugo
 
-Placeholder
+Hugo is a fast and flexible static site generation tool that allows you to create websites quickly and easily. It uses a simple and intuitive directory structure and provides a wide range of themes and templates to choose from, enabling you to create professional-looking websites with minimal effort.
 
 ### Installation
 
