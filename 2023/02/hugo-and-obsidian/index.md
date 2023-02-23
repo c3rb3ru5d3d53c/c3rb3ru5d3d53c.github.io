@@ -17,7 +17,7 @@ To create a [GitHub](https://github.com/) account, first go to the [GitHub](http
 
 ### Create a Repository
 
-To create a [GitHub](https://github.com/) repository, first log in to your [GitHub](https://github.com/) account and click on the `+` icon in the upper right corner, then select `New repository`. Next, choose a name for your repository and provide an optional description. Finally, set your repository to be public.
+To create a [GitHub](https://github.com/) repository, first log in to your [GitHub](https://github.com/) account and click on the `+` icon in the upper right corner, then select `New repository`. Next, choose a name for your repository (should be `<username>.github.io`) and provide an optional description. Finally, set your repository to be public.
 
 ## Hugo
 
