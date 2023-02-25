@@ -1,14 +1,14 @@
 ---
 weight: 4
-title: "Reversing RedLine Stealer"
+title: "Destroying Redline Stealer"
 date: 2022-11-29T21:57:40+08:00
 lastmod: 2020-01-01T16:45:40+08:00
 draft: false
 author: "c3rb3ru5d3d53c"
-description: "Reversing Redline Stealer Pron Lure"
+description: "Reverse Engineering Redline Stealer that infected Martin Shkreli"
 images: []
 featuredImage: "images/58355ee00525933c00837595236e80804db1188e1b2bf06e20ef315014943039.png"
-tags: ["RedLine", "Stealer"]
+tags: ["RedLine", "Stealer", "Reverse Engineering"]
 categories: ["Malware"]
 lightgallery: true
 ---
@@ -482,6 +482,12 @@ mwcfg -m modules/ -i tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c
 ]
 ```
 *Figure placeholder. Redline Stealer Configuration Extraction*
+
+## Conclusion
+
+At this point, I think we have successfully destroyed *Redline Stealer*.
+
+![destroy](images/26d7d2f5130d353a4bb7a5b02f8a25b0639a0ce6e4f130fcf53ca7170e60b6a1.png)
 
 ## Video Series
 
