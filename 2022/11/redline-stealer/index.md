@@ -1,4 +1,4 @@
-# Reversing RedLine Stealer
+# Destroying Redline Stealer
 
 
 ## Situation
@@ -470,6 +470,12 @@ mwcfg -m modules/ -i tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c
 ]
 ```
 *Figure placeholder. Redline Stealer Configuration Extraction*
+
+## Conclusion
+
+At this point, I think we have successfully destroyed *Redline Stealer*.
+
+![destroy](images/26d7d2f5130d353a4bb7a5b02f8a25b0639a0ce6e4f130fcf53ca7170e60b6a1.png)
 
 ## Video Series
 
