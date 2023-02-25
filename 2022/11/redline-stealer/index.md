@@ -514,17 +514,78 @@ This section contains signatures to detect *Redline Stealer* and its infection c
 
 ### YARA
 
-Placeholder
+```cpp
+import "dotnet"
+
+rule redline_0 {
+    meta:
+        author      = "@c3rb3r3u5d3d53c"
+        description = "Redline Stealer"
+        created     = "2023-02-25"
+        tlp         = "white"
+        reference   = "https://c3rb3ru5d3d53c.github.io/2023/02/opaque-predicate-hunting-with-yara/"
+        rev         = 1
+    strings:
+        $string_decrypt_method = {
+            73 ?? ?? ?? ?? 0a 16 0b 2b ?? 02 07 6F ?? ?? ??
+            ?? 03 07 03 6F ?? ?? ?? ?? 5d 6F ?? ?? ?? ?? 61
+            0c 06 72 ?? ?? ?? ?? 08 28 ?? ?? ?? ?? 6F ?? ??
+            ?? ?? 26 07 17 58 0b 07 02 6F ?? ?? ?? ?? 32 ??
+            06 6F ?? ?? ?? ?? 2a
+        }
+        $typedef_0 = "РrоtoнVРN" ascii wide
+        $typedef_1 = "M03illa"   ascii wide
+    condition:
+        uint16(0) == 0x5a4d and
+        dotnet.is_dotnet and
+        $string_decrypt_method and
+        1 of ($typedef_*)
+}
+```
 
 ### Suricata
 
-Placeholder
+```cpp
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (
+ msg:"MALWARE Redline Stealer C2 Beacon (SOAP-TCP)";
+ content:"|06|"; depth:1;
+ content:"/Entity/Id"; distance:20; fast_pattern;
+ pcre:"/\x2fEntity\x2fId\d\x03/";
+ content:"Authorization|08 03|ns1|99 20|"; distance:0;
+ flow:to_server, established;
+ classtype:trojan-activity;
+ sid:1000000;
+ rev:1;
+)
+alert http $HOME_NET any -> $EXTERNAL_NET any (
+ msg:"MALWARE Redline Stealer C2 Beacon (SOAP-HTTP)";
+ content:"SOAPAction|3a 20 22|"; http_header;
+ content:"/Endpoint/EnvironmentSettings"; http_header; distance:0;
+ content:"<s:Envelope"; http_client_body; depth:11;
+ flow:to_server, established;
+ classtype:trojan-activity;
+ sid:1000001;
+ rev:1;
+)
+```
 
 ## Mitre Attack TTPs
 
-| ID          | Tactic      | Technique   |
-| ----------- | ----------- | ----------- |
-| placeholder | placeholder | placeholder | 
+| ID                                                          | Tactic               | Technique                                                |
+| ----------------------------------------------------------- | -------------------- | -------------------------------------------------------- |
+| [T1059.003](https://attack.mitre.org/techniques/T1059/003/) | Execution            | Command and Scripting Interpreter: Windows Command Shell |
+| [T1055.012](https://attack.mitre.org/techniques/T1055/012/) | Defense Evasion      | Process Injection: Process Hollowing                     |
+| [T1027](https://attack.mitre.org/techniques/T1027/)         | Defense Evasion      | Obfuscated Files or Information                          |
+| [T1071.001](https://attack.mitre.org/techniques/T1071/001/) | Command and Control  | Application Layer Protocol: Web Protocols                |
+| [T1041](https://attack.mitre.org/techniques/T1041/)         | Exfiltration         | Exfiltration Over C2 Channel                             |
+| [T1020](https://attack.mitre.org/techniques/T1020/)         | Exfiltration         | Automated Exfiltration                                   |
+| [T1555](https://attack.mitre.org/techniques/T1555/)         | Credential Access    | Credentials from Password Stores                         |
+| [T1586.001](https://attack.mitre.org/techniques/T1586/001/) | Resource Development | Compromise Accounts: Social Media Accounts               |
+| [T1528](https://attack.mitre.org/techniques/T1528/)         | Credential Access    | Steal Application Access Token                           |
+| [T1204.002](https://attack.mitre.org/techniques/T1204/002/) | Execution            | User Execution: Malicious File                           | 
+
+## References
+- [AnyRun](https://app.any.run/tasks/b97bb9a0-7f20-4ead-8c38-d82640195779/)
 
 ## Contributors
 - [dr4k0nia](https://twitter.com/dr4k0nia)
