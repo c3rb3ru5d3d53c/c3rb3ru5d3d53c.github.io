@@ -15,9 +15,13 @@ lightgallery: true
 
 ## Situation
 
-Muta from `SomeOrdinaryGamers` uploaded a video on *Redline Stealer* on Aug 14, 2022, which infected Martin Shkreli.
+Muta from [SomeOrdinaryGamers](https://www.youtube.com/@SomeOrdinaryGamers) uploaded a video on *Redline Stealer* on Aug 14, 2022, which infected [Martin Shkreli](https://en.wikipedia.org/wiki/Martin_Shkreli). The purpose of this analysis is to destroy *Redline Stealer* (specifically the version that infected [Martin Shkreli](https://en.wikipedia.org/wiki/Martin_Shkreli)), beginning to end. We will be writing our own configuration extractor, compiling our own version of *Redline Stealer* in Visual Studio (without source code), write detection signature and tear apart every aspect of the attack chain. The entire live video series of reverse engineering this is available on [YouTube](https://www.youtube.com/channel/UCk9BugRahSWgPLYOAA3QH4w) for everyone!
 
-### Key Points
+If you wish to support my work, you can buy me a coffee [here](buymeacoffee.com/c3rb3ru5d3d53c).
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/L4ske42sAXQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+## Executive Summary
 - *Redline Stealer* has the ability to communicate with multiple C2 hosts.
 - *Redline Stealer* has the ability to present a message box to the user upon execution.
 - *Redline Stealer* communicates with the C2 server using Simple Object Access Protocol (SOAP).
@@ -478,6 +482,18 @@ mwcfg -m modules/ -i tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c
 ]
 ```
 *Figure placeholder. Redline Stealer Configuration Extraction*
+
+## Video Series
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ZOAVy0Klg0I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/e2YM-LxW1U4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/r3kNLOD4HNo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tqLV7o-BCbY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gBpl5TIUD7A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ## Downloads
 
