@@ -27,3 +27,7 @@ find samples/ -type f | while read i; binlex -i $i | jq -r 'trait' | sort | uniq
 ```bash
 tshark -i lo -F libpcap -w (date +"%Y-%m-%d").pcap
 ```
+## Linux TTS
+```bash
+flite --setf duration_stretch=0.5 -voice slt -t "Hello World!"
+```
