@@ -25,7 +25,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     post = ""
     name = ""
     url = "/posts/"
-    title = ""
+    title = "Blog"
   [[menu.main]]
     weight = 2
     identifier = "tags"
@@ -33,7 +33,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     post = ""
     name = ""
     url = "/tags/"
-    title = ""
+    title = "Tags"
   [[menu.main]]
     weight = 3
     identifier = "categories"
@@ -41,7 +41,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     post = ""
     name = ""
     url = "/categories/"
-    title = ""
+    title = "Categories"
   [[menu.main]]
     weight = 4
     identifier = "discord-server"
@@ -49,7 +49,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     post = "<i class=\"fa-solid fa-server\"></i>"
     name = ""
     url = "https://discord.gg/NzaXGDVYkD"
-    title = ""
+    title = "Discord Server"
 
 [params]
   defaultTheme = "dark"
