@@ -109,7 +109,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     [params.home.profile]
       enable = true
       gravatarEmail = ""
-      avatarURL = "/images/9c00b60f26c99acad7327a3e25ac52b2d1dbc917be19747f74e1da68dff30922.png"
+      avatarURL = "/images/beddfc292cd7b9066b3ed5397fdc745259a53f4642c8d876ef75cdbc3d4b0f52.jpg"
       title = "c3rb3r3u5d3d53c"
       subtitle = "Hey everyone! I’m c3rb3ru5d3d53c. 😄 I’m a malware analyst and reverse engineer who has been in the cybersecurity industry now about 7 years. I’ve worked on everything from APT malware to popular crimeware. I’m also the developer of binlex and mwcfg. I have a huge passion for genetic binary analysis and much more. I’m a reverse engineer by day and a developer by night."
       typeit = false
