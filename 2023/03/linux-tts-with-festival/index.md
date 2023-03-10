@@ -55,14 +55,14 @@ Once completed, you can setup your shortcuts in your distribution like the follo
 
 ![shortcut](images/97a30b5bad97368f3b836f0dbec846df15706b662e1d8a0ad80549b457e1fdc3.png)
 
-## Speed up Playback
+## Speed up Playback and Increase Volume
 
-When reading, I find it useful to speed up playback as it allows me to read at a faster pace. You can change the option for `atemo` to whatever works for you.
+When reading, I find it useful to speed up playback as it allows me to read at a faster pace. You can change the option for `atemo` to whatever works for you. If you wish to increase the volume you can change the `volume` option as well.
 
 ```lisp
 (Parameter.set 'Audio_Required_Format 'aiff)
 (Parameter.set 'Audio_Method 'Audio_Command)
-(Parameter.set 'Audio_Command "ffplay -hide_banner -loglevel error -nodisp -autoexit -volume 100 -af 'atempo=1.8' $FILE")
+(Parameter.set 'Audio_Command "ffplay -hide_banner -loglevel error -nodisp -autoexit -volume 100 -af 'atempo=1.8,volume=3' $FILE")
 ```
 
 ### Set Default Voice
