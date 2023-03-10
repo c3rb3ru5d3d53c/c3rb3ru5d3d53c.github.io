@@ -21,26 +21,34 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   [[menu.main]]
     weight = 1
     identifier = "posts"
-    pre = ""
+    pre = "<i class=\"fa-solid fa-square-pen\"></i>"
     post = ""
-    name = "Blog"
+    name = ""
     url = "/posts/"
     title = ""
   [[menu.main]]
     weight = 2
     identifier = "tags"
-    pre = ""
+    pre = "<i class=\"fa-solid fa-tag\"></i>"
     post = ""
-    name = "Tags"
+    name = ""
     url = "/tags/"
     title = ""
   [[menu.main]]
     weight = 3
     identifier = "categories"
-    pre = ""
+    pre = "<i class=\"fa-solid fa-folder\"></i>"
     post = ""
-    name = "Categories"
+    name = ""
     url = "/categories/"
+    title = ""
+  [[menu.main]]
+    weight = 4
+    identifier = "discord-server"
+    pre = "<i class=\"fa-brands fa-discord\"></i>"
+    post = "<i class=\"fa-solid fa-server\"></i>"
+    name = ""
+    url = "https://discord.gg/NzaXGDVYkD"
     title = ""
 
 [params]
@@ -124,6 +132,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     Youtubechannel = "UCk9BugRahSWgPLYOAA3QH4w"
     Twitch         = "c3rb3ru5d3d53c"
     Email          = "c3rb3ru5d3d53c@gmail.com"
+    Discord        = "c3rb3ru5#6258"
 
   [params.page]
     hiddenFromHomePage = false
