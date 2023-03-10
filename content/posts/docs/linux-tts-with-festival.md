@@ -17,7 +17,7 @@ Most Linux distributions do not come with a text-to-speech (TTS) engine installe
 
 I have dysgraphia, which is a neurological disorder that affects a person's ability to write. People with dysgraphia may struggle with writing legibly, organizing their thoughts on paper, and/or maintaining consistent spacing and sizing of letters and words.
 
-In order to combat this mental limitation, I use TTS to read text more quickly and to proof read what I'm writing. Additionaly, treatment for dysgraphia can include accommodations such as using a cl, you can use the text below. Each voice that you have can be listed in the repl by doing (voice.list). Each voice name, must be prefixed with voomputer instead of handwriting or receiving occupational therapy to improve handwriting skills. It's important for individuals with dysgraphia to receive support and accommodations to help them succeed in academic and professional settings.
+In order to combat this mental limitation, I use TTS to read text more quickly and to proof read what I'm writing. Additionaly, treatment for dysgraphia can include accommodations such as using a computer. It's important for individuals with dysgraphia to receive support and accommodations to help them succeed in academic and professional settings.
 
 The solution I found in this case is `festival`, which is a free and open-source text-to-speech (TTS) tool for Linux that allows users to generate artificial speech from written text. Festival is highly customizable and supports a range of voices, languages, and output formats. It can be used for a variety of applications, including voice interfaces, screen readers, and language learning tools.
 
