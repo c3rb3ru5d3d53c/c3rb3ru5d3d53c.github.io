@@ -552,7 +552,8 @@ At this point, I think we have successfully destroyed *Redline Stealer*.
 | SHA256 | 454b381e98f092cab4e82f21a790c5ccd4dbd006e44925bcabd6c9289ea6700e | AutoIT Script                  |
 | SHA256 | 676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c33087a3a5dca06364aa | Redline Stealer (Unpacked)     |
 | IPv4   | 95.217.35[.]153                                                  | Redline Stealer C2             |
-| SHA256 | 2ccf3271c2e61033cddaf0af23854fc73cdaf7eab15745c419f269b8b24687c6 | Redline Stealer Deobfuscated   | 
+| SHA256 | 2ccf3271c2e61033cddaf0af23854fc73cdaf7eab15745c419f269b8b24687c6 | Redline Stealer Deobfuscated   |
+| SHA256 | 6cc516d93917545e60f938906bea4684860ec6db5e45480b1c81e2a2a42eb2e2 | AutoIt Script (Deobfuscated)   | 
 
 ## Detection
 
