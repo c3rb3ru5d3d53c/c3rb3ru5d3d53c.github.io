@@ -45,6 +45,11 @@ from ghidra.program.model.listing import CodeUnit
 cu = currentProgram.getListing().getCodeUnitAt(addr)
 cu.getComment(CodeUnit.EOL_COMMENT)
 cu.setComment(CodeUnit.EOL_COMMENT, "Comment text")
+
+def set_comment_eol(address, text, debug=False):
+    cu = currentProgram.getListing().getCodeUnitAt(address)
+    if debug is False: cu.setComment(CodeUnit.EOL_COMMENT, text)
+    if debug is True: print(str(address) + ' | ' + text)
 ```
 
 ## Bookmarks
@@ -61,6 +66,9 @@ fm = currentProgram.getFunctionManager()
 f = fm.getFunctionAt(currentAddress)
 f = fm.getFunctionContaining(currentAddress)
 f.setName("test", SourceType.USER_DEFINED)
+
+def get_xrefs(address: int):
+    return [x.getFromAddress() for x in getReferencesTo(get_address(address))]
 ```
 
 ## Addresses
@@ -92,4 +100,20 @@ mnemonic = codeunit.getMnemonicString()
 number_operands = codeunit.getNumOperands()
 next_codeunit = codeunit.getNext()
 prev_codeunit = codeunit.getPrev()
+```
+
+## Common Imports
+
+```python
+from pprint import pprint
+from hexdump import hexdump
+from ghidra.program.model.lang import OperandType
+from ghidra.program.model.listing import CodeUnit
+```
+
+## Load Pickled Object
+
+```python
+import pickle
+data = pickle.load(open('example.pickle', 'rb'))
 ```
