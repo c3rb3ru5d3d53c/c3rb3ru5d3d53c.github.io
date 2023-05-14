@@ -5,6 +5,11 @@ This is a cheatsheet I use for Ghidra scripting.
 
 NOTE: Some of these functions use each other :smile:
 
+## User Input
+```python
+askFile('Title', 'Okay').toString()
+```
+
 ## Get Python Bytes from Address
 
 ```python
@@ -109,6 +114,7 @@ from pprint import pprint
 from hexdump import hexdump
 from ghidra.program.model.lang import OperandType
 from ghidra.program.model.listing import CodeUnit
+from ghidra.program.flatapi import FlatProgramAPI
 ```
 
 ## Load Pickled Object
@@ -116,4 +122,16 @@ from ghidra.program.model.listing import CodeUnit
 ```python
 import pickle
 data = pickle.load(open('example.pickle', 'rb'))
+```
+
+## Searching Patterns
+```python
+from ghidra.program.flatapi import FlatProgramAPI
+
+def search_memory(string, max_results=128):
+	fpi = FlatProgramAPI(getCurrentProgram())
+	return fpi.findBytes(currentProgram.getMinAddress(), ''.join(['.' if '?' in x else f'\\x{x}' for x in string.split()]), max_results)
+
+addresses = search_memory('55 8b ec 83 ec 20 8b 4? ?? 33')
+for address in addresses: print(address)
 ```
