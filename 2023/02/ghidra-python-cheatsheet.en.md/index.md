@@ -47,6 +47,7 @@ currentProgram.getMaxAddress()
 
 ```python
 from ghidra.program.model.listing import CodeUnit
+
 cu = currentProgram.getListing().getCodeUnitAt(addr)
 cu.getComment(CodeUnit.EOL_COMMENT)
 cu.setComment(CodeUnit.EOL_COMMENT, "Comment text")
