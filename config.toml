@@ -9,7 +9,7 @@ paginate = 12
 enableRobotsTXT = true
 enableGitInfo = false
 enableEmoji = true
-
+# test
 ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
 
 [author]
