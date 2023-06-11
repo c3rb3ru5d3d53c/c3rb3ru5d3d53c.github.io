@@ -32,21 +32,32 @@ PLACEHOLDER (Write single paragraph summary here)
 
 ## Infection Chain
 
-The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr` from `pornleech[.]ch`, which creates three files (Table placeholder).
+The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr` (installer) from `pornleech[.]ch`, which creates three files, an AutoIt interpreter, Batch script, and autoit script. The batch script is executed with `cmd.exe` by the installer. The process of the initial infection is indicated in Figure 1.
 
-| Filepath              | Description          |
-| --------------------- | -------------------- |
-| `%TEMP%\Che.mp3`      | AutoIt Interpreter   |
-| `%TEMP%\Quella.mp3`   | Batch Script         |
-| `%TEMP%\Travolge.mp3` | AutoIt Loader Script | 
-
-*Table placeholder: Written Installer Files*
+{{< mermaid >}}
+  graph TD
+	0("[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr")
+	1("%TEMP%\Che.mp3 (AutoIt Interpreter)")
+	2("%TEMP%\Quella.mp3 (Batch Script)")
+	3("%TEMP%\Travolage.mp3 (AutoIt Loader Script)")
+	4("cmd /c cmd < Quella.mp3 & ping -n 5 localhost")
+	5("%WINDOWS%\Microsoft.NET\Framework\v4.0.30319\jsc.exe (Redline Stealer)")
+	 0 -->|writes| 1
+	 0 -->|writes| 2
+	 0 -->|writes| 3
+     0 -->|executes| 4
+     4 -->|executes| 2
+     2 -->|executes| 1
+     1 -->|executes| 3
+     3 -->|process hollowing| 5
+{{< /mermaid >}}
+*Figure 1. Redline Stealer Infection Chain*
 
 ### Obfuscated BAT Script
 
 Once extracted, the installer executes `cmd /c cmd < Quella.mp3 & ping -n 5 localhost`, which executes `tasklist` to identify if `PSUAService.exe` (PandaAV) is currently running. If the process is not running, it uses `autoit.exe` as the file name for the AutoIt interpreter. Otherwise, the AutoIt interpreter is named `Magenta.exe.pif`.
 
-Next, the magic bytes `MZ` is written to the start of the file to contain the AutoIt interpreter. Once written, the file `%TEMP%\Che.mp3` is filtered by `findstr` to exclude the string a string (Figure placeholder), which results in writing the rest of the AutoIt interperter to the `%TEMP%` directory as either `autoit.exe` or `Magenta.exe.pif`. Next, `%TEMP%\Travolge.mp3` is moved to the file `%TEMP%\i`, which is then executed with the AutoIt interpreter (Figure placeholder).
+Next, the magic bytes `MZ` is written to the start of the file to contain the AutoIt interpreter. Once written, the file `%TEMP%\Che.mp3` is filtered by `findstr` to exclude the string a string (Figure 2), which results in writing the rest of the AutoIt interperter to the `%TEMP%` directory as either `autoit.exe` or `Magenta.exe.pif`. Next, `%TEMP%\Travolge.mp3` is moved to the file `%TEMP%\i`, which is then executed with the AutoIt interpreter (Figure 2).
 
 ```powershell
 Set AUTOIT=Mantenga.exe.pif
@@ -58,7 +69,7 @@ Move Travolge.* i
 %AUTOIT% i
 ping localhost -n 5
 ```
-Figure placeholder: Redline Stealer Deobfuscated Batch Script
+*Figure 2: Redline Stealer Deobfuscated Batch Script*
 
 ### Obfuscated AutoIT Script
 
@@ -68,7 +79,6 @@ Next, the AutoIT interpreter executes `i`.  Then the AutoIT script performs proc
 def decode_string(string: str, key: int) -> str:
     return ''.join([chr(int(c) - int(key)) for c in string.split('U')])
 ```
-
 
 ```vb
 ; BitDefender Emulator
@@ -90,18 +100,88 @@ If(Execute("EnvGet('COMPUTERNAME')") = "ELICZ") Then
 
 Installer → Quella.mp3 (BAT) → Mantenga.exe.pif (Loader) → jsc.exe
 
-Looks like they are doing process hollowing from the AutoIT script.
+The AutoIt script decrypts the payload by performing the following:
+- Allocating executable memory
+- Writes the shellcode depending on architecture to the executable memory space
+- Executes the shellcode by calling `CallWindowProc`, using the `lpPrevWndFunc` parameter as the pointer to shellcode for the first stage of RC4 decryption, the `Msg` parameter as the pointer to the RC4 decryption key, and the `wParam` parameters as the RC4 key length.
+- Calls `CallWindowProc` again, with the `lpPrevWndFunc` pointing to the function responsible for the decryption routine for RC4, the `Msg` paramater pointing to the ciphertext, and the `wParam`, pointing to the ciphertext length.
+- The  last call to `CallWindoProc`, returns the decrypted data, which is LZNT1 compressed
+- The LZNT1 compressed data, is decompressed by calling `RtlDecompressBuffer` using `COMPRESSION_FORMAT_LZNT1`
+- The proceess  `%WINDOWS%\Microsoft.NET\Framework\v4.0.30319\jsc.exe`, created in suspended mode and Redline Stealer is injected using process hollowing
 
 ```text
-CreateProcessW
-NtWriteVirtualMemory
-NtReadVirtualMemory
-NtWriteVirtualMemory
-NtProtectVirtualMemory
-NtSetContextThread
-NtResumeThread
-NtUnmapViewOfSection
+9113177476903537125675877499912933
 ```
+*Figure placeholder. AutoIt RC4 Decryption Key*
+
+I wrote a tool to extract payloads from this AutoIt loader, which is provided below.
+
+```python
+#!/usr/bin/env python
+
+# pip install malduck
+
+import re
+import argparse
+from malduck import lznt1, rc4
+
+__version__ = '1.0.0'
+__author__ = '@c3rb3ru5d3d53c'
+
+r_key = re.compile(r'Binary\(\w+\(\"([^\"]+)\", ?(\d+)\)')
+r_ct  = re.compile(r'(= \x270x|&= \x27)([A-F0-9]+)', re.MULTILINE)
+
+def decode_string(string: str, key: int) -> str:
+    return ''.join([chr(int(c) - int(key)) for c in string.split('U')])
+
+def decode_key(data):
+    match = r_key.search(data)
+    if not match: return None
+    return decode_string(match.group(1), int(match.group(2)))
+
+def get_ciphertext(data):
+    matches = r_ct.finditer(data)
+    if matches is None: return None
+    return bytes.fromhex(''.join([x.group(2) for x in matches]))
+
+parser = argparse.ArgumentParser(
+    prog=f'extractor v{__version__}',
+    description='Extract AutoIt Payload',
+    epilog=f'Author: {__author__}'
+)
+parser.add_argument(
+    '-i',
+    '--input',
+    type=str,
+    default=None,
+    help='Input File',
+    required=True
+)
+parser.add_argument(
+    '-o',
+    '--output',
+    type=str,
+    default=None,
+    help='Output File',
+    required=True
+)
+parser.add_argument(
+    '-k',
+    '--key',
+    type=str,
+    default=None,
+    help='Key',
+    required=False
+)
+args = parser.parse_args()
+data = open(args.input, 'r').read()
+key = args.key
+if key is None: key = decode_key(data)
+ct = get_ciphertext(data)
+pt = lznt1(rc4(key.encode(), ct))
+open(args.output, 'wb').write(pt)
+```
+*Figure placeholder. AutoIt Loader Static Unpacking Tool*
 
 ## Redline Stealer
 
@@ -565,7 +645,9 @@ At this point, I think we have successfully destroyed *Redline Stealer*.
 | SHA256 | 676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c33087a3a5dca06364aa | Redline Stealer (Unpacked)     |
 | IPv4   | 95.217.35[.]153                                                  | Redline Stealer C2             |
 | SHA256 | 2ccf3271c2e61033cddaf0af23854fc73cdaf7eab15745c419f269b8b24687c6 | Redline Stealer Deobfuscated   |
-| SHA256 | 6cc516d93917545e60f938906bea4684860ec6db5e45480b1c81e2a2a42eb2e2 | AutoIt Script (Deobfuscated)   | 
+| SHA256 | 6cc516d93917545e60f938906bea4684860ec6db5e45480b1c81e2a2a42eb2e2 | AutoIt Script (Deobfuscated)   |
+| SHA256 | 6914ed57497a934722dd948698e612eaf5727b631d2c6d24ff0ed76ec16cb5df | AutoIt Script Shellcode (x86)  |
+| SHA256 | b73a01e19f8dbc51d8a42b26fd293eda31ab6efc13eb36cc78e3ff8ee5506146 | AutoIt Script Shellcodee (x64) | 
 
 ## Detection
 
