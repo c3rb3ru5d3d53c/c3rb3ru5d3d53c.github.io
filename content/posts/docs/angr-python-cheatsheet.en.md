@@ -1,3 +1,16 @@
+---
+weight: 4
+title: "ANGR Python Scripting Cheatsheet"
+description: "A Cheatsheet of Useful ANGR Python Scripting Snippets"
+date: "2023-06-26"
+draft: false
+author: "c3rb3ru5d3d53c"
+images: []
+tags: ["Cheatsheet", "ANGR", "Reversing", "Python"]
+categories: ["Docs"]
+lightgallery: true
+---
+
 # ANGR Python CheatSheet
 
 
