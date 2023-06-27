@@ -1,4 +1,4 @@
-# Destroying Redline Stealer
+# Destroying Redline Stealer and CypherIT
 
 
 ## Situation
@@ -27,7 +27,7 @@ The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Ja
 	0("[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr")
 	1("%TEMP%\Che.mp3 (AutoIt Interpreter)")
 	2("%TEMP%\Quella.mp3 (Batch Script)")
-	3("%TEMP%\Travolage.mp3 (AutoIt Loader Script)")
+	3("%TEMP%\Travolage.mp3 (AutoIt Loader or CipherIT)")
 	4("cmd /c cmd < Quella.mp3 & ping -n 5 localhost")
 	5("%WINDOWS%\Microsoft.NET\Framework\v4.0.30319\jsc.exe (Redline Stealer)")
 	 0 -->|writes| 1
