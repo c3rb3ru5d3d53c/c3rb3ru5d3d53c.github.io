@@ -13,7 +13,6 @@ lightgallery: true
 
 # ANGR Python CheatSheet
 
-
 ## Starting a Project
 ```python
 import angr, claripy
@@ -39,8 +38,10 @@ p.is_hooked(0xdeadbeef)
 start_address = 0xdeadbeef
 end_address   = 0xbeefdead
 avoid_address = 0xcafef00d
-# Create the Initial Execution State
+# Create Blank State
 s = p.factory.blank_state(addr=start_address)
+# Create State for Executing a Function
+s = p.factory.call_state(addr=start_address)
 # Setting Registers and Memory
 s.regs.ebp = s.regs.esp
 s.regs.ebx = 0xdeadbeef
@@ -51,14 +52,33 @@ s.options.add(angr.options.LAZY_SOLVES)
 s.options.add(angr.options.UNICORN)
 # Make the value of memory read from an uninitialized address zero instead of an unconstrained symbol
 s.options.add(angr.options.ZERO_FILL_UNCONSTRAINED_MEMORY)
+# Single Step State
+s.step()
+```
+
+## Bit Vectors (ASTs)
+```python
+x = s.solver.BVS('x', 32)
+# <BV32 x_54_32>
+y = s.solver.BVS('y', 32)
+# <BV32 y_55_32>
+(x + y).op
+# '__add__'
+(x + y).args
+#(<BV32 x_54_32>, <BV32 y_55_32>)
+(x + y).args[0]
+# <BV32 x_54_32>
 ```
 
 ## Creating Constraints
 ```python
 # Add Constraints to the State
-s.add_constraints(s.regs.eax == 0xdeadbeef)
+s.add_constraints(s.regs.eax != 0xdeadbeef)
+# s.add_constraints(s.regs.eip != 0xcafef00d)
 # Access or Print Constraints
 s.constraints
+# Check if State is Satisfiable
+state.satisfiable()
 ```
 
 ## Starting your Simulation
