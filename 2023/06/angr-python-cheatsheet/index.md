@@ -3,6 +3,40 @@
 
 # ANGR Python CheatSheet
 
+Symbolic execution is a technique that involves the systematic exploration of all possible paths in a program's code using abstract syntax trees (ASTs).
+
+## Assembly as an AST
+
+Placeholder
+
+### Without Branching
+
+In the following example, the assembly code moves the value of 5 into the 32-bit register `eax`, moves the value 7 into the 32-bit register `ebx`, then adds both `eax` and `ebx` together with the result being stored in `eax`.
+
+```asm
+0:  b8 05 00 00 00          mov    eax,0x5
+5:  bb 07 00 00 00          mov    ebx,0x7
+a:  01 d8                   add    eax,ebx
+```
+
+Each register is 32-bit and can be considered a bit vector symbol (BVS). Once created, the add operation can be represented as `ast = eax + ebx`. Next, we create a solver object where we add constraints to the bit vector symbols we created earlier such that `eax` must equal 5 and the result must equal `12`. Once the constraints are added, we can evaluate the AST using the method `eval`.
+
+```python
+from claripy import Solver, BVS
+eax = BVS('eax', 32)
+ebx = BVS('ebx', 32)
+ast = eax + ebx
+s = Solver()
+s.add(ebx == 7)
+s.add(eax + ebx == 12)
+s.eval(eax, 1)
+# (5,)
+```
+
+### With Branching
+
+Placeholder.
+
 ## Starting a Project
 ```python
 import angr, claripy
