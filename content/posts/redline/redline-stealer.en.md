@@ -28,7 +28,7 @@ If you wish to support my work, you can buy me a coffee [here](buymeacoffee.com/
 - *Redline Stealer* exits if it detects the infected machine is from a near Russian countries.
 - *Redline Stealer* executes its modules in random order to potentially evade heuristic detection.
 
-(EXECUTIVE SUMMARY HERE)
+Delving into the intricate world of an information-stealing malware known as *Redline Stealer*, we explore its structure and functionality. With a specific focus on Windows-based systems, *Redline Stealer* demonstrates capabilities such as arbitrary command execution, downloading additional payloads and the exfiltration of sensitive data. Our analysis uncovers the various infection vectors employed, shedding light on the methods used to distribute *Redline Stealer*. To empower our readers, we provide practical recommendations to mitigate the risk to defend against *Redline Stealer* and *CipherIT*. This comprehensive resource is essential for cyber-security professionals and researchers seeking to understand *Redline Stealer*'s intricacies and adopt proactive measures to safeguard against its impact.
 
 ## Infection Chain
 
@@ -623,10 +623,13 @@ At this point, I think we have successfully destroyed *Redline Stealer*.
 <iframe width="560" height="315" src="https://www.youtube.com/embed/gBpl5TIUD7A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ttFPUgojPYg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/s_u-n9239EU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/qjAu48YQwOw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eQ2TtKvRmsc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ## Downloads
 
--  [Reverse Engineered Source Code](samples/2023-02-18-redline-src.zip)
+- [Reverse Engineered Source Code](samples/2023-02-18-redline-src.zip)
 - [Redline Samples](samples/2023-02-18-redline-samples.zip)
 
 ## Indicators of Compromise
@@ -736,3 +739,4 @@ New TTP System Network Configuration Discovery: Internet Connection Discovery T1
 - [whichbuffer](https://twitter.com/WhichbufferArda)
 - shellsilky
 - [grayhatter](https://gr.ht/)
+- t00big2fl4il
