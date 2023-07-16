@@ -136,3 +136,40 @@ def search_memory(string, max_results=128):
 addresses = search_memory('55 8b ec 83 ec 20 8b 4? ?? 33')
 for address in addresses: print(address)
 ```
+
+## Get Current Program DataTypes
+```python
+def get_currentprogram_datatypes():
+    dataTypeManager = currentProgram.getDataTypeManager()
+    return dataTypeManager.getAllDataTypes()
+```
+
+## Enums
+```python
+from ghidra.program.model.data import EnumDataType
+
+def get_enums():
+    dataTypeManager = getCurrentProgram().getDataTypeManager()
+    dts = dataTypeManager.getAllDataTypes()
+    return [dt for dt in dts if isinstance(dt, EnumDB)]
+
+def enums_to_dict(enums):
+    r = []
+    for enum in enums:
+        d = {}
+        names = enum.getNames()
+        for name in names:
+            d[name] = enum.getValue(name)
+        r.append(
+            {
+                'name': enum.getName(),
+                'values': d
+            }
+        )
+    return r
+enum = EnumDataType("EnumName", length)
+enum.add("One", 1)
+enum.add("Two", 2)
+enum.add("Three", 3)
+dataTypeManager.addDataType(enum, None)
+```
