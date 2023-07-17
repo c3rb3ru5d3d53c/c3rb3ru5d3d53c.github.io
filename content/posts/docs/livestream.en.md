@@ -1,7 +1,7 @@
 ---
 weight: 4
-title: "Twitch Streaming Live Chat for OBS"
-description: "Twitch Streaming Live Chat for OBS"
+title: "Live Streaming Cheat Sheet"
+description: "Live Streaming Cheat Sheet for OBS"
 date: "2022-11-23"
 draft: false
 author: "c3rb3ru5d3d53c"
@@ -115,4 +115,10 @@ html {
 .stream-chat-header, .channel-leaderboard {
   display: none !important;
 }
+```
+
+Kick CSS for Chat Window
+
+```css
+@keyframes fade-in { 0% { opacity: 0; transform:translateX(100%) } 100% { opacity: 1; transform:translateX(0)} } #chatroom-footer, #chatroom-top, .bottom-0.w-screen, .chatroom-history-breaker, .spinner {display:none !important} .bg-gray-900, .border-secondary-lighter, :is(.dark .dark\:bg-secondary) {background-color: transparent !important; border: none} .chat-entry {text-align:left; font-size:28px; background-color: rgba(0, 0, 0, 1); padding: 0px; border-radius: 0px; opacity: 0; animation: fade-in 0.5s forwards} 
 ```
