@@ -1,6 +1,3 @@
 # Tags
 
----
-title: "Tags"
----
 

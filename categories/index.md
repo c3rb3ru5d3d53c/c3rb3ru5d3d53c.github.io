@@ -1,6 +1,3 @@
 # Categories
 
----
-title: "Categories"
----
 
